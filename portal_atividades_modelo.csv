@@ -1,0 +1,6 @@
+Tipo,ID_Materia,Nome_Materia,Descricao_Materia,Emoji_Materia,Cor_Materia,Nome_Modulo,ID_Professor,Nome_Professor,Senha_Professor,Titulo_Atividade,Descricao_Atividade,Link_Atividade,Codigo_Acesso,Senha_Admin
+Admin,,,,,,,,,,,,,"admin123"
+Materia,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,,,,,,,
+Modulo,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,,,,,"MAT01",
+Atividade,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,"Exercícios de Equações","Resolva as equações propostas","https://exemplo.com/exercicios","MAT01",
+Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"prof1","Prof. João Silva","mat123",,,,
