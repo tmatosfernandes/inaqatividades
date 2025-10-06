@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Atividades - Estudantes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.3.0"></script>
     <style>
         body {
             box-sizing: border-box;
@@ -387,6 +387,9 @@
                             <button onclick="generateSampleCsv()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📋 Gerar CSV Modelo
                             </button>
+                            <button onclick="debugCsvContent()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                                🔍 Debug CSV
+                            </button>
                         </div>
                         
                         <!-- Auto-sync Settings -->
@@ -704,6 +707,63 @@
             alert('📋 Arquivo CSV modelo gerado! Use este arquivo como base para configurar a sincronização.');
         }
 
+        async function debugCsvContent() {
+            if (!syncConfig.csvUrl) {
+                alert('Configure primeiro a URL do arquivo CSV.');
+                return;
+            }
+
+            try {
+                addToSyncLog('Iniciando debug do CSV...');
+                const response = await fetch(syncConfig.csvUrl, { 
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const csvContent = await response.text();
+                
+                // Show raw content
+                console.log('=== CONTEÚDO BRUTO DO CSV ===');
+                console.log(csvContent);
+                
+                // Parse and show structure
+                const lines = csvContent.split('\n').filter(line => line.trim());
+                console.log('=== ANÁLISE DO CSV ===');
+                console.log(`Total de linhas: ${lines.length}`);
+                
+                if (lines.length > 0) {
+                    const headers = parseCSVLine(lines[0]);
+                    console.log('Headers:', headers);
+                    
+                    for (let i = 1; i < Math.min(lines.length, 6); i++) {
+                        const values = parseCSVLine(lines[i]);
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header.replace(/"/g, '').trim()] = (values[index] || '').replace(/"/g, '').trim();
+                        });
+                        console.log(`Linha ${i}:`, row);
+                    }
+                }
+                
+                // Show current system data
+                console.log('=== DADOS ATUAIS DO SISTEMA ===');
+                console.log('Subjects:', Object.keys(systemData.subjects));
+                console.log('Module Access:', systemData.moduleAccess);
+                console.log('Admin Password:', systemData.admin.password);
+                
+                addToSyncLog('Debug concluído - verifique o console do navegador');
+                alert('🔍 Debug concluído!\n\nAbra o console do navegador (F12) para ver os detalhes do CSV e dados do sistema.');
+                
+            } catch (error) {
+                addToSyncLog(`Erro no debug: ${error.message}`);
+                alert(`❌ Erro ao fazer debug do CSV:\n${error.message}`);
+            }
+        }
+
         // Data Persistence Functions
         function saveData() {
             try {
@@ -786,18 +846,29 @@
 
         async function importFromCSV(csvContent, silent = false) {
             try {
+                if (!silent) {
+                    addToSyncLog('Iniciando importação do CSV...');
+                }
+                
                 // Backup current data
                 const backup = JSON.parse(JSON.stringify(systemData));
                 
-                // Reset system data
-                systemData = {
+                // Don't reset completely - preserve existing structure
+                const newData = {
                     admin: { password: 'admin123' },
                     subjects: {},
                     moduleAccess: {}
                 };
 
-                const lines = csvContent.split('\n');
-                const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
+                const lines = csvContent.split('\n').filter(line => line.trim());
+                if (lines.length === 0) {
+                    throw new Error('Arquivo CSV vazio');
+                }
+                
+                const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
+                addToSyncLog(`Headers encontrados: ${headers.join(', ')}`);
+                
+                let processedRows = 0;
                 
                 // Process each line
                 for (let i = 1; i < lines.length; i++) {
@@ -805,37 +876,51 @@
                     if (!line) continue;
                     
                     const values = parseCSVLine(line);
-                    if (values.length < headers.length) continue;
+                    if (values.length === 0) continue;
                     
                     const row = {};
                     headers.forEach((header, index) => {
-                        row[header] = values[index] || '';
+                        row[header] = (values[index] || '').replace(/"/g, '').trim();
                     });
                     
-                    processCSVRow(row);
+                    if (processCSVRow(row, newData)) {
+                        processedRows++;
+                    }
                 }
                 
-                saveData();
-                
-                // Only reload UI if not silent
-                if (!silent) {
+                // Only update if we processed some data
+                if (processedRows > 0) {
+                    systemData = newData;
+                    saveData();
+                    addToSyncLog(`${processedRows} linhas processadas com sucesso`);
+                    
+                    // Reload UI
                     loadSubjects();
                     if (document.getElementById('subjectsList')) {
                         loadSubjectsList();
                     }
+                    if (document.getElementById('teachersList')) {
+                        loadTeachersList();
+                    }
+                    if (document.getElementById('accessCodesList')) {
+                        loadAccessCodesList();
+                    }
                     updateAllSelects();
                     
                     if (!silent) {
-                        alert('✅ Dados CSV importados com sucesso! O sistema foi sincronizado.');
+                        alert(`✅ Dados CSV importados com sucesso!\n${processedRows} registros processados.`);
                     }
+                } else {
+                    throw new Error('Nenhum dado válido encontrado no CSV');
                 }
                 
                 return true;
                 
             } catch (error) {
+                addToSyncLog(`Erro na importação: ${error.message}`);
                 console.error('CSV Import error:', error);
                 if (!silent) {
-                    alert('Erro ao processar arquivo CSV. Verifique o formato do arquivo.');
+                    alert(`❌ Erro ao processar arquivo CSV:\n${error.message}\n\nVerifique o formato do arquivo.`);
                 }
                 return false;
             }
@@ -863,19 +948,28 @@
             return values;
         }
 
-        function processCSVRow(row) {
+        function processCSVRow(row, targetData) {
             const tipo = row.Tipo;
             const subjectKey = row.ID_Materia;
             
+            console.log('Processando linha:', row);
+            
             // Process admin password
             if (tipo === 'Admin' && row.Senha_Admin) {
-                systemData.admin.password = row.Senha_Admin;
-                return;
+                targetData.admin.password = row.Senha_Admin;
+                console.log('Admin password updated:', row.Senha_Admin);
+                return true;
+            }
+            
+            // Skip if no subject key for non-admin rows
+            if (!subjectKey && tipo !== 'Admin') {
+                console.log('Skipping row - no subject key');
+                return false;
             }
             
             // Ensure subject exists
-            if (subjectKey && !systemData.subjects[subjectKey]) {
-                systemData.subjects[subjectKey] = {
+            if (subjectKey && !targetData.subjects[subjectKey]) {
+                targetData.subjects[subjectKey] = {
                     name: row.Nome_Materia || subjectKey,
                     description: row.Descricao_Materia || '',
                     emoji: row.Emoji_Materia || '📚',
@@ -883,22 +977,28 @@
                     teachers: [],
                     modules: []
                 };
+                console.log('Created subject:', subjectKey);
             }
             
-            const subject = systemData.subjects[subjectKey];
-            if (!subject) return;
+            const subject = targetData.subjects[subjectKey];
+            if (!subject && tipo !== 'Admin') {
+                console.log('No subject found for:', subjectKey);
+                return false;
+            }
             
             // Process different types
             if (tipo === 'Professor' && row.Nome_Professor) {
                 // Add teacher if not exists
-                const existingTeacher = subject.teachers.find(t => t.id === row.ID_Professor);
+                const existingTeacher = subject.teachers.find(t => t.name === row.Nome_Professor);
                 if (!existingTeacher) {
                     subject.teachers.push({
                         id: row.ID_Professor || Date.now().toString(),
                         name: row.Nome_Professor,
                         password: row.Senha_Professor || 'temp123'
                     });
+                    console.log('Added teacher:', row.Nome_Professor);
                 }
+                return true;
             } else if ((tipo === 'Modulo' || tipo === 'Atividade') && row.Nome_Modulo) {
                 // Find or create module
                 let module = subject.modules.find(m => m.name === row.Nome_Modulo);
@@ -908,12 +1008,14 @@
                         activities: []
                     };
                     subject.modules.push(module);
+                    console.log('Created module:', row.Nome_Modulo);
                     
                     // Set access code if provided
                     if (row.Codigo_Acesso) {
                         const moduleIndex = subject.modules.length - 1;
                         const moduleKey = `${subjectKey}-${moduleIndex}`;
-                        systemData.moduleAccess[moduleKey] = row.Codigo_Acesso;
+                        targetData.moduleAccess[moduleKey] = row.Codigo_Acesso;
+                        console.log('Set access code:', row.Codigo_Acesso, 'for', moduleKey);
                     }
                 }
                 
@@ -926,9 +1028,18 @@
                             description: row.Descricao_Atividade || '',
                             link: row.Link_Atividade || null
                         });
+                        console.log('Added activity:', row.Titulo_Atividade);
                     }
                 }
+                return true;
+            } else if (tipo === 'Materia') {
+                // Just creating the subject is enough
+                console.log('Subject created/updated:', subjectKey);
+                return true;
             }
+            
+            console.log('Row not processed:', tipo);
+            return false;
         }
 
         // Initialize system with sample data
@@ -2247,29 +2358,32 @@
 
         // Initialize system
         function initializeSystem() {
-            // Try to load saved data first
-            const dataLoaded = loadData();
+            console.log('🚀 Inicializando sistema...');
             
-            // If no saved data, initialize with sample data
-            if (!dataLoaded) {
-                initializeSampleData();
+            // Always start with sample data structure
+            initializeSampleData();
+            
+            // Try to load saved data and merge
+            const savedData = loadData();
+            if (savedData) {
+                console.log('✅ Dados salvos carregados');
+            } else {
+                console.log('📝 Usando dados de exemplo');
                 saveData(); // Save the initial sample data
             }
             
             // Load sync configuration
             loadSyncConfig();
+            console.log('🔄 Configuração de sync carregada');
             
-            // Try to sync from CSV if configured
-            if (syncConfig.csvUrl && syncConfig.autoSync) {
-                setTimeout(() => {
-                    forceSyncFromCsv();
-                }, 2000);
-            }
+            // Update display
+            updateSyncDisplay();
+            
+            console.log('✅ Sistema inicializado');
+            console.log('Subjects disponíveis:', Object.keys(systemData.subjects));
+            console.log('Códigos de acesso:', systemData.moduleAccess);
         }
 
-        // Initialize sample data on load
-        initializeSampleData();
-        
         // Initialize the system when page loads
         window.addEventListener('load', initializeSystem);
 
@@ -2278,5 +2392,5 @@
             stopAutoSync();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a67e5e733e128c',t:'MTc1OTc2NzcwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a6ff6445e04ae8',t:'MTc1OTc3Mjk5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
