@@ -1,0 +1,2282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Atividades - Estudantes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .carousel-container {
+            scroll-behavior: smooth;
+        }
+        
+        .module-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .module-content.expanded {
+            max-height: 1000px;
+        }
+        
+        .login-overlay {
+            backdrop-filter: blur(10px);
+        }
+        
+        .carousel-dot {
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background-color: #3b82f6;
+            transform: scale(1.2);
+        }
+        
+        .activity-item {
+            transition: all 0.2s ease;
+        }
+        
+        .activity-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .activity-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+        
+        .activity-item.drag-over {
+            border: 2px dashed #3b82f6;
+            background-color: #dbeafe;
+        }
+        
+        .drag-handle {
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        .sync-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sync-indicator.syncing {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Sync Indicator -->
+    <div id="syncIndicator" class="sync-indicator bg-green-500 text-white px-3 py-1 rounded-full text-sm hidden">
+        🔄 Sincronizando...
+    </div>
+
+    <!-- Login Overlay -->
+    <div id="loginOverlay" class="fixed inset-0 bg-black bg-opacity-50 login-overlay flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Portal de Atividades</h2>
+                <p class="text-gray-600 mt-2">Selecione seu tipo de acesso</p>
+            </div>
+            
+            <div class="space-y-4 mb-6">
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="selectUserType('student')" id="studentBtn" class="py-2 px-3 border-2 border-blue-500 text-blue-500 rounded-lg transition duration-200 hover:bg-blue-50 text-sm">
+                        👨‍🎓 Aluno
+                    </button>
+                    <button onclick="selectUserType('teacher')" id="teacherBtn" class="py-2 px-3 border-2 border-gray-300 text-gray-500 rounded-lg transition duration-200 hover:bg-gray-50 text-sm">
+                        👩‍🏫 Professor
+                    </button>
+                    <button onclick="selectUserType('admin')" id="adminBtn" class="py-2 px-3 border-2 border-gray-300 text-gray-500 rounded-lg transition duration-200 hover:bg-gray-50 text-sm">
+                        👑 Admin
+                    </button>
+                </div>
+            </div>
+            
+            <form id="loginForm" class="space-y-4">
+                <div id="subjectSelectDiv" class="hidden mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Selecione a Matéria</label>
+                    <select id="loginSubjectSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span id="passwordLabel">Senha de Acesso</span>
+                    </label>
+                    <input type="password" id="passwordInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Digite sua senha">
+                    <div class="mt-2 text-xs text-gray-500">
+                        <div id="studentHint" class="block">💡 Digite o código de acesso do módulo</div>
+                        <div id="teacherHint" class="hidden">💡 Digite sua senha de professor</div>
+                        <div id="adminHint" class="hidden">💡 Senha do administrador: <span class="font-mono">admin123</span></div>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                    Entrar
+                </button>
+                <div id="errorMessage" class="text-red-500 text-sm text-center hidden">Senha incorreta. Tente novamente.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Portal de Atividades</h1>
+                        <p class="text-gray-600 mt-1">Organize suas atividades por matéria e módulo</p>
+                        <div id="syncStatus" class="text-xs text-green-600 mt-1">
+                            ✅ Dados sincronizados automaticamente
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div id="lastSyncTime" class="text-xs text-gray-500"></div>
+                        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                            Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Subject Carousel -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Selecione uma Matéria</h2>
+                
+                <!-- Carousel Navigation -->
+                <div class="flex justify-center mb-4">
+                    <div id="carouselDots" class="flex space-x-2">
+                    </div>
+                </div>
+
+                <!-- Carousel Container -->
+                <div class="relative overflow-hidden">
+                    <div id="carouselContainer" class="flex transition-transform duration-500 ease-in-out">
+                    </div>
+                </div>
+
+                <!-- Navigation Arrows -->
+                <div class="flex justify-between items-center mt-6">
+                    <button onclick="previousSubject()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-3 rounded-full transition duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <button onclick="nextSubject()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-3 rounded-full transition duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel (Only for Teachers) -->
+        <div id="adminPanel" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 hidden">
+            <!-- Admin Navigation Tabs -->
+            <div class="bg-white rounded-2xl shadow-xl mb-6">
+                <div class="flex border-b border-gray-200 flex-wrap" id="adminTabs">
+                    <button onclick="showAdminTab('subjects')" id="subjectsTab" class="flex-1 py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm admin-only">
+                        📚 Matérias
+                    </button>
+                    <button onclick="showAdminTab('modules')" id="modulesTab" class="flex-1 py-4 px-4 text-center font-semibold text-gray-500 hover:text-gray-700 text-sm admin-only">
+                        📋 Módulos
+                    </button>
+                    <button onclick="showAdminTab('activities')" id="activitiesTab" class="flex-1 py-4 px-4 text-center font-semibold text-gray-500 hover:text-gray-700 text-sm">
+                        ✏️ Atividades
+                    </button>
+                    <button onclick="showAdminTab('users')" id="usersTab" class="flex-1 py-4 px-4 text-center font-semibold text-gray-500 hover:text-gray-700 text-sm admin-only">
+                        👥 Usuários
+                    </button>
+                    <button onclick="showAdminTab('access')" id="accessTab" class="flex-1 py-4 px-4 text-center font-semibold text-gray-500 hover:text-gray-700 text-sm admin-only">
+                        🔐 Acessos
+                    </button>
+                    <button onclick="showAdminTab('sync')" id="syncTab" class="flex-1 py-4 px-4 text-center font-semibold text-gray-500 hover:text-gray-700 text-sm admin-only">
+                        🔄 Sincronização
+                    </button>
+                </div>
+            </div>
+
+            <!-- Subjects Management -->
+            <div id="subjectsPanel" class="bg-white rounded-2xl shadow-xl p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Gerenciar Matérias</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Adicionar Nova Matéria</h4>
+                        <input type="text" id="newSubjectKey" placeholder="ID da matéria (ex: fisica)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <input type="text" id="newSubjectName" placeholder="Nome da matéria (ex: Física)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <input type="text" id="newSubjectDescription" placeholder="Descrição (ex: Mecânica e Eletricidade)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <input type="text" id="newSubjectEmoji" placeholder="Emoji (ex: ⚡)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <input type="text" id="newSubjectColor" placeholder="Cor (ex: red-500)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <button onclick="addSubject()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            Adicionar Matéria
+                        </button>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Matérias Existentes</h4>
+                        <div id="subjectsList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules Management -->
+            <div id="modulesPanel" class="bg-white rounded-2xl shadow-xl p-6 hidden">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Gerenciar Módulos</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Adicionar Novo Módulo</h4>
+                        <select id="moduleSubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        </select>
+                        <input type="text" id="newModuleName" placeholder="Nome do módulo" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <button onclick="addModule()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            Adicionar Módulo
+                        </button>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Módulos por Matéria</h4>
+                        <select id="viewModulesSelect" onchange="loadModulesList()" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        </select>
+                        <div id="modulesList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activities Management -->
+            <div id="activitiesPanel" class="bg-white rounded-2xl shadow-xl p-6 hidden">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Gerenciar Atividades</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Adicionar Nova Atividade</h4>
+                        <select id="activitySubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2" onchange="updateActivityModuleSelect()">
+                        </select>
+                        <select id="activityModuleSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        </select>
+                        <input type="text" id="activityTitle" placeholder="Título da atividade" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <textarea id="activityDescription" placeholder="Descrição da atividade" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 h-20"></textarea>
+                        <input type="url" id="activityLink" placeholder="Link da atividade (opcional)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <button onclick="addActivity()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            Adicionar Atividade
+                        </button>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Atividades Existentes</h4>
+                        <select id="viewActivitiesSubjectSelect" onchange="updateViewActivitiesModuleSelect()" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        </select>
+                        <select id="viewActivitiesModuleSelect" onchange="loadActivitiesList()" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        </select>
+                        <div id="activitiesList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Management -->
+            <div id="usersPanel" class="bg-white rounded-2xl shadow-xl p-6 hidden">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Gerenciar Usuários</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Adicionar Professor</h4>
+                        <input type="text" id="newTeacherName" placeholder="Nome do professor" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <input type="password" id="newTeacherPassword" placeholder="Senha do professor" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <select id="teacherSubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        </select>
+                        <button onclick="addTeacher()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            Adicionar Professor
+                        </button>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Professores Cadastrados</h4>
+                        <div id="teachersList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Access Management -->
+            <div id="accessPanel" class="bg-white rounded-2xl shadow-xl p-6 hidden">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Gerenciar Códigos de Acesso</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Definir Código para Módulo</h4>
+                        <select id="accessSubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2" onchange="updateAccessModuleSelect()">
+                        </select>
+                        <select id="accessModuleSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        </select>
+                        <input type="text" id="moduleAccessCode" placeholder="Código de acesso (ex: MAT01)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <button onclick="setModuleAccess()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            Definir Código
+                        </button>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Códigos Ativos</h4>
+                        <div id="accessCodesList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync Management Panel -->
+            <div id="syncPanel" class="bg-white rounded-2xl shadow-xl p-6 hidden">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">🔄 Configuração de Sincronização</h3>
+                
+                <!-- Sync Status -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <h4 class="font-semibold text-blue-800 mb-2">📊 Status da Sincronização</h4>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="text-blue-600">Última sincronização:</span>
+                            <div id="lastSyncDisplay" class="font-mono text-gray-700">Nunca</div>
+                        </div>
+                        <div>
+                            <span class="text-blue-600">Arquivo CSV:</span>
+                            <div id="csvFileStatus" class="font-mono text-gray-700">Não configurado</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- CSV Configuration -->
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">📁 Configurar Arquivo CSV Compartilhado</h4>
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                            <p class="text-sm text-yellow-800">
+                                <strong>💡 Como funciona:</strong><br>
+                                1. Coloque o arquivo CSV em uma pasta compartilhada (Google Drive, Dropbox, etc.)<br>
+                                2. Configure o link público do arquivo<br>
+                                3. Todos os usuários verão as atualizações automaticamente
+                            </p>
+                        </div>
+                        <input type="url" id="csvFileUrl" placeholder="URL do arquivo CSV compartilhado" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <button onclick="configureCsvSync()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200 mb-2">
+                            Configurar Sincronização
+                        </button>
+                        <button onclick="testCsvConnection()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            Testar Conexão
+                        </button>
+                    </div>
+
+                    <!-- Manual Sync -->
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">🔄 Sincronização Manual</h4>
+                        <div class="space-y-2">
+                            <button onclick="forceSyncFromCsv()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                                📥 Sincronizar do CSV
+                            </button>
+                            <button onclick="exportToCsvFile()" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                                📤 Exportar para CSV
+                            </button>
+                            <button onclick="generateSampleCsv()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                                📋 Gerar CSV Modelo
+                            </button>
+                        </div>
+                        
+                        <!-- Auto-sync Settings -->
+                        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" id="autoSyncEnabled" onchange="toggleAutoSync()" class="rounded">
+                                <span class="text-sm">Sincronização automática (a cada 30s)</span>
+                            </label>
+                            <div id="autoSyncStatus" class="text-xs text-gray-500 mt-1">Desabilitada</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync Log -->
+                <div class="mt-6">
+                    <h4 class="font-semibold text-gray-700 mb-3">📋 Log de Sincronização</h4>
+                    <div id="syncLog" class="bg-gray-50 rounded-lg p-3 max-h-40 overflow-y-auto text-sm font-mono">
+                        Sistema iniciado - aguardando configuração...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Persistence System with CSV Sync
+        const STORAGE_KEY = 'portal_atividades_data';
+        const SYNC_CONFIG_KEY = 'portal_sync_config';
+        
+        // Sync Configuration
+        let syncConfig = {
+            csvUrl: null,
+            autoSync: false,
+            lastSync: null,
+            syncInterval: null
+        };
+
+        // Authentication System
+        let systemData = {
+            admin: {
+                password: 'admin123'
+            },
+            subjects: {},
+            moduleAccess: {} // códigos de acesso para módulos
+        };
+        
+        let currentUser = {
+            type: null, // 'admin', 'teacher', 'student'
+            subjectKey: null, // para professores
+            name: null
+        };
+        let currentSubject = 0;
+
+        // Sync Functions
+        function loadSyncConfig() {
+            try {
+                const saved = localStorage.getItem(SYNC_CONFIG_KEY);
+                if (saved) {
+                    syncConfig = { ...syncConfig, ...JSON.parse(saved) };
+                    updateSyncDisplay();
+                    if (syncConfig.autoSync && syncConfig.csvUrl) {
+                        startAutoSync();
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao carregar configuração de sincronização:', error);
+            }
+        }
+
+        function saveSyncConfig() {
+            try {
+                localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig));
+            } catch (error) {
+                console.error('Erro ao salvar configuração de sincronização:', error);
+            }
+        }
+
+        function updateSyncDisplay() {
+            const lastSyncDisplay = document.getElementById('lastSyncDisplay');
+            const csvFileStatus = document.getElementById('csvFileStatus');
+            const autoSyncStatus = document.getElementById('autoSyncStatus');
+            const csvFileUrl = document.getElementById('csvFileUrl');
+            const autoSyncEnabled = document.getElementById('autoSyncEnabled');
+
+            if (lastSyncDisplay) {
+                lastSyncDisplay.textContent = syncConfig.lastSync ? 
+                    new Date(syncConfig.lastSync).toLocaleString('pt-BR') : 'Nunca';
+            }
+
+            if (csvFileStatus) {
+                csvFileStatus.textContent = syncConfig.csvUrl ? 'Configurado' : 'Não configurado';
+            }
+
+            if (autoSyncStatus) {
+                autoSyncStatus.textContent = syncConfig.autoSync ? 
+                    'Ativa (sincroniza a cada 30s)' : 'Desabilitada';
+            }
+
+            if (csvFileUrl) {
+                csvFileUrl.value = syncConfig.csvUrl || '';
+            }
+
+            if (autoSyncEnabled) {
+                autoSyncEnabled.checked = syncConfig.autoSync;
+            }
+
+            // Update header sync status
+            const syncStatus = document.getElementById('syncStatus');
+            const lastSyncTime = document.getElementById('lastSyncTime');
+            
+            if (syncStatus) {
+                if (syncConfig.csvUrl) {
+                    syncStatus.innerHTML = '🔄 Sincronização automática ativa';
+                    syncStatus.className = 'text-xs text-green-600 mt-1';
+                } else {
+                    syncStatus.innerHTML = '⚠️ Sincronização não configurada';
+                    syncStatus.className = 'text-xs text-yellow-600 mt-1';
+                }
+            }
+
+            if (lastSyncTime && syncConfig.lastSync) {
+                lastSyncTime.textContent = `Última sync: ${new Date(syncConfig.lastSync).toLocaleTimeString('pt-BR')}`;
+            }
+        }
+
+        function addToSyncLog(message) {
+            const syncLog = document.getElementById('syncLog');
+            if (syncLog) {
+                const timestamp = new Date().toLocaleTimeString('pt-BR');
+                syncLog.innerHTML += `\n[${timestamp}] ${message}`;
+                syncLog.scrollTop = syncLog.scrollHeight;
+            }
+            console.log(`[SYNC] ${message}`);
+        }
+
+        function showSyncIndicator(message) {
+            const indicator = document.getElementById('syncIndicator');
+            if (indicator) {
+                indicator.textContent = message;
+                indicator.classList.remove('hidden');
+                indicator.classList.add('syncing');
+                
+                setTimeout(() => {
+                    indicator.classList.add('hidden');
+                    indicator.classList.remove('syncing');
+                }, 3000);
+            }
+        }
+
+        async function configureCsvSync() {
+            const url = document.getElementById('csvFileUrl').value.trim();
+            
+            if (!url) {
+                alert('Por favor, insira a URL do arquivo CSV.');
+                return;
+            }
+
+            try {
+                // Test the URL
+                const response = await fetch(url, { mode: 'cors' });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                syncConfig.csvUrl = url;
+                saveSyncConfig();
+                updateSyncDisplay();
+                addToSyncLog(`CSV configurado: ${url}`);
+                
+                alert('✅ URL do CSV configurada com sucesso! A sincronização automática está disponível.');
+                
+            } catch (error) {
+                addToSyncLog(`Erro ao configurar CSV: ${error.message}`);
+                alert('❌ Erro ao acessar o arquivo CSV. Verifique se a URL está correta e se o arquivo é público.');
+            }
+        }
+
+        async function testCsvConnection() {
+            if (!syncConfig.csvUrl) {
+                alert('Configure primeiro a URL do arquivo CSV.');
+                return;
+            }
+
+            try {
+                addToSyncLog('Testando conexão com CSV...');
+                const response = await fetch(syncConfig.csvUrl, { mode: 'cors' });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const csvContent = await response.text();
+                const lines = csvContent.split('\n').filter(line => line.trim());
+                
+                addToSyncLog(`Conexão OK - ${lines.length} linhas encontradas`);
+                alert(`✅ Conexão bem-sucedida!\n\nArquivo CSV acessível com ${lines.length} linhas.`);
+                
+            } catch (error) {
+                addToSyncLog(`Erro na conexão: ${error.message}`);
+                alert(`❌ Erro ao conectar com o CSV:\n${error.message}`);
+            }
+        }
+
+        async function forceSyncFromCsv() {
+            if (!syncConfig.csvUrl) {
+                alert('Configure primeiro a URL do arquivo CSV.');
+                return;
+            }
+
+            try {
+                showSyncIndicator('🔄 Sincronizando dados...');
+                addToSyncLog('Iniciando sincronização manual...');
+                
+                const response = await fetch(syncConfig.csvUrl, { 
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const csvContent = await response.text();
+                await importFromCSV(csvContent, false);
+                
+                syncConfig.lastSync = Date.now();
+                saveSyncConfig();
+                updateSyncDisplay();
+                
+                addToSyncLog('Sincronização manual concluída');
+                showSyncIndicator('✅ Dados sincronizados!');
+                
+            } catch (error) {
+                addToSyncLog(`Erro na sincronização: ${error.message}`);
+                alert(`❌ Erro ao sincronizar:\n${error.message}`);
+            }
+        }
+
+        function toggleAutoSync() {
+            const enabled = document.getElementById('autoSyncEnabled').checked;
+            
+            if (enabled && !syncConfig.csvUrl) {
+                document.getElementById('autoSyncEnabled').checked = false;
+                alert('Configure primeiro a URL do arquivo CSV.');
+                return;
+            }
+
+            syncConfig.autoSync = enabled;
+            saveSyncConfig();
+            updateSyncDisplay();
+
+            if (enabled) {
+                startAutoSync();
+                addToSyncLog('Sincronização automática ativada');
+            } else {
+                stopAutoSync();
+                addToSyncLog('Sincronização automática desativada');
+            }
+        }
+
+        function startAutoSync() {
+            if (syncConfig.syncInterval) {
+                clearInterval(syncConfig.syncInterval);
+            }
+
+            syncConfig.syncInterval = setInterval(async () => {
+                if (syncConfig.csvUrl && syncConfig.autoSync) {
+                    try {
+                        const response = await fetch(syncConfig.csvUrl, { 
+                            mode: 'cors',
+                            cache: 'no-cache'
+                        });
+                        
+                        if (response.ok) {
+                            const csvContent = await response.text();
+                            await importFromCSV(csvContent, true); // Silent sync
+                            
+                            syncConfig.lastSync = Date.now();
+                            saveSyncConfig();
+                            updateSyncDisplay();
+                        }
+                    } catch (error) {
+                        console.error('Auto-sync error:', error);
+                    }
+                }
+            }, 30000); // 30 seconds
+        }
+
+        function stopAutoSync() {
+            if (syncConfig.syncInterval) {
+                clearInterval(syncConfig.syncInterval);
+                syncConfig.syncInterval = null;
+            }
+        }
+
+        function generateSampleCsv() {
+            let csvContent = "Tipo,ID_Materia,Nome_Materia,Descricao_Materia,Emoji_Materia,Cor_Materia,Nome_Modulo,ID_Professor,Nome_Professor,Senha_Professor,Titulo_Atividade,Descricao_Atividade,Link_Atividade,Codigo_Acesso,Senha_Admin\n";
+            
+            // Add admin password
+            csvContent += `Admin,,,,,,,,,,,,,"admin123"\n`;
+            
+            // Add sample data
+            csvContent += `Materia,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,,,,,,,\n`;
+            csvContent += `Modulo,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,,,,,"MAT01",\n`;
+            csvContent += `Atividade,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,"Exercícios de Equações","Resolva as equações propostas","https://exemplo.com/exercicios","MAT01",\n`;
+            csvContent += `Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"prof1","Prof. João Silva","mat123",,,,\n`;
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'portal_atividades_modelo.csv';
+            link.click();
+            
+            addToSyncLog('CSV modelo gerado');
+            alert('📋 Arquivo CSV modelo gerado! Use este arquivo como base para configurar a sincronização.');
+        }
+
+        // Data Persistence Functions
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(systemData));
+                console.log('✅ Dados salvos com sucesso!');
+            } catch (error) {
+                console.error('❌ Erro ao salvar dados:', error);
+                alert('Erro ao salvar dados. Verifique o espaço de armazenamento do navegador.');
+            }
+        }
+
+        function loadData() {
+            try {
+                const savedData = localStorage.getItem(STORAGE_KEY);
+                if (savedData) {
+                    const parsedData = JSON.parse(savedData);
+                    // Merge with default structure to ensure compatibility
+                    systemData = {
+                        admin: parsedData.admin || { password: 'admin123' },
+                        subjects: parsedData.subjects || {},
+                        moduleAccess: parsedData.moduleAccess || {}
+                    };
+                    console.log('✅ Dados carregados com sucesso!');
+                    return true;
+                }
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados:', error);
+                alert('Erro ao carregar dados salvos. Usando dados padrão.');
+            }
+            return false;
+        }
+
+        function exportToCsvFile() {
+            let csvContent = "Tipo,ID_Materia,Nome_Materia,Descricao_Materia,Emoji_Materia,Cor_Materia,Nome_Modulo,ID_Professor,Nome_Professor,Senha_Professor,Titulo_Atividade,Descricao_Atividade,Link_Atividade,Codigo_Acesso,Senha_Admin\n";
+            
+            // Export admin password first
+            csvContent += `Admin,,,,,,,,,,,,,"${systemData.admin.password}"\n`;
+            
+            // Export subjects and all related data
+            Object.keys(systemData.subjects).forEach(subjectKey => {
+                const subject = systemData.subjects[subjectKey];
+                
+                // Export each module with its data
+                subject.modules.forEach((module, moduleIndex) => {
+                    const moduleKey = `${subjectKey}-${moduleIndex}`;
+                    const accessCode = systemData.moduleAccess[moduleKey] || '';
+                    
+                    if (module.activities.length === 0) {
+                        // Module without activities
+                        csvContent += `Modulo,"${subjectKey}","${subject.name}","${subject.description}","${subject.emoji}","${subject.color}","${module.name}",,,,,,,"${accessCode}",\n`;
+                    } else {
+                        // Module with activities
+                        module.activities.forEach(activity => {
+                            csvContent += `Atividade,"${subjectKey}","${subject.name}","${subject.description}","${subject.emoji}","${subject.color}","${module.name}",,,"${activity.title}","${activity.description}","${activity.link || ''}","${accessCode}",\n`;
+                        });
+                    }
+                });
+                
+                // Export teachers for this subject
+                subject.teachers.forEach(teacher => {
+                    csvContent += `Professor,"${subjectKey}","${subject.name}","${subject.description}","${subject.emoji}","${subject.color}",,"${teacher.id}","${teacher.name}","${teacher.password}",,,,\n`;
+                });
+                
+                // If subject has no modules, export just the subject
+                if (subject.modules.length === 0) {
+                    csvContent += `Materia,"${subjectKey}","${subject.name}","${subject.description}","${subject.emoji}","${subject.color}",,,,,,,,\n`;
+                }
+            });
+            
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `portal_atividades_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            
+            addToSyncLog('Dados exportados para CSV');
+            alert('📊 Dados exportados para CSV! Faça upload deste arquivo para sua pasta compartilhada.');
+        }
+
+        async function importFromCSV(csvContent, silent = false) {
+            try {
+                // Backup current data
+                const backup = JSON.parse(JSON.stringify(systemData));
+                
+                // Reset system data
+                systemData = {
+                    admin: { password: 'admin123' },
+                    subjects: {},
+                    moduleAccess: {}
+                };
+
+                const lines = csvContent.split('\n');
+                const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
+                
+                // Process each line
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    const values = parseCSVLine(line);
+                    if (values.length < headers.length) continue;
+                    
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] || '';
+                    });
+                    
+                    processCSVRow(row);
+                }
+                
+                saveData();
+                
+                // Only reload UI if not silent
+                if (!silent) {
+                    loadSubjects();
+                    if (document.getElementById('subjectsList')) {
+                        loadSubjectsList();
+                    }
+                    updateAllSelects();
+                    
+                    if (!silent) {
+                        alert('✅ Dados CSV importados com sucesso! O sistema foi sincronizado.');
+                    }
+                }
+                
+                return true;
+                
+            } catch (error) {
+                console.error('CSV Import error:', error);
+                if (!silent) {
+                    alert('Erro ao processar arquivo CSV. Verifique o formato do arquivo.');
+                }
+                return false;
+            }
+        }
+
+        function parseCSVLine(line) {
+            const values = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    values.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            values.push(current.trim());
+            return values;
+        }
+
+        function processCSVRow(row) {
+            const tipo = row.Tipo;
+            const subjectKey = row.ID_Materia;
+            
+            // Process admin password
+            if (tipo === 'Admin' && row.Senha_Admin) {
+                systemData.admin.password = row.Senha_Admin;
+                return;
+            }
+            
+            // Ensure subject exists
+            if (subjectKey && !systemData.subjects[subjectKey]) {
+                systemData.subjects[subjectKey] = {
+                    name: row.Nome_Materia || subjectKey,
+                    description: row.Descricao_Materia || '',
+                    emoji: row.Emoji_Materia || '📚',
+                    color: row.Cor_Materia || 'blue-500',
+                    teachers: [],
+                    modules: []
+                };
+            }
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject) return;
+            
+            // Process different types
+            if (tipo === 'Professor' && row.Nome_Professor) {
+                // Add teacher if not exists
+                const existingTeacher = subject.teachers.find(t => t.id === row.ID_Professor);
+                if (!existingTeacher) {
+                    subject.teachers.push({
+                        id: row.ID_Professor || Date.now().toString(),
+                        name: row.Nome_Professor,
+                        password: row.Senha_Professor || 'temp123'
+                    });
+                }
+            } else if ((tipo === 'Modulo' || tipo === 'Atividade') && row.Nome_Modulo) {
+                // Find or create module
+                let module = subject.modules.find(m => m.name === row.Nome_Modulo);
+                if (!module) {
+                    module = {
+                        name: row.Nome_Modulo,
+                        activities: []
+                    };
+                    subject.modules.push(module);
+                    
+                    // Set access code if provided
+                    if (row.Codigo_Acesso) {
+                        const moduleIndex = subject.modules.length - 1;
+                        const moduleKey = `${subjectKey}-${moduleIndex}`;
+                        systemData.moduleAccess[moduleKey] = row.Codigo_Acesso;
+                    }
+                }
+                
+                // Add activity if it's an activity row
+                if (tipo === 'Atividade' && row.Titulo_Atividade) {
+                    const existingActivity = module.activities.find(a => a.title === row.Titulo_Atividade);
+                    if (!existingActivity) {
+                        module.activities.push({
+                            title: row.Titulo_Atividade,
+                            description: row.Descricao_Atividade || '',
+                            link: row.Link_Atividade || null
+                        });
+                    }
+                }
+            }
+        }
+
+        // Initialize system with sample data
+        systemData.subjects = {
+            math: {
+                name: 'Matemática',
+                description: 'Álgebra, Geometria e Cálculo',
+                emoji: '📊',
+                color: 'blue-500',
+                teachers: [], // professores vinculados
+                modules: [
+                    { name: 'Módulo 1: Álgebra Básica', activities: [] },
+                    { name: 'Módulo 2: Geometria Plana', activities: [] },
+                    { name: 'Módulo 3: Funções', activities: [] },
+                    { name: 'Módulo 4: Trigonometria', activities: [] }
+                ]
+            },
+            portuguese: {
+                name: 'Português',
+                description: 'Gramática, Literatura e Redação',
+                emoji: '📚',
+                color: 'green-500',
+                teachers: [],
+                modules: [
+                    { name: 'Módulo 1: Gramática', activities: [] },
+                    { name: 'Módulo 2: Literatura Clássica', activities: [] },
+                    { name: 'Módulo 3: Redação', activities: [] },
+                    { name: 'Módulo 4: Interpretação de Texto', activities: [] }
+                ]
+            },
+            history: {
+                name: 'História',
+                description: 'Brasil, Mundo e Contemporânea',
+                emoji: '🏛️',
+                color: 'purple-500',
+                teachers: [],
+                modules: [
+                    { name: 'Módulo 1: Brasil Colonial', activities: [] },
+                    { name: 'Módulo 2: Independência', activities: [] },
+                    { name: 'Módulo 3: República', activities: [] },
+                    { name: 'Módulo 4: História Contemporânea', activities: [] }
+                ]
+            }
+        };
+
+        // Códigos de acesso para módulos (formato: subjectKey-moduleIndex: código)
+        systemData.moduleAccess = {
+            'math-0': 'MAT01',
+            'portuguese-0': 'PORT01',
+            'history-0': 'HIST01'
+        };
+
+        let currentAdminTab = 'subjects';
+
+        // User type selection
+        function selectUserType(type) {
+            currentUser.type = type;
+            
+            // Reset all buttons
+            const buttons = ['studentBtn', 'teacherBtn', 'adminBtn'];
+            buttons.forEach(btnId => {
+                document.getElementById(btnId).className = 'py-2 px-3 border-2 border-gray-300 text-gray-500 rounded-lg transition duration-200 hover:bg-gray-50 text-sm';
+            });
+            
+            // Reset all hints
+            const hints = ['studentHint', 'teacherHint', 'adminHint'];
+            hints.forEach(hintId => {
+                document.getElementById(hintId).classList.add('hidden');
+            });
+            
+            // Update selected button and show appropriate elements
+            const subjectSelectDiv = document.getElementById('subjectSelectDiv');
+            const passwordLabel = document.getElementById('passwordLabel');
+            
+            if (type === 'student') {
+                document.getElementById('studentBtn').className = 'py-2 px-3 border-2 border-blue-500 bg-blue-500 text-white rounded-lg transition duration-200 text-sm';
+                document.getElementById('studentHint').classList.remove('hidden');
+                subjectSelectDiv.classList.remove('hidden');
+                passwordLabel.textContent = 'Código de Acesso do Módulo';
+                updateLoginSubjectSelect();
+            } else if (type === 'teacher') {
+                document.getElementById('teacherBtn').className = 'py-2 px-3 border-2 border-purple-500 bg-purple-500 text-white rounded-lg transition duration-200 text-sm';
+                document.getElementById('teacherHint').classList.remove('hidden');
+                subjectSelectDiv.classList.add('hidden');
+                passwordLabel.textContent = 'Senha do Professor';
+            } else if (type === 'admin') {
+                document.getElementById('adminBtn').className = 'py-2 px-3 border-2 border-red-500 bg-red-500 text-white rounded-lg transition duration-200 text-sm';
+                document.getElementById('adminHint').classList.remove('hidden');
+                subjectSelectDiv.classList.add('hidden');
+                passwordLabel.textContent = 'Senha do Administrador';
+            }
+        }
+
+        function updateLoginSubjectSelect() {
+            const select = document.getElementById('loginSubjectSelect');
+            select.innerHTML = '';
+            
+            Object.keys(systemData.subjects).forEach(key => {
+                const subject = systemData.subjects[key];
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = `${subject.emoji} ${subject.name}`;
+                select.appendChild(option);
+            });
+        }
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('passwordInput').value;
+            let loginSuccess = false;
+            
+            if (currentUser.type === 'admin') {
+                // Admin login
+                if (password === systemData.admin.password) {
+                    currentUser.name = 'Administrador';
+                    loginSuccess = true;
+                }
+            } else if (currentUser.type === 'teacher') {
+                // Teacher login - check all subjects for matching teacher
+                Object.keys(systemData.subjects).forEach(subjectKey => {
+                    const subject = systemData.subjects[subjectKey];
+                    const teacher = subject.teachers.find(t => t.password === password);
+                    if (teacher) {
+                        currentUser.name = teacher.name;
+                        currentUser.subjectKey = subjectKey;
+                        loginSuccess = true;
+                    }
+                });
+            } else if (currentUser.type === 'student') {
+                // Student login - check module access codes
+                const selectedSubject = document.getElementById('loginSubjectSelect').value;
+                Object.keys(systemData.moduleAccess).forEach(key => {
+                    if (systemData.moduleAccess[key] === password && key.startsWith(selectedSubject + '-')) {
+                        currentUser.name = 'Aluno';
+                        currentUser.subjectKey = selectedSubject;
+                        loginSuccess = true;
+                    }
+                });
+            }
+            
+            if (loginSuccess) {
+                document.getElementById('loginOverlay').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                
+                // Show admin panel for admin and teachers
+                if (currentUser.type === 'admin') {
+                    document.getElementById('adminPanel').classList.remove('hidden');
+                    showAdminTab('subjects');
+                } else if (currentUser.type === 'teacher') {
+                    document.getElementById('adminPanel').classList.remove('hidden');
+                    showAdminTab('activities'); // Teachers start on activities tab
+                } else {
+                    document.getElementById('adminPanel').classList.add('hidden');
+                }
+                
+                loadSubjects();
+                
+                // Start auto-sync if configured
+                if (syncConfig.csvUrl && syncConfig.autoSync) {
+                    startAutoSync();
+                }
+            } else {
+                document.getElementById('errorMessage').classList.remove('hidden');
+                document.getElementById('passwordInput').value = '';
+            }
+        });
+
+        function logout() {
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMessage').classList.add('hidden');
+            
+            // Stop auto-sync
+            stopAutoSync();
+            
+            // Reset current user
+            currentUser = {
+                type: null,
+                subjectKey: null,
+                name: null
+            };
+            
+            // Reset to student selection
+            selectUserType('student');
+        }
+
+        // Admin Tab Management
+        function showAdminTab(tabName) {
+            // Check if teacher is trying to access admin-only tabs
+            if (currentUser.type === 'teacher' && ['subjects', 'modules', 'users', 'access', 'sync'].includes(tabName)) {
+                alert('Você não tem permissão para acessar esta seção.');
+                return;
+            }
+            
+            currentAdminTab = tabName;
+            
+            // Hide all panels
+            const panels = ['subjectsPanel', 'modulesPanel', 'activitiesPanel', 'usersPanel', 'accessPanel', 'syncPanel'];
+            panels.forEach(panelId => {
+                document.getElementById(panelId).classList.add('hidden');
+            });
+            
+            // Reset all tab styles
+            document.querySelectorAll('[id$="Tab"]').forEach(tab => {
+                tab.className = 'flex-1 py-4 px-4 text-center font-semibold text-gray-500 hover:text-gray-700 text-sm';
+            });
+            
+            // Show selected panel and update tab style
+            document.getElementById(tabName + 'Panel').classList.remove('hidden');
+            document.getElementById(tabName + 'Tab').className = 'flex-1 py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm';
+            
+            // Hide admin-only tabs for teachers
+            if (currentUser.type === 'teacher') {
+                document.querySelectorAll('.admin-only').forEach(tab => {
+                    tab.style.display = 'none';
+                });
+                // Make activities tab full width for teachers
+                document.getElementById('activitiesTab').className = 'w-full py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm';
+            } else {
+                document.querySelectorAll('.admin-only').forEach(tab => {
+                    tab.style.display = 'block';
+                });
+            }
+            
+            // Load data for the selected tab
+            if (tabName === 'subjects') {
+                loadSubjectsList();
+            } else if (tabName === 'modules') {
+                updateModuleSelects();
+            } else if (tabName === 'activities') {
+                updateActivitySelects();
+            } else if (tabName === 'users') {
+                updateTeacherSelects();
+                loadTeachersList();
+            } else if (tabName === 'access') {
+                updateAccessSelects();
+                loadAccessCodesList();
+            } else if (tabName === 'sync') {
+                updateSyncDisplay();
+            }
+        }
+
+        // Carousel functionality
+        function buildCarousel() {
+            const container = document.getElementById('carouselContainer');
+            const dotsContainer = document.getElementById('carouselDots');
+            
+            // Filter subjects based on user permissions
+            let availableSubjects = {};
+            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
+                // Students and teachers see only their assigned subject
+                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
+                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                }
+            } else if (currentUser.type === 'admin') {
+                // Admin sees all subjects
+                availableSubjects = systemData.subjects;
+            }
+            
+            const subjectKeys = Object.keys(availableSubjects);
+            container.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            
+            subjectKeys.forEach((key, index) => {
+                const subject = availableSubjects[key];
+                
+                // Create carousel slide
+                const slide = document.createElement('div');
+                slide.className = 'w-full flex-shrink-0';
+                slide.innerHTML = `
+                    <div class="bg-white rounded-2xl shadow-xl p-6 mx-2">
+                        <div class="text-center mb-6">
+                            <div class="w-20 h-20 bg-${subject.color} rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-3xl">${subject.emoji}</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">${subject.name}</h3>
+                            <p class="text-gray-600">${subject.description}</p>
+                        </div>
+                        <div id="${key}-modules" class="space-y-4"></div>
+                    </div>
+                `;
+                container.appendChild(slide);
+                
+                // Create dot
+                const dot = document.createElement('button');
+                dot.className = `carousel-dot w-3 h-3 rounded-full bg-gray-300 ${index === 0 ? 'active' : ''}`;
+                dot.onclick = () => showSubject(index);
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function showSubject(index) {
+            // Get available subjects based on user permissions
+            let availableSubjects = {};
+            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
+                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
+                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                }
+            } else if (currentUser.type === 'admin') {
+                availableSubjects = systemData.subjects;
+            }
+            
+            const subjectKeys = Object.keys(availableSubjects);
+            if (index >= subjectKeys.length) index = 0;
+            if (index < 0) index = subjectKeys.length - 1;
+            
+            currentSubject = index;
+            const container = document.getElementById('carouselContainer');
+            container.style.transform = `translateX(-${index * 100}%)`;
+            
+            // Update dots
+            document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextSubject() {
+            let availableSubjects = {};
+            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
+                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
+                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                }
+            } else if (currentUser.type === 'admin') {
+                availableSubjects = systemData.subjects;
+            }
+            
+            const subjectKeys = Object.keys(availableSubjects);
+            currentSubject = (currentSubject + 1) % subjectKeys.length;
+            showSubject(currentSubject);
+        }
+
+        function previousSubject() {
+            let availableSubjects = {};
+            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
+                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
+                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                }
+            } else if (currentUser.type === 'admin') {
+                availableSubjects = systemData.subjects;
+            }
+            
+            const subjectKeys = Object.keys(availableSubjects);
+            currentSubject = (currentSubject - 1 + subjectKeys.length) % subjectKeys.length;
+            showSubject(currentSubject);
+        }
+
+        // Module toggle functionality
+        function toggleModule(subjectKey, moduleIndex) {
+            const content = document.getElementById(`${subjectKey}-module-${moduleIndex}`);
+            const icon = document.getElementById(`${subjectKey}-icon-${moduleIndex}`);
+            
+            content.classList.toggle('expanded');
+            icon.style.transform = content.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // Load subjects and modules
+        function loadSubjects() {
+            buildCarousel();
+            
+            // Get available subjects based on user permissions
+            let availableSubjects = {};
+            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
+                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
+                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                }
+            } else if (currentUser.type === 'admin') {
+                availableSubjects = systemData.subjects;
+            }
+            
+            Object.keys(availableSubjects).forEach(subjectKey => {
+                const container = document.getElementById(`${subjectKey}-modules`);
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                availableSubjects[subjectKey].modules.forEach((module, index) => {
+                    const moduleDiv = document.createElement('div');
+                    moduleDiv.className = 'border border-gray-200 rounded-lg overflow-hidden';
+                    moduleDiv.innerHTML = `
+                        <button onclick="toggleModule('${subjectKey}', ${index})" class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 flex justify-between items-center transition duration-200">
+                            <span class="font-semibold text-gray-800">${module.name}</span>
+                            <svg id="${subjectKey}-icon-${index}" class="w-5 h-5 text-gray-600 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="${subjectKey}-module-${index}" class="module-content bg-white">
+                            <div class="p-4">
+                                <div id="${subjectKey}-activities-${index}" class="space-y-3">
+                                    ${module.activities.length === 0 ? 
+                                        '<p class="text-gray-500 italic">Nenhuma atividade adicionada ainda.</p>' : 
+                                        module.activities.map((activity, actIndex) => `
+                                            <div class="bg-blue-50 p-3 rounded-lg relative activity-item ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'cursor-move' : ''}" 
+                                                 draggable="${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'true' : 'false'}"
+                                                 data-subject="${subjectKey}" 
+                                                 data-module="${index}" 
+                                                 data-activity="${actIndex}"
+                                                 ondragstart="handleDragStart(event)"
+                                                 ondragover="handleDragOver(event)"
+                                                 ondrop="handleDrop(event)"
+                                                 ondragend="handleDragEnd(event)">
+                                                ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? `
+                                                    <div class="drag-handle absolute top-2 left-2 text-gray-400 cursor-move">
+                                                        ⋮⋮
+                                                    </div>
+                                                ` : ''}
+                                                <div class="${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'ml-6' : ''}">
+                                                    <h4 class="font-semibold text-blue-800">${activity.title}</h4>
+                                                    <p class="text-gray-700 text-sm mt-1">${activity.description}</p>
+                                                    ${activity.link ? `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block">🔗 Acessar atividade</a>` : ''}
+                                                </div>
+                                                ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? `
+                                                    <button onclick="deleteActivity('${subjectKey}', ${index}, ${actIndex})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs">
+                                                        ✕
+                                                    </button>
+                                                ` : ''}
+                                            </div>
+                                        `).join('')
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(moduleDiv);
+                });
+            });
+        }
+
+        // CRUD Functions for Subjects
+        function loadSubjectsList() {
+            const container = document.getElementById('subjectsList');
+            container.innerHTML = '';
+            
+            // Filter subjects based on user permissions
+            let availableSubjects = {};
+            if (currentUser.type === 'teacher') {
+                // Teachers see only their subject
+                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
+                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                }
+            } else if (currentUser.type === 'admin') {
+                // Admin sees all subjects
+                availableSubjects = systemData.subjects;
+            }
+            
+            Object.keys(availableSubjects).forEach(key => {
+                const subject = availableSubjects[key];
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">${subject.emoji}</span>
+                        <div>
+                            <h5 class="font-semibold">${subject.name}</h5>
+                            <p class="text-sm text-gray-600">${subject.description}</p>
+                            <p class="text-xs text-blue-600">${subject.teachers.length} professor(es)</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        ${currentUser.type === 'admin' ? `
+                            <button onclick="editSubject('${key}')" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
+                            <button onclick="deleteSubject('${key}')" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
+                        ` : `
+                            <span class="text-green-600 text-sm">✓ Sua matéria</span>
+                        `}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function addSubject() {
+            if (currentUser.type !== 'admin') {
+                alert('Apenas administradores podem adicionar matérias.');
+                return;
+            }
+
+            const key = document.getElementById('newSubjectKey').value.trim();
+            const name = document.getElementById('newSubjectName').value.trim();
+            const description = document.getElementById('newSubjectDescription').value.trim();
+            const emoji = document.getElementById('newSubjectEmoji').value.trim();
+            const color = document.getElementById('newSubjectColor').value.trim();
+
+            if (!key || !name || !description || !emoji || !color) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            if (systemData.subjects[key]) {
+                alert('Já existe uma matéria com este ID.');
+                return;
+            }
+
+            systemData.subjects[key] = {
+                name: name,
+                description: description,
+                emoji: emoji,
+                color: color,
+                teachers: [],
+                modules: []
+            };
+
+            // Clear form
+            document.getElementById('newSubjectKey').value = '';
+            document.getElementById('newSubjectName').value = '';
+            document.getElementById('newSubjectDescription').value = '';
+            document.getElementById('newSubjectEmoji').value = '';
+            document.getElementById('newSubjectColor').value = '';
+
+            // Save data
+            saveData();
+            addToSyncLog('Matéria adicionada: ' + name);
+            
+            loadSubjectsList();
+            loadSubjects();
+            updateAllSelects();
+            alert('✅ Matéria adicionada com sucesso!');
+        }
+
+        // Teacher Management Functions
+        function addTeacher() {
+            if (currentUser.type !== 'admin') {
+                alert('Apenas administradores podem adicionar professores.');
+                return;
+            }
+
+            const name = document.getElementById('newTeacherName').value.trim();
+            const password = document.getElementById('newTeacherPassword').value.trim();
+            const subjectKey = document.getElementById('teacherSubjectSelect').value;
+
+            if (!name || !password || !subjectKey) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            if (password.length < 4) {
+                alert('A senha deve ter pelo menos 4 caracteres.');
+                return;
+            }
+
+            // Check if password already exists
+            let passwordExists = false;
+            Object.keys(systemData.subjects).forEach(key => {
+                systemData.subjects[key].teachers.forEach(teacher => {
+                    if (teacher.password === password) {
+                        passwordExists = true;
+                    }
+                });
+            });
+
+            if (passwordExists) {
+                alert('Esta senha já está sendo usada por outro professor.');
+                return;
+            }
+
+            const teacher = {
+                name: name,
+                password: password,
+                id: Date.now().toString()
+            };
+
+            systemData.subjects[subjectKey].teachers.push(teacher);
+
+            // Clear form
+            document.getElementById('newTeacherName').value = '';
+            document.getElementById('newTeacherPassword').value = '';
+
+            // Save data
+            saveData();
+            addToSyncLog('Professor adicionado: ' + name);
+
+            loadTeachersList();
+            loadSubjectsList();
+            alert('✅ Professor adicionado com sucesso!');
+        }
+
+        function loadTeachersList() {
+            const container = document.getElementById('teachersList');
+            container.innerHTML = '';
+
+            Object.keys(systemData.subjects).forEach(subjectKey => {
+                const subject = systemData.subjects[subjectKey];
+                subject.teachers.forEach((teacher, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-2';
+                    div.innerHTML = `
+                        <div>
+                            <h5 class="font-semibold">${teacher.name}</h5>
+                            <p class="text-sm text-gray-600">${subject.name}</p>
+                            <p class="text-xs text-gray-500">Senha: ${teacher.password}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="editTeacher('${subjectKey}', ${index})" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
+                            <button onclick="deleteTeacher('${subjectKey}', ${index})" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        function editTeacher(subjectKey, teacherIndex) {
+            if (currentUser.type !== 'admin') {
+                alert('Apenas administradores podem editar professores.');
+                return;
+            }
+
+            const teacher = systemData.subjects[subjectKey].teachers[teacherIndex];
+            const newName = prompt('Nome do professor:', teacher.name);
+            if (newName === null) return;
+
+            const newPassword = prompt('Nova senha:', teacher.password);
+            if (newPassword === null) return;
+
+            if (newPassword.length < 4) {
+                alert('A senha deve ter pelo menos 4 caracteres.');
+                return;
+            }
+
+            systemData.subjects[subjectKey].teachers[teacherIndex].name = newName.trim();
+            systemData.subjects[subjectKey].teachers[teacherIndex].password = newPassword.trim();
+
+            saveData();
+            loadTeachersList();
+            alert('Professor atualizado com sucesso!');
+        }
+
+        function deleteTeacher(subjectKey, teacherIndex) {
+            if (currentUser.type !== 'admin') {
+                alert('Apenas administradores podem excluir professores.');
+                return;
+            }
+
+            const teacher = systemData.subjects[subjectKey].teachers[teacherIndex];
+            if (!confirm(`Tem certeza que deseja excluir o professor "${teacher.name}"?`)) {
+                return;
+            }
+
+            systemData.subjects[subjectKey].teachers.splice(teacherIndex, 1);
+            saveData();
+            loadTeachersList();
+            loadSubjectsList();
+            alert('Professor excluído com sucesso!');
+        }
+
+        function editSubject(key) {
+            if (currentUser.type !== 'admin') {
+                alert('Apenas administradores podem editar matérias.');
+                return;
+            }
+
+            const subject = systemData.subjects[key];
+            const newName = prompt('Nome da matéria:', subject.name);
+            if (newName === null) return;
+            
+            const newDescription = prompt('Descrição:', subject.description);
+            if (newDescription === null) return;
+            
+            const newEmoji = prompt('Emoji:', subject.emoji);
+            if (newEmoji === null) return;
+            
+            const newColor = prompt('Cor (ex: blue-500):', subject.color);
+            if (newColor === null) return;
+
+            systemData.subjects[key].name = newName;
+            systemData.subjects[key].description = newDescription;
+            systemData.subjects[key].emoji = newEmoji;
+            systemData.subjects[key].color = newColor;
+
+            saveData();
+            loadSubjectsList();
+            loadSubjects();
+            alert('Matéria atualizada com sucesso!');
+        }
+
+        // Access Code Management Functions
+        function setModuleAccess() {
+            if (currentUser.type !== 'admin') {
+                alert('Apenas administradores podem definir códigos de acesso.');
+                return;
+            }
+
+            const subjectKey = document.getElementById('accessSubjectSelect').value;
+            const moduleIndex = document.getElementById('accessModuleSelect').value;
+            const accessCode = document.getElementById('moduleAccessCode').value.trim();
+
+            if (!subjectKey || moduleIndex === '' || !accessCode) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            if (accessCode.length < 3) {
+                alert('O código deve ter pelo menos 3 caracteres.');
+                return;
+            }
+
+            // Check if code already exists
+            const existingKey = Object.keys(systemData.moduleAccess).find(key => 
+                systemData.moduleAccess[key] === accessCode
+            );
+
+            if (existingKey) {
+                alert('Este código já está sendo usado em outro módulo.');
+                return;
+            }
+
+            const moduleKey = `${subjectKey}-${moduleIndex}`;
+            systemData.moduleAccess[moduleKey] = accessCode;
+
+            document.getElementById('moduleAccessCode').value = '';
+            saveData();
+            addToSyncLog('Código de acesso definido: ' + accessCode);
+            loadAccessCodesList();
+            alert('✅ Código de acesso definido com sucesso!');
+        }
+
+        function loadAccessCodesList() {
+            const container = document.getElementById('accessCodesList');
+            container.innerHTML = '';
+
+            Object.keys(systemData.moduleAccess).forEach(moduleKey => {
+                const [subjectKey, moduleIndex] = moduleKey.split('-');
+                const subject = systemData.subjects[subjectKey];
+                const module = subject?.modules[parseInt(moduleIndex)];
+                const accessCode = systemData.moduleAccess[moduleKey];
+
+                if (subject && module) {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-2';
+                    div.innerHTML = `
+                        <div>
+                            <h5 class="font-semibold">${subject.name}</h5>
+                            <p class="text-sm text-gray-600">${module.name}</p>
+                            <p class="text-xs text-blue-600 font-mono">Código: ${accessCode}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="editModuleAccess('${moduleKey}')" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
+                            <button onclick="deleteModuleAccess('${moduleKey}')" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                }
+            });
+        }
+
+        function editModuleAccess(moduleKey) {
+            if (currentUser.type !== 'admin') {
+                alert('Apenas administradores podem editar códigos de acesso.');
+                return;
+            }
+
+            const currentCode = systemData.moduleAccess[moduleKey];
+            const newCode = prompt('Novo código de acesso:', currentCode);
+            
+            if (newCode === null || newCode.trim().length < 3) {
+                if (newCode !== null) alert('O código deve ter pelo menos 3 caracteres.');
+                return;
+            }
+
+            // Check if new code already exists
+            const existingKey = Object.keys(systemData.moduleAccess).find(key => 
+                key !== moduleKey && systemData.moduleAccess[key] === newCode.trim()
+            );
+
+            if (existingKey) {
+                alert('Este código já está sendo usado em outro módulo.');
+                return;
+            }
+
+            systemData.moduleAccess[moduleKey] = newCode.trim();
+            saveData();
+            loadAccessCodesList();
+            alert('Código atualizado com sucesso!');
+        }
+
+        function deleteModuleAccess(moduleKey) {
+            if (currentUser.type !== 'admin') {
+                alert('Apenas administradores podem excluir códigos de acesso.');
+                return;
+            }
+
+            if (!confirm('Tem certeza que deseja excluir este código de acesso?')) {
+                return;
+            }
+
+            delete systemData.moduleAccess[moduleKey];
+            saveData();
+            loadAccessCodesList();
+            alert('Código de acesso excluído com sucesso!');
+        }
+
+        function deleteSubject(key) {
+            if (currentUser.type !== 'admin') {
+                alert('Apenas administradores podem excluir matérias.');
+                return;
+            }
+
+            if (!confirm(`Tem certeza que deseja excluir a matéria "${systemData.subjects[key].name}"? Todos os módulos e atividades serão perdidos.`)) {
+                return;
+            }
+
+            delete systemData.subjects[key];
+            
+            // Remove related access codes
+            Object.keys(systemData.moduleAccess).forEach(moduleKey => {
+                if (moduleKey.startsWith(key + '-')) {
+                    delete systemData.moduleAccess[moduleKey];
+                }
+            });
+
+            saveData();
+            loadSubjectsList();
+            loadSubjects();
+            updateAllSelects();
+            alert('Matéria excluída com sucesso!');
+        }
+
+        // Update all select elements
+        function updateAllSelects() {
+            updateModuleSelects();
+            updateActivitySelects();
+            updateTeacherSelects();
+            updateAccessSelects();
+        }
+
+        function updateTeacherSelects() {
+            const select = document.getElementById('teacherSubjectSelect');
+            if (!select) return;
+            
+            select.innerHTML = '';
+            Object.keys(systemData.subjects).forEach(key => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = systemData.subjects[key].name;
+                select.appendChild(option);
+            });
+        }
+
+        function updateAccessSelects() {
+            const select = document.getElementById('accessSubjectSelect');
+            if (!select) return;
+            
+            select.innerHTML = '';
+            Object.keys(systemData.subjects).forEach(key => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = systemData.subjects[key].name;
+                select.appendChild(option);
+            });
+            updateAccessModuleSelect();
+        }
+
+        function updateAccessModuleSelect() {
+            const subjectKey = document.getElementById('accessSubjectSelect').value;
+            const select = document.getElementById('accessModuleSelect');
+            select.innerHTML = '';
+
+            if (systemData.subjects[subjectKey]) {
+                systemData.subjects[subjectKey].modules.forEach((module, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = module.name;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        // CRUD Functions for Modules
+        function updateModuleSelects() {
+            const selects = ['moduleSubjectSelect', 'viewModulesSelect'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (!select) return;
+                
+                select.innerHTML = '';
+                
+                // Filter subjects based on user permissions
+                let availableSubjects = {};
+                if (currentUser.type === 'teacher') {
+                    if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
+                        availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                    }
+                } else if (currentUser.type === 'admin') {
+                    availableSubjects = systemData.subjects;
+                }
+                
+                Object.keys(availableSubjects).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = availableSubjects[key].name;
+                    select.appendChild(option);
+                });
+            });
+            loadModulesList();
+        }
+
+        function loadModulesList() {
+            const subjectKey = document.getElementById('viewModulesSelect').value;
+            const container = document.getElementById('modulesList');
+            container.innerHTML = '';
+
+            if (!subjectKey || !systemData.subjects[subjectKey]) return;
+
+            systemData.subjects[subjectKey].modules.forEach((module, index) => {
+                const moduleKey = `${subjectKey}-${index}`;
+                const accessCode = systemData.moduleAccess[moduleKey] || 'Sem código';
+                
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <h5 class="font-semibold">${module.name}</h5>
+                        <p class="text-sm text-gray-600">${module.activities.length} atividades</p>
+                        <p class="text-xs text-blue-600 font-mono">Código: ${accessCode}</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="editModule('${subjectKey}', ${index})" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
+                        ${(currentUser.type === 'admin' || (currentUser.type === 'teacher' && currentUser.subjectKey === subjectKey)) ? `
+                            <button onclick="deleteModule('${subjectKey}', ${index})" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function addModule() {
+            const subjectKey = document.getElementById('moduleSubjectSelect').value;
+            const name = document.getElementById('newModuleName').value.trim();
+
+            if (!name) {
+                alert('Por favor, digite o nome do módulo.');
+                return;
+            }
+
+            // Check permissions
+            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
+                alert('Você só pode adicionar módulos à sua matéria.');
+                return;
+            }
+
+            systemData.subjects[subjectKey].modules.push({
+                name: name,
+                activities: []
+            });
+
+            document.getElementById('newModuleName').value = '';
+            saveData();
+            addToSyncLog('Módulo adicionado: ' + name);
+            loadModulesList();
+            loadSubjects();
+            updateAllSelects();
+            alert('✅ Módulo adicionado com sucesso!');
+        }
+
+        function editModule(subjectKey, moduleIndex) {
+            // Check permissions
+            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
+                alert('Você só pode editar módulos da sua matéria.');
+                return;
+            }
+
+            const module = systemData.subjects[subjectKey].modules[moduleIndex];
+            const newName = prompt('Nome do módulo:', module.name);
+            if (newName === null || !newName.trim()) return;
+
+            systemData.subjects[subjectKey].modules[moduleIndex].name = newName.trim();
+            saveData();
+            loadModulesList();
+            loadSubjects();
+            alert('Módulo atualizado com sucesso!');
+        }
+
+        function deleteModule(subjectKey, moduleIndex) {
+            // Check permissions
+            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
+                alert('Você só pode excluir módulos da sua matéria.');
+                return;
+            }
+
+            const module = systemData.subjects[subjectKey].modules[moduleIndex];
+            if (!confirm(`Tem certeza que deseja excluir o módulo "${module.name}"? Todas as atividades serão perdidas.`)) {
+                return;
+            }
+
+            // Remove module access code
+            const moduleKey = `${subjectKey}-${moduleIndex}`;
+            delete systemData.moduleAccess[moduleKey];
+
+            systemData.subjects[subjectKey].modules.splice(moduleIndex, 1);
+            saveData();
+            loadModulesList();
+            loadSubjects();
+            loadAccessCodesList();
+            alert('Módulo excluído com sucesso!');
+        }
+
+        // CRUD Functions for Activities
+        function updateActivitySelects() {
+            const selects = ['activitySubjectSelect', 'viewActivitiesSubjectSelect'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (!select) return;
+                
+                select.innerHTML = '';
+                
+                // Filter subjects based on user permissions
+                let availableSubjects = {};
+                if (currentUser.type === 'teacher') {
+                    // Teachers can only see their own subject
+                    if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
+                        availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                    }
+                } else if (currentUser.type === 'admin') {
+                    // Admins can see all subjects
+                    availableSubjects = systemData.subjects;
+                }
+                
+                Object.keys(availableSubjects).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = availableSubjects[key].name;
+                    select.appendChild(option);
+                });
+            });
+            updateActivityModuleSelect();
+            updateViewActivitiesModuleSelect();
+        }
+
+        function updateActivityModuleSelect() {
+            const subjectKey = document.getElementById('activitySubjectSelect').value;
+            const select = document.getElementById('activityModuleSelect');
+            select.innerHTML = '';
+
+            if (systemData.subjects[subjectKey]) {
+                systemData.subjects[subjectKey].modules.forEach((module, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = module.name;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        function updateViewActivitiesModuleSelect() {
+            const subjectKey = document.getElementById('viewActivitiesSubjectSelect').value;
+            const select = document.getElementById('viewActivitiesModuleSelect');
+            select.innerHTML = '';
+
+            if (systemData.subjects[subjectKey]) {
+                systemData.subjects[subjectKey].modules.forEach((module, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = module.name;
+                    select.appendChild(option);
+                });
+            }
+            loadActivitiesList();
+        }
+
+        function loadActivitiesList() {
+            const subjectKey = document.getElementById('viewActivitiesSubjectSelect').value;
+            const moduleIndex = document.getElementById('viewActivitiesModuleSelect').value;
+            const container = document.getElementById('activitiesList');
+            container.innerHTML = '';
+
+            if (!subjectKey || moduleIndex === '' || !systemData.subjects[subjectKey]) return;
+
+            const activities = systemData.subjects[subjectKey].modules[moduleIndex].activities;
+            activities.forEach((activity, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <h5 class="font-semibold">${activity.title}</h5>
+                        <p class="text-sm text-gray-600">${activity.description}</p>
+                        ${activity.link ? `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 text-xs">🔗 Link</a>` : ''}
+                    </div>
+                    <div class="flex space-x-2">
+                        ${(currentUser.type === 'admin' || (currentUser.type === 'teacher' && currentUser.subjectKey === subjectKey)) ? `
+                            <button onclick="editActivity('${subjectKey}', ${moduleIndex}, ${index})" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
+                            <button onclick="deleteActivity('${subjectKey}', ${moduleIndex}, ${index})" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function editActivity(subjectKey, moduleIndex, activityIndex) {
+            // Check permissions - teachers can edit activities in their subject
+            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
+                alert('Você só pode editar atividades da sua matéria.');
+                return;
+            }
+
+            const activity = systemData.subjects[subjectKey].modules[moduleIndex].activities[activityIndex];
+            
+            const newTitle = prompt('Título da atividade:', activity.title);
+            if (newTitle === null) return;
+            
+            const newDescription = prompt('Descrição:', activity.description);
+            if (newDescription === null) return;
+            
+            const newLink = prompt('Link (opcional):', activity.link || '');
+            if (newLink === null) return;
+
+            systemData.subjects[subjectKey].modules[moduleIndex].activities[activityIndex] = {
+                title: newTitle.trim(),
+                description: newDescription.trim(),
+                link: newLink.trim() || null
+            };
+
+            saveData();
+            loadActivitiesList();
+            loadSubjects();
+            alert('Atividade atualizada com sucesso!');
+        }
+
+        function deleteActivity(subjectKey, moduleIndex, activityIndex) {
+            // Check permissions - teachers can delete activities in their subject
+            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
+                alert('Você só pode excluir atividades da sua matéria.');
+                return;
+            }
+
+            const activity = systemData.subjects[subjectKey].modules[moduleIndex].activities[activityIndex];
+            if (!confirm(`Tem certeza que deseja excluir a atividade "${activity.title}"?`)) {
+                return;
+            }
+
+            systemData.subjects[subjectKey].modules[moduleIndex].activities.splice(activityIndex, 1);
+            saveData();
+            loadActivitiesList();
+            loadSubjects();
+            alert('Atividade excluída com sucesso!');
+        }
+
+        // Add activity functionality
+        function addActivity() {
+            const subject = document.getElementById('activitySubjectSelect').value;
+            const moduleIndex = parseInt(document.getElementById('activityModuleSelect').value);
+            const title = document.getElementById('activityTitle').value;
+            const description = document.getElementById('activityDescription').value;
+            const link = document.getElementById('activityLink').value;
+
+            if (!title || !description) {
+                alert('Por favor, preencha o título e a descrição da atividade.');
+                return;
+            }
+
+            // Check permissions - teachers can add activities to their subject
+            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subject) {
+                alert('Você só pode adicionar atividades à sua matéria.');
+                return;
+            }
+
+            const activity = {
+                title: title,
+                description: description,
+                link: link || null
+            };
+
+            systemData.subjects[subject].modules[moduleIndex].activities.push(activity);
+            
+            // Clear form
+            document.getElementById('activityTitle').value = '';
+            document.getElementById('activityDescription').value = '';
+            document.getElementById('activityLink').value = '';
+            
+            // Save data
+            saveData();
+            addToSyncLog('Atividade adicionada: ' + title);
+            
+            // Reload subjects and activities list
+            loadSubjects();
+            loadActivitiesList();
+            
+            alert('✅ Atividade adicionada com sucesso!');
+        }
+
+        // Initialize with sample data and teachers
+        function initializeSampleData() {
+            // Add sample teachers
+            systemData.subjects.math.teachers.push({
+                name: 'Prof. Maria Silva',
+                password: 'mat123',
+                id: '1'
+            });
+
+            systemData.subjects.portuguese.teachers.push({
+                name: 'Prof. João Santos',
+                password: 'port123',
+                id: '2'
+            });
+
+            systemData.subjects.history.teachers.push({
+                name: 'Prof. Ana Costa',
+                password: 'hist123',
+                id: '3'
+            });
+
+            // Add sample activities
+            systemData.subjects.math.modules[0].activities.push({
+                title: 'Exercícios de Equações',
+                description: 'Resolva as equações do primeiro grau propostas.',
+                link: 'https://example.com/exercicios-equacoes'
+            });
+
+            systemData.subjects.portuguese.modules[0].activities.push({
+                title: 'Análise Sintática',
+                description: 'Identifique os termos das orações nos textos fornecidos.',
+                link: null
+            });
+
+            systemData.subjects.history.modules[0].activities.push({
+                title: 'Período Colonial',
+                description: 'Estude sobre a colonização do Brasil.',
+                link: null
+            });
+
+            // Add more access codes
+            systemData.moduleAccess['math-1'] = 'MAT02';
+            systemData.moduleAccess['portuguese-1'] = 'PORT02';
+            systemData.moduleAccess['history-1'] = 'HIST02';
+        }
+
+        // Drag and Drop Functions
+        let draggedElement = null;
+        let draggedData = null;
+
+        function handleDragStart(event) {
+            draggedElement = event.target;
+            draggedData = {
+                subject: event.target.dataset.subject,
+                module: parseInt(event.target.dataset.module),
+                activity: parseInt(event.target.dataset.activity)
+            };
+            
+            event.target.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            
+            const target = event.target.closest('.activity-item');
+            if (target && target !== draggedElement) {
+                target.classList.add('drag-over');
+            }
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            
+            const target = event.target.closest('.activity-item');
+            if (!target || target === draggedElement) return;
+            
+            const targetData = {
+                subject: target.dataset.subject,
+                module: parseInt(target.dataset.module),
+                activity: parseInt(target.dataset.activity)
+            };
+            
+            // Only allow reordering within the same module
+            if (draggedData.subject === targetData.subject && draggedData.module === targetData.module) {
+                reorderActivities(draggedData, targetData);
+            }
+            
+            target.classList.remove('drag-over');
+        }
+
+        function handleDragEnd(event) {
+            event.target.classList.remove('dragging');
+            
+            // Remove drag-over class from all elements
+            document.querySelectorAll('.activity-item').forEach(item => {
+                item.classList.remove('drag-over');
+            });
+            
+            draggedElement = null;
+            draggedData = null;
+        }
+
+        function reorderActivities(fromData, toData) {
+            const activities = systemData.subjects[fromData.subject].modules[fromData.module].activities;
+            
+            // Remove the dragged activity
+            const draggedActivity = activities.splice(fromData.activity, 1)[0];
+            
+            // Insert at new position
+            let newIndex = toData.activity;
+            if (fromData.activity < toData.activity) {
+                newIndex = toData.activity;
+            }
+            
+            activities.splice(newIndex, 0, draggedActivity);
+            
+            // Save data and reload
+            saveData();
+            loadSubjects();
+            loadActivitiesList();
+            
+            // Show success message
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+            notification.textContent = '✅ Ordem das atividades atualizada!';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize system
+        function initializeSystem() {
+            // Try to load saved data first
+            const dataLoaded = loadData();
+            
+            // If no saved data, initialize with sample data
+            if (!dataLoaded) {
+                initializeSampleData();
+                saveData(); // Save the initial sample data
+            }
+            
+            // Load sync configuration
+            loadSyncConfig();
+            
+            // Try to sync from CSV if configured
+            if (syncConfig.csvUrl && syncConfig.autoSync) {
+                setTimeout(() => {
+                    forceSyncFromCsv();
+                }, 2000);
+            }
+        }
+
+        // Initialize sample data on load
+        initializeSampleData();
+        
+        // Initialize the system when page loads
+        window.addEventListener('load', initializeSystem);
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            stopAutoSync();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a13540e78ccaee',t:'MTc1OTcxMjI4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
