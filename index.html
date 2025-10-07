@@ -361,7 +361,7 @@
                             <p class="text-sm text-blue-800">
                                 <strong>🎯 CONFIGURAÇÃO PERMANENTE:</strong><br>
                                 Para que todos os navegadores se conectem automaticamente, cole a URL do CSV diretamente no código na linha 426:<br>
-                                <code class="bg-blue-100 px-2 py-1 rounded text-xs">const GLOBAL_CSV_URL = 'https://drive.google.com/file/d/1lG0B8qCi-tVUpsabcGG4JMMWOUy4UnVR/view?usp=drive_link';</code>
+                                <code class="bg-blue-100 px-2 py-1 rounded text-xs">const GLOBAL_CSV_URL = 'SUA_URL_AQUI';</code>
                             </p>
                         </div>
                         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
@@ -393,6 +393,9 @@
                             </button>
                             <button onclick="generateSampleCsv()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📋 Gerar CSV Modelo
+                            </button>
+                            <button onclick="testWithSampleData()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                                🧪 Testar com Dados Exemplo
                             </button>
                             <button onclick="debugCsvContent()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 🔍 Debug CSV
@@ -725,6 +728,26 @@
             alert('📋 Arquivo CSV modelo gerado! Use este arquivo como base para configurar a sincronização.');
         }
 
+        function testWithSampleData() {
+            const sampleCsv = `Tipo,ID_Materia,Nome_Materia,Descricao_Materia,Emoji_Materia,Cor_Materia,Nome_Modulo,ID_Professor,Nome_Professor,Senha_Professor,Titulo_Atividade,Descricao_Atividade,Link_Atividade,Codigo_Acesso,Senha_Admin
+Admin,,,,,,,,,,,,,"admin123"
+Materia,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,,,,,,,
+Modulo,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,,,,,"MAT01",
+Atividade,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,"Exercícios de Equações","Resolva as equações propostas","https://exemplo.com/exercicios","MAT01",
+Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"prof1","Prof. João Silva","mat123",,,,`;
+
+            console.log('=== TESTANDO COM DADOS EXEMPLO ===');
+            addToSyncLog('Testando importação com dados exemplo...');
+            
+            importFromCSV(sampleCsv, false).then(success => {
+                if (success) {
+                    alert('✅ Teste concluído com sucesso!\n\nVerifique o console (F12) para detalhes completos.');
+                } else {
+                    alert('❌ Teste falhou. Verifique o console (F12) para detalhes.');
+                }
+            });
+        }
+
         async function debugCsvContent() {
             if (!syncConfig.csvUrl) {
                 alert('Configure primeiro a URL do arquivo CSV.');
@@ -886,6 +909,10 @@
                     addToSyncLog('Iniciando importação do CSV...');
                 }
                 
+                console.log('=== INÍCIO DA IMPORTAÇÃO CSV ===');
+                console.log('Conteúdo CSV (primeiros 500 chars):', csvContent.substring(0, 500));
+                console.log('Tamanho total do CSV:', csvContent.length);
+                
                 // Backup current data
                 const backup = JSON.parse(JSON.stringify(systemData));
                 
@@ -897,32 +924,57 @@
                 };
 
                 const lines = csvContent.split('\n').filter(line => line.trim());
+                console.log('Linhas encontradas:', lines.length);
+                
                 if (lines.length === 0) {
                     throw new Error('Arquivo CSV vazio');
                 }
                 
+                console.log('Linha 0 (headers):', lines[0]);
                 const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
+                console.log('Headers parseados:', headers);
                 addToSyncLog(`Headers encontrados: ${headers.join(', ')}`);
                 
                 let processedRows = 0;
+                let skippedRows = 0;
                 
                 // Process each line
                 for (let i = 1; i < lines.length; i++) {
                     const line = lines[i].trim();
-                    if (!line) continue;
+                    console.log(`\n--- PROCESSANDO LINHA ${i} ---`);
+                    console.log('Linha bruta:', `"${line}"`);
+                    
+                    if (!line) {
+                        console.log('Linha vazia, pulando...');
+                        continue;
+                    }
                     
                     const values = parseCSVLine(line);
-                    if (values.length === 0) continue;
+                    if (values.length === 0) {
+                        console.log('Nenhum valor encontrado, pulando...');
+                        continue;
+                    }
                     
                     const row = {};
                     headers.forEach((header, index) => {
                         row[header] = (values[index] || '').replace(/"/g, '').trim();
                     });
                     
+                    console.log('Row construída:', row);
+                    
                     if (processCSVRow(row, newData)) {
                         processedRows++;
+                        console.log(`✅ Linha ${i} processada com sucesso`);
+                    } else {
+                        skippedRows++;
+                        console.log(`❌ Linha ${i} foi pulada`);
                     }
                 }
+                
+                console.log(`\n=== RESULTADO DA IMPORTAÇÃO ===`);
+                console.log(`Linhas processadas: ${processedRows}`);
+                console.log(`Linhas puladas: ${skippedRows}`);
+                console.log('Dados finais:', newData);
                 
                 // Only update if we processed some data
                 if (processedRows > 0) {
@@ -963,6 +1015,7 @@
         }
 
         function parseCSVLine(line) {
+            console.log('Parsing line:', `"${line}"`);
             const values = [];
             let current = '';
             let inQuotes = false;
@@ -987,33 +1040,38 @@
             }
             
             values.push(current.trim());
-            return values.map(v => v.replace(/^"|"$/g, '')); // Remove surrounding quotes
+            const cleanValues = values.map(v => v.replace(/^"|"$/g, '')); // Remove surrounding quotes
+            console.log('Parsed values:', cleanValues);
+            return cleanValues;
         }
 
         function processCSVRow(row, targetData) {
             const tipo = (row.Tipo || '').trim();
             const subjectKey = (row.ID_Materia || '').trim();
             
-            console.log('Processando linha:', row);
+            console.log('=== PROCESSANDO LINHA ===');
+            console.log('Row completa:', row);
             console.log('Tipo detectado:', `"${tipo}"`);
             console.log('Subject Key:', `"${subjectKey}"`);
+            console.log('Todas as chaves da row:', Object.keys(row));
             
             // Process admin password
             if (tipo === 'Admin' && row.Senha_Admin) {
                 targetData.admin.password = row.Senha_Admin.trim();
-                console.log('Admin password updated:', row.Senha_Admin);
+                console.log('✅ Admin password updated:', row.Senha_Admin);
                 return true;
             }
             
-            // Skip empty rows
-            if (!tipo) {
-                console.log('Skipping empty row');
+            // Skip empty rows but be more flexible
+            if (!tipo || tipo === '') {
+                console.log('❌ Skipping empty row - no tipo');
                 return false;
             }
             
-            // Skip if no subject key for non-admin rows
+            // For non-admin rows, we need subject key
             if (!subjectKey && tipo !== 'Admin') {
-                console.log('Skipping row - no subject key for type:', tipo);
+                console.log('❌ Skipping row - no subject key for type:', tipo);
+                console.log('Available keys in row:', Object.keys(row));
                 return false;
             }
             
@@ -2462,5 +2520,5 @@
             stopAutoSync();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98aea07554e7f1ff',t:'MTc1OTg1Mjk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98aeaabda51cf1ff',t:'MTc1OTg1MzQwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
