@@ -79,7 +79,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+<body class="bg-gradient-to-br from-orange-50 to-amber-100 min-h-screen">
     <!-- Sync Indicator -->
     <div id="syncIndicator" class="sync-indicator bg-green-500 text-white px-3 py-1 rounded-full text-sm hidden">
         🔄 Sincronizando...
@@ -89,7 +89,7 @@
     <div id="loginOverlay" class="fixed inset-0 bg-black bg-opacity-50 login-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                     </svg>
@@ -100,7 +100,7 @@
             
             <div class="space-y-4 mb-6">
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="selectUserType('student')" id="studentBtn" class="py-2 px-3 border-2 border-blue-500 text-blue-500 rounded-lg transition duration-200 hover:bg-blue-50 text-sm">
+                    <button onclick="selectUserType('student')" id="studentBtn" class="py-2 px-3 border-2 border-orange-500 text-orange-500 rounded-lg transition duration-200 hover:bg-orange-50 text-sm">
                         👨‍🎓 Aluno
                     </button>
                     <button onclick="selectUserType('teacher')" id="teacherBtn" class="py-2 px-3 border-2 border-gray-300 text-gray-500 rounded-lg transition duration-200 hover:bg-gray-50 text-sm">
@@ -122,14 +122,14 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         <span id="passwordLabel">Senha de Acesso</span>
                     </label>
-                    <input type="password" id="passwordInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Digite sua senha">
+                    <input type="password" id="passwordInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Digite sua senha">
                     <div class="mt-2 text-xs text-gray-500">
                         <div id="studentHint" class="block">💡 Digite o código de acesso do módulo</div>
                         <div id="teacherHint" class="hidden">💡 Digite sua senha de professor</div>
                         <div id="adminHint" class="hidden">💡 Senha do administrador: <span class="font-mono">admin123</span></div>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
                     Entrar
                 </button>
                 <div id="errorMessage" class="text-red-500 text-sm text-center hidden">Senha incorreta. Tente novamente.</div>
@@ -179,12 +179,12 @@
 
                 <!-- Navigation Arrows -->
                 <div class="flex justify-between items-center mt-6">
-                    <button onclick="previousSubject()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-3 rounded-full transition duration-200">
+                    <button onclick="previousSubject()" class="bg-orange-200 hover:bg-orange-300 text-orange-700 p-3 rounded-full transition duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
                     </button>
-                    <button onclick="nextSubject()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-3 rounded-full transition duration-200">
+                    <button onclick="nextSubject()" class="bg-orange-200 hover:bg-orange-300 text-orange-700 p-3 rounded-full transition duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -198,7 +198,7 @@
             <!-- Admin Navigation Tabs -->
             <div class="bg-white rounded-2xl shadow-xl mb-6">
                 <div class="flex border-b border-gray-200 flex-wrap" id="adminTabs">
-                    <button onclick="showAdminTab('subjects')" id="subjectsTab" class="flex-1 py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm admin-only">
+                    <button onclick="showAdminTab('subjects')" id="subjectsTab" class="flex-1 py-4 px-4 text-center font-semibold text-orange-600 border-b-2 border-orange-600 bg-orange-50 text-sm admin-only">
                         📚 Matérias
                     </button>
                     <button onclick="showAdminTab('modules')" id="modulesTab" class="flex-1 py-4 px-4 text-center font-semibold text-gray-500 hover:text-gray-700 text-sm admin-only">
@@ -230,7 +230,7 @@
                         <input type="text" id="newSubjectDescription" placeholder="Descrição (ex: Mecânica e Eletricidade)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <input type="text" id="newSubjectEmoji" placeholder="Emoji (ex: ⚡)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <input type="text" id="newSubjectColor" placeholder="Cor (ex: red-500)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="addSubject()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addSubject()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Matéria
                         </button>
                     </div>
@@ -250,7 +250,7 @@
                         <select id="moduleSubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         </select>
                         <input type="text" id="newModuleName" placeholder="Nome do módulo" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="addModule()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addModule()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Módulo
                         </button>
                     </div>
@@ -276,7 +276,7 @@
                         <input type="text" id="activityTitle" placeholder="Título da atividade" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <textarea id="activityDescription" placeholder="Descrição da atividade" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 h-20"></textarea>
                         <input type="url" id="activityLink" placeholder="Link da atividade (opcional)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="addActivity()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addActivity()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Atividade
                         </button>
                     </div>
@@ -301,7 +301,7 @@
                         <input type="password" id="newTeacherPassword" placeholder="Senha do professor" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <select id="teacherSubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         </select>
-                        <button onclick="addTeacher()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addTeacher()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Professor
                         </button>
                     </div>
@@ -323,7 +323,7 @@
                         <select id="accessModuleSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         </select>
                         <input type="text" id="moduleAccessCode" placeholder="Código de acesso (ex: MAT01)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="setModuleAccess()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="setModuleAccess()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Definir Código
                         </button>
                     </div>
@@ -357,6 +357,13 @@
                     <!-- CSV Configuration -->
                     <div>
                         <h4 class="font-semibold text-gray-700 mb-3">📁 Configurar Arquivo CSV Compartilhado</h4>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                            <p class="text-sm text-blue-800">
+                                <strong>🎯 CONFIGURAÇÃO PERMANENTE:</strong><br>
+                                Para que todos os navegadores se conectem automaticamente, cole a URL do CSV diretamente no código na linha 426:<br>
+                                <code class="bg-blue-100 px-2 py-1 rounded text-xs">const GLOBAL_CSV_URL = 'https://drive.google.com/file/d/1lG0B8qCi-tVUpsabcGG4JMMWOUy4UnVR/view?usp=drive_link';</code>
+                            </p>
+                        </div>
                         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
                             <p class="text-sm text-yellow-800">
                                 <strong>💡 Como funciona:</strong><br>
@@ -366,10 +373,10 @@
                             </p>
                         </div>
                         <input type="url" id="csvFileUrl" placeholder="URL do arquivo CSV compartilhado" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="configureCsvSync()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200 mb-2">
+                        <button onclick="configureCsvSync()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200 mb-2">
                             Configurar Sincronização
                         </button>
-                        <button onclick="testCsvConnection()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="testCsvConnection()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Testar Conexão
                         </button>
                     </div>
@@ -378,13 +385,13 @@
                     <div>
                         <h4 class="font-semibold text-gray-700 mb-3">🔄 Sincronização Manual</h4>
                         <div class="space-y-2">
-                            <button onclick="forceSyncFromCsv()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            <button onclick="forceSyncFromCsv()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📥 Sincronizar do CSV
                             </button>
-                            <button onclick="exportToCsvFile()" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            <button onclick="exportToCsvFile()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📤 Exportar para CSV
                             </button>
-                            <button onclick="generateSampleCsv()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            <button onclick="generateSampleCsv()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📋 Gerar CSV Modelo
                             </button>
                             <button onclick="debugCsvContent()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
@@ -420,6 +427,10 @@
         const SYNC_CONFIG_KEY = 'portal_sync_config';
         
         // Sync Configuration
+        // 🔧 CONFIGURAÇÃO GLOBAL DO CSV
+        // Cole aqui a URL do seu arquivo CSV do Google Drive para configuração automática
+        const GLOBAL_CSV_URL = ''; // Exemplo: 'https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv'
+        
         let syncConfig = {
             csvUrl: null,
             autoSync: false,
@@ -449,10 +460,17 @@
                 const saved = localStorage.getItem(SYNC_CONFIG_KEY);
                 if (saved) {
                     syncConfig = { ...syncConfig, ...JSON.parse(saved) };
-                    updateSyncDisplay();
-                    if (syncConfig.autoSync && syncConfig.csvUrl) {
-                        startAutoSync();
-                    }
+                } else if (GLOBAL_CSV_URL) {
+                    // Se não há configuração salva mas há URL global, use ela
+                    syncConfig.csvUrl = GLOBAL_CSV_URL;
+                    syncConfig.autoSync = true; // Ativa automaticamente
+                    saveSyncConfig();
+                    addToSyncLog('URL global configurada automaticamente');
+                }
+                
+                updateSyncDisplay();
+                if (syncConfig.autoSync && syncConfig.csvUrl) {
+                    startAutoSync();
                 }
             } catch (error) {
                 console.error('Erro ao carregar configuração de sincronização:', error);
@@ -729,6 +747,7 @@
                 // Show raw content
                 console.log('=== CONTEÚDO BRUTO DO CSV ===');
                 console.log(csvContent);
+                console.log('Tamanho do conteúdo:', csvContent.length, 'caracteres');
                 
                 // Parse and show structure
                 const lines = csvContent.split('\n').filter(line => line.trim());
@@ -736,16 +755,33 @@
                 console.log(`Total de linhas: ${lines.length}`);
                 
                 if (lines.length > 0) {
+                    console.log('Linha 0 (headers) bruta:', `"${lines[0]}"`);
                     const headers = parseCSVLine(lines[0]);
-                    console.log('Headers:', headers);
+                    console.log('Headers parseados:', headers);
+                    console.log('Número de headers:', headers.length);
                     
                     for (let i = 1; i < Math.min(lines.length, 6); i++) {
+                        console.log(`\nLinha ${i} bruta:`, `"${lines[i]}"`);
                         const values = parseCSVLine(lines[i]);
+                        console.log(`Valores parseados:`, values);
+                        console.log(`Número de valores:`, values.length);
+                        
                         const row = {};
                         headers.forEach((header, index) => {
-                            row[header.replace(/"/g, '').trim()] = (values[index] || '').replace(/"/g, '').trim();
+                            const cleanHeader = header.replace(/"/g, '').trim();
+                            const cleanValue = (values[index] || '').replace(/"/g, '').trim();
+                            row[cleanHeader] = cleanValue;
                         });
-                        console.log(`Linha ${i}:`, row);
+                        console.log(`Linha ${i} como objeto:`, row);
+                        
+                        // Test processing
+                        const testData = {
+                            admin: { password: 'admin123' },
+                            subjects: {},
+                            moduleAccess: {}
+                        };
+                        const processed = processCSVRow(row, testData);
+                        console.log(`Linha ${i} processada:`, processed);
                     }
                 }
                 
@@ -756,7 +792,7 @@
                 console.log('Admin Password:', systemData.admin.password);
                 
                 addToSyncLog('Debug concluído - verifique o console do navegador');
-                alert('🔍 Debug concluído!\n\nAbra o console do navegador (F12) para ver os detalhes do CSV e dados do sistema.');
+                alert('🔍 Debug concluído!\n\nAbra o console do navegador (F12) para ver os detalhes completos do CSV e processamento.');
                 
             } catch (error) {
                 addToSyncLog(`Erro no debug: ${error.message}`);
@@ -935,7 +971,13 @@
                 const char = line[i];
                 
                 if (char === '"') {
-                    inQuotes = !inQuotes;
+                    if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
+                        // Handle escaped quotes
+                        current += '"';
+                        i++; // Skip next quote
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
                 } else if (char === ',' && !inQuotes) {
                     values.push(current.trim());
                     current = '';
@@ -945,35 +987,43 @@
             }
             
             values.push(current.trim());
-            return values;
+            return values.map(v => v.replace(/^"|"$/g, '')); // Remove surrounding quotes
         }
 
         function processCSVRow(row, targetData) {
-            const tipo = row.Tipo;
-            const subjectKey = row.ID_Materia;
+            const tipo = (row.Tipo || '').trim();
+            const subjectKey = (row.ID_Materia || '').trim();
             
             console.log('Processando linha:', row);
+            console.log('Tipo detectado:', `"${tipo}"`);
+            console.log('Subject Key:', `"${subjectKey}"`);
             
             // Process admin password
             if (tipo === 'Admin' && row.Senha_Admin) {
-                targetData.admin.password = row.Senha_Admin;
+                targetData.admin.password = row.Senha_Admin.trim();
                 console.log('Admin password updated:', row.Senha_Admin);
                 return true;
             }
             
+            // Skip empty rows
+            if (!tipo) {
+                console.log('Skipping empty row');
+                return false;
+            }
+            
             // Skip if no subject key for non-admin rows
             if (!subjectKey && tipo !== 'Admin') {
-                console.log('Skipping row - no subject key');
+                console.log('Skipping row - no subject key for type:', tipo);
                 return false;
             }
             
             // Ensure subject exists
             if (subjectKey && !targetData.subjects[subjectKey]) {
                 targetData.subjects[subjectKey] = {
-                    name: row.Nome_Materia || subjectKey,
-                    description: row.Descricao_Materia || '',
-                    emoji: row.Emoji_Materia || '📚',
-                    color: row.Cor_Materia || 'blue-500',
+                    name: (row.Nome_Materia || subjectKey).trim(),
+                    description: (row.Descricao_Materia || '').trim(),
+                    emoji: (row.Emoji_Materia || '📚').trim(),
+                    color: (row.Cor_Materia || 'blue-500').trim(),
                     teachers: [],
                     modules: []
                 };
@@ -987,48 +1037,52 @@
             }
             
             // Process different types
-            if (tipo === 'Professor' && row.Nome_Professor) {
+            if (tipo === 'Professor' && row.Nome_Professor && row.Nome_Professor.trim()) {
                 // Add teacher if not exists
-                const existingTeacher = subject.teachers.find(t => t.name === row.Nome_Professor);
+                const teacherName = row.Nome_Professor.trim();
+                const existingTeacher = subject.teachers.find(t => t.name === teacherName);
                 if (!existingTeacher) {
                     subject.teachers.push({
-                        id: row.ID_Professor || Date.now().toString(),
-                        name: row.Nome_Professor,
-                        password: row.Senha_Professor || 'temp123'
+                        id: (row.ID_Professor || Date.now().toString()).trim(),
+                        name: teacherName,
+                        password: (row.Senha_Professor || 'temp123').trim()
                     });
-                    console.log('Added teacher:', row.Nome_Professor);
+                    console.log('Added teacher:', teacherName);
                 }
                 return true;
-            } else if ((tipo === 'Modulo' || tipo === 'Atividade') && row.Nome_Modulo) {
+            } else if ((tipo === 'Modulo' || tipo === 'Atividade') && row.Nome_Modulo && row.Nome_Modulo.trim()) {
+                const moduleName = row.Nome_Modulo.trim();
+                
                 // Find or create module
-                let module = subject.modules.find(m => m.name === row.Nome_Modulo);
+                let module = subject.modules.find(m => m.name === moduleName);
                 if (!module) {
                     module = {
-                        name: row.Nome_Modulo,
+                        name: moduleName,
                         activities: []
                     };
                     subject.modules.push(module);
-                    console.log('Created module:', row.Nome_Modulo);
+                    console.log('Created module:', moduleName);
                     
                     // Set access code if provided
-                    if (row.Codigo_Acesso) {
+                    if (row.Codigo_Acesso && row.Codigo_Acesso.trim()) {
                         const moduleIndex = subject.modules.length - 1;
                         const moduleKey = `${subjectKey}-${moduleIndex}`;
-                        targetData.moduleAccess[moduleKey] = row.Codigo_Acesso;
-                        console.log('Set access code:', row.Codigo_Acesso, 'for', moduleKey);
+                        targetData.moduleAccess[moduleKey] = row.Codigo_Acesso.trim();
+                        console.log('Set access code:', row.Codigo_Acesso.trim(), 'for', moduleKey);
                     }
                 }
                 
                 // Add activity if it's an activity row
-                if (tipo === 'Atividade' && row.Titulo_Atividade) {
-                    const existingActivity = module.activities.find(a => a.title === row.Titulo_Atividade);
+                if (tipo === 'Atividade' && row.Titulo_Atividade && row.Titulo_Atividade.trim()) {
+                    const activityTitle = row.Titulo_Atividade.trim();
+                    const existingActivity = module.activities.find(a => a.title === activityTitle);
                     if (!existingActivity) {
                         module.activities.push({
-                            title: row.Titulo_Atividade,
-                            description: row.Descricao_Atividade || '',
-                            link: row.Link_Atividade || null
+                            title: activityTitle,
+                            description: (row.Descricao_Atividade || '').trim(),
+                            link: (row.Link_Atividade && row.Link_Atividade.trim()) ? row.Link_Atividade.trim() : null
                         });
-                        console.log('Added activity:', row.Titulo_Atividade);
+                        console.log('Added activity:', activityTitle);
                     }
                 }
                 return true;
@@ -1038,7 +1092,7 @@
                 return true;
             }
             
-            console.log('Row not processed:', tipo);
+            console.log('Row not processed - tipo:', `"${tipo}"`, 'keys:', Object.keys(row));
             return false;
         }
 
@@ -1115,13 +1169,13 @@
             const passwordLabel = document.getElementById('passwordLabel');
             
             if (type === 'student') {
-                document.getElementById('studentBtn').className = 'py-2 px-3 border-2 border-blue-500 bg-blue-500 text-white rounded-lg transition duration-200 text-sm';
+                document.getElementById('studentBtn').className = 'py-2 px-3 border-2 border-orange-500 bg-orange-500 text-white rounded-lg transition duration-200 text-sm';
                 document.getElementById('studentHint').classList.remove('hidden');
                 subjectSelectDiv.classList.remove('hidden');
                 passwordLabel.textContent = 'Código de Acesso do Módulo';
                 updateLoginSubjectSelect();
             } else if (type === 'teacher') {
-                document.getElementById('teacherBtn').className = 'py-2 px-3 border-2 border-purple-500 bg-purple-500 text-white rounded-lg transition duration-200 text-sm';
+                document.getElementById('teacherBtn').className = 'py-2 px-3 border-2 border-amber-500 bg-amber-500 text-white rounded-lg transition duration-200 text-sm';
                 document.getElementById('teacherHint').classList.remove('hidden');
                 subjectSelectDiv.classList.add('hidden');
                 passwordLabel.textContent = 'Senha do Professor';
@@ -1176,6 +1230,7 @@
                     if (systemData.moduleAccess[key] === password && key.startsWith(selectedSubject + '-')) {
                         currentUser.name = 'Aluno';
                         currentUser.subjectKey = selectedSubject;
+                        currentUser.moduleIndex = parseInt(key.split('-')[1]); // Store allowed module index
                         loginSuccess = true;
                     }
                 });
@@ -1196,11 +1251,20 @@
                     document.getElementById('adminPanel').classList.add('hidden');
                 }
                 
-                loadSubjects();
-                
-                // Start auto-sync if configured
-                if (syncConfig.csvUrl && syncConfig.autoSync) {
-                    startAutoSync();
+                // Sync data first if CSV is configured
+                if (syncConfig.csvUrl) {
+                    forceSyncFromCsv().then(() => {
+                        loadSubjects();
+                    }).catch(() => {
+                        loadSubjects(); // Load anyway if sync fails
+                    });
+                    
+                    // Start auto-sync
+                    if (syncConfig.autoSync) {
+                        startAutoSync();
+                    }
+                } else {
+                    loadSubjects();
                 }
             } else {
                 document.getElementById('errorMessage').classList.remove('hidden');
@@ -1221,7 +1285,8 @@
             currentUser = {
                 type: null,
                 subjectKey: null,
-                name: null
+                name: null,
+                moduleIndex: null
             };
             
             // Reset to student selection
@@ -1251,7 +1316,7 @@
             
             // Show selected panel and update tab style
             document.getElementById(tabName + 'Panel').classList.remove('hidden');
-            document.getElementById(tabName + 'Tab').className = 'flex-1 py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm';
+            document.getElementById(tabName + 'Tab').className = 'flex-1 py-4 px-4 text-center font-semibold text-orange-600 border-b-2 border-orange-600 bg-orange-50 text-sm';
             
             // Hide admin-only tabs for teachers
             if (currentUser.type === 'teacher') {
@@ -1259,7 +1324,7 @@
                     tab.style.display = 'none';
                 });
                 // Make activities tab full width for teachers
-                document.getElementById('activitiesTab').className = 'w-full py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm';
+                document.getElementById('activitiesTab').className = 'w-full py-4 px-4 text-center font-semibold text-orange-600 border-b-2 border-orange-600 bg-orange-50 text-sm';
             } else {
                 document.querySelectorAll('.admin-only').forEach(tab => {
                     tab.style.display = 'block';
@@ -1418,6 +1483,11 @@
                 container.innerHTML = '';
                 
                 availableSubjects[subjectKey].modules.forEach((module, index) => {
+                    // For students, only show the specific module they have access to
+                    if (currentUser.type === 'student' && currentUser.moduleIndex !== undefined && currentUser.moduleIndex !== index) {
+                        return; // Skip this module
+                    }
+                    
                     const moduleDiv = document.createElement('div');
                     moduleDiv.className = 'border border-gray-200 rounded-lg overflow-hidden';
                     moduleDiv.innerHTML = `
@@ -1433,7 +1503,7 @@
                                     ${module.activities.length === 0 ? 
                                         '<p class="text-gray-500 italic">Nenhuma atividade adicionada ainda.</p>' : 
                                         module.activities.map((activity, actIndex) => `
-                                            <div class="bg-blue-50 p-3 rounded-lg relative activity-item ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'cursor-move' : ''}" 
+                                            <div class="bg-orange-50 p-3 rounded-lg relative activity-item ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'cursor-move' : ''}" 
                                                  draggable="${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'true' : 'false'}"
                                                  data-subject="${subjectKey}" 
                                                  data-module="${index}" 
@@ -1448,9 +1518,9 @@
                                                     </div>
                                                 ` : ''}
                                                 <div class="${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'ml-6' : ''}">
-                                                    <h4 class="font-semibold text-blue-800">${activity.title}</h4>
+                                                    <h4 class="font-semibold text-orange-800">${activity.title}</h4>
                                                     <p class="text-gray-700 text-sm mt-1">${activity.description}</p>
-                                                    ${activity.link ? `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block">🔗 Acessar atividade</a>` : ''}
+                                                    ${activity.link ? `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:text-orange-800 text-sm mt-2 inline-block">🔗 Acessar atividade</a>` : ''}
                                                 </div>
                                                 ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? `
                                                     <button onclick="deleteActivity('${subjectKey}', ${index}, ${actIndex})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs">
@@ -2392,5 +2462,5 @@
             stopAutoSync();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a6ff6445e04ae8',t:'MTc1OTc3Mjk5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98aea07554e7f1ff',t:'MTc1OTg1Mjk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
