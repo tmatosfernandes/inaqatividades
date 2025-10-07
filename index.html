@@ -361,7 +361,7 @@
                             <p class="text-sm text-blue-800">
                                 <strong>🎯 CONFIGURAÇÃO PERMANENTE:</strong><br>
                                 Para que todos os navegadores se conectem automaticamente, cole a URL do CSV diretamente no código na linha 426:<br>
-                                <code class="bg-blue-100 px-2 py-1 rounded text-xs">const GLOBAL_CSV_URL = 'SUA_URL_AQUI';</code>
+                                <code class="bg-blue-100 px-2 py-1 rounded text-xs">const GLOBAL_CSV_URL = 'https://drive.google.com/file/d/1Dedvy2zci1qOPSO-4NA_T260yWgG7O9r/view?usp=sharing';</code>
                             </p>
                         </div>
                         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
@@ -777,48 +777,92 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
                 console.log('=== ANÁLISE DO CSV ===');
                 console.log(`Total de linhas: ${lines.length}`);
                 
-                if (lines.length > 0) {
-                    console.log('Linha 0 (headers) bruta:', `"${lines[0]}"`);
-                    const headers = parseCSVLine(lines[0]);
-                    console.log('Headers parseados:', headers);
-                    console.log('Número de headers:', headers.length);
+                if (lines.length === 0) {
+                    console.log('❌ ARQUIVO VAZIO!');
+                    alert('❌ O arquivo CSV está vazio!');
+                    return;
+                }
+                
+                console.log('Linha 0 (headers) bruta:', `"${lines[0]}"`);
+                const headers = parseCSVLine(lines[0]);
+                console.log('Headers parseados:', headers);
+                console.log('Número de headers:', headers.length);
+                
+                // Check for common header patterns
+                const headerCheck = {
+                    tipo: headers.some(h => ['Tipo', 'tipo', 'Type', 'type'].includes(h.replace(/"/g, '').trim())),
+                    materia: headers.some(h => ['ID_Materia', 'id_materia', 'SubjectID', 'subject_id'].includes(h.replace(/"/g, '').trim())),
+                    admin: headers.some(h => ['Senha_Admin', 'senha_admin', 'AdminPassword', 'admin_password'].includes(h.replace(/"/g, '').trim()))
+                };
+                
+                console.log('=== VERIFICAÇÃO DE HEADERS ===');
+                console.log('Tem coluna de Tipo?', headerCheck.tipo);
+                console.log('Tem coluna de Matéria?', headerCheck.materia);
+                console.log('Tem coluna de Admin?', headerCheck.admin);
+                
+                if (!headerCheck.tipo) {
+                    console.log('⚠️ AVISO: Não foi encontrada coluna de Tipo. Procurou por:', ['Tipo', 'tipo', 'Type', 'type']);
+                }
+                
+                // Process all lines for detailed analysis
+                for (let i = 1; i < lines.length; i++) {
+                    console.log(`\n=== LINHA ${i} ===`);
+                    console.log('Linha bruta:', `"${lines[i]}"`);
                     
-                    for (let i = 1; i < Math.min(lines.length, 6); i++) {
-                        console.log(`\nLinha ${i} bruta:`, `"${lines[i]}"`);
-                        const values = parseCSVLine(lines[i]);
-                        console.log(`Valores parseados:`, values);
-                        console.log(`Número de valores:`, values.length);
-                        
-                        const row = {};
-                        headers.forEach((header, index) => {
-                            const cleanHeader = header.replace(/"/g, '').trim();
-                            const cleanValue = (values[index] || '').replace(/"/g, '').trim();
-                            row[cleanHeader] = cleanValue;
-                        });
-                        console.log(`Linha ${i} como objeto:`, row);
-                        
-                        // Test processing
-                        const testData = {
-                            admin: { password: 'admin123' },
-                            subjects: {},
-                            moduleAccess: {}
-                        };
-                        const processed = processCSVRow(row, testData);
-                        console.log(`Linha ${i} processada:`, processed);
+                    if (!lines[i].trim()) {
+                        console.log('❌ Linha vazia');
+                        continue;
+                    }
+                    
+                    const values = parseCSVLine(lines[i]);
+                    console.log(`Valores parseados (${values.length}):`, values);
+                    
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        const cleanHeader = header.replace(/"/g, '').trim();
+                        const cleanValue = (values[index] || '').replace(/"/g, '').trim();
+                        row[cleanHeader] = cleanValue;
+                    });
+                    console.log(`Linha ${i} como objeto:`, row);
+                    
+                    // Check what data is available
+                    const dataCheck = {
+                        hasAnyData: Object.values(row).some(v => v && v.trim() !== ''),
+                        tipo: row.Tipo || row.tipo || row.Type || row.type,
+                        materia: row.ID_Materia || row.id_materia || row.SubjectID || row.subject_id,
+                        admin: row.Senha_Admin || row.senha_admin || row.AdminPassword || row.admin_password
+                    };
+                    
+                    console.log(`Dados detectados:`, dataCheck);
+                    
+                    // Test processing
+                    const testData = {
+                        admin: { password: 'admin123' },
+                        subjects: {},
+                        moduleAccess: {}
+                    };
+                    
+                    console.log('Tentando processar linha...');
+                    const processed = processCSVRow(row, testData);
+                    console.log(`Resultado do processamento:`, processed ? '✅ SUCESSO' : '❌ FALHOU');
+                    
+                    if (processed) {
+                        console.log('Estado após processamento:', testData);
                     }
                 }
                 
                 // Show current system data
-                console.log('=== DADOS ATUAIS DO SISTEMA ===');
+                console.log('\n=== DADOS ATUAIS DO SISTEMA ===');
                 console.log('Subjects:', Object.keys(systemData.subjects));
                 console.log('Module Access:', systemData.moduleAccess);
                 console.log('Admin Password:', systemData.admin.password);
                 
                 addToSyncLog('Debug concluído - verifique o console do navegador');
-                alert('🔍 Debug concluído!\n\nAbra o console do navegador (F12) para ver os detalhes completos do CSV e processamento.');
+                alert('🔍 Debug concluído!\n\nAbra o console do navegador (F12) para ver a análise completa.\n\nProcure por "VERIFICAÇÃO DE HEADERS" para ver se as colunas estão corretas.');
                 
             } catch (error) {
                 addToSyncLog(`Erro no debug: ${error.message}`);
+                console.error('Erro completo:', error);
                 alert(`❌ Erro ao fazer debug do CSV:\n${error.message}`);
             }
         }
@@ -935,6 +979,16 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
                 console.log('Headers parseados:', headers);
                 addToSyncLog(`Headers encontrados: ${headers.join(', ')}`);
                 
+                // Auto-detect CSV structure
+                console.log('\n=== AUTO-DETECÇÃO DE ESTRUTURA ===');
+                const structure = detectCSVStructure(headers);
+                console.log('Estrutura detectada:', structure);
+                
+                if (!structure.isValid) {
+                    console.log('⚠️ ESTRUTURA NÃO RECONHECIDA - tentando processar mesmo assim...');
+                    addToSyncLog('Estrutura CSV não reconhecida - tentando processar...');
+                }
+                
                 let processedRows = 0;
                 let skippedRows = 0;
                 
@@ -961,8 +1015,15 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
                     });
                     
                     console.log('Row construída:', row);
+                    console.log('Valores por posição:', values.map((v, idx) => `${idx}: "${v}"`));
                     
-                    if (processCSVRow(row, newData)) {
+                    // Use detected structure to help processing
+                    if (structure.tipoColumn !== null) {
+                        const tipoValue = values[structure.tipoColumn] || '';
+                        console.log(`Tipo na posição ${structure.tipoColumn}:`, `"${tipoValue}"`);
+                    }
+                    
+                    if (processCSVRow(row, newData, structure)) {
                         processedRows++;
                         console.log(`✅ Linha ${i} processada com sucesso`);
                     } else {
@@ -1014,6 +1075,71 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
             }
         }
 
+        function detectCSVStructure(headers) {
+            console.log('Analisando headers:', headers);
+            
+            const structure = {
+                isValid: false,
+                tipoColumn: null,
+                materiaColumn: null,
+                adminColumn: null,
+                suggestions: []
+            };
+            
+            // Try to find tipo column
+            const tipoPatterns = ['tipo', 'type'];
+            for (let i = 0; i < headers.length; i++) {
+                const header = headers[i].toLowerCase().trim();
+                if (tipoPatterns.some(pattern => header.includes(pattern))) {
+                    structure.tipoColumn = i;
+                    console.log(`Coluna de tipo encontrada: ${headers[i]} (índice ${i})`);
+                    break;
+                }
+            }
+            
+            // If no tipo column, assume first column
+            if (structure.tipoColumn === null) {
+                structure.tipoColumn = 0;
+                structure.suggestions.push(`Assumindo primeira coluna "${headers[0]}" como tipo`);
+                console.log(`Assumindo primeira coluna como tipo: ${headers[0]}`);
+            }
+            
+            // Try to find materia column
+            const materiaPatterns = ['materia', 'subject', 'id_materia', 'subjectid'];
+            for (let i = 0; i < headers.length; i++) {
+                const header = headers[i].toLowerCase().trim();
+                if (materiaPatterns.some(pattern => header.includes(pattern))) {
+                    structure.materiaColumn = i;
+                    console.log(`Coluna de matéria encontrada: ${headers[i]} (índice ${i})`);
+                    break;
+                }
+            }
+            
+            // Try to find admin column
+            const adminPatterns = ['admin', 'senha_admin', 'adminpassword'];
+            for (let i = 0; i < headers.length; i++) {
+                const header = headers[i].toLowerCase().trim();
+                if (adminPatterns.some(pattern => header.includes(pattern))) {
+                    structure.adminColumn = i;
+                    console.log(`Coluna de admin encontrada: ${headers[i]} (índice ${i})`);
+                    break;
+                }
+            }
+            
+            // Check if structure is valid
+            structure.isValid = structure.tipoColumn !== null;
+            
+            if (!structure.materiaColumn) {
+                structure.suggestions.push('Coluna de matéria não encontrada - pode causar problemas');
+            }
+            
+            if (!structure.adminColumn) {
+                structure.suggestions.push('Coluna de admin não encontrada - senha padrão será mantida');
+            }
+            
+            return structure;
+        }
+
         function parseCSVLine(line) {
             console.log('Parsing line:', `"${line}"`);
             const values = [];
@@ -1045,32 +1171,91 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
             return cleanValues;
         }
 
-        function processCSVRow(row, targetData) {
-            const tipo = (row.Tipo || '').trim();
-            const subjectKey = (row.ID_Materia || '').trim();
-            
+        function processCSVRow(row, targetData, structure = null) {
             console.log('=== PROCESSANDO LINHA ===');
             console.log('Row completa:', row);
-            console.log('Tipo detectado:', `"${tipo}"`);
-            console.log('Subject Key:', `"${subjectKey}"`);
             console.log('Todas as chaves da row:', Object.keys(row));
+            console.log('Valores da row:', Object.values(row));
             
-            // Process admin password
-            if (tipo === 'Admin' && row.Senha_Admin) {
-                targetData.admin.password = row.Senha_Admin.trim();
-                console.log('✅ Admin password updated:', row.Senha_Admin);
+            // Check if row has any meaningful data first
+            const hasAnyData = Object.values(row).some(value => value && value.toString().trim() !== '');
+            console.log('hasAnyData:', hasAnyData);
+            
+            if (!hasAnyData) {
+                console.log('❌ Linha completamente vazia - pulando');
+                return false;
+            }
+            
+            // Try to find tipo column with more flexible matching
+            let tipo = '';
+            const tipoKeys = Object.keys(row).filter(key => 
+                key.toLowerCase().includes('tipo') || 
+                key.toLowerCase().includes('type') ||
+                key.toLowerCase() === 'tipo' ||
+                key.toLowerCase() === 'type'
+            );
+            
+            if (tipoKeys.length > 0) {
+                tipo = (row[tipoKeys[0]] || '').toString().trim();
+            } else {
+                // Try first column if no tipo column found
+                const firstKey = Object.keys(row)[0];
+                const firstValue = (row[firstKey] || '').toString().trim();
+                console.log('Primeira coluna:', firstKey, '=', `"${firstValue}"`);
+                
+                // Check if first value looks like a tipo
+                if (['Admin', 'admin', 'Materia', 'materia', 'Subject', 'subject', 
+                     'Modulo', 'modulo', 'Module', 'module', 'Atividade', 'atividade', 
+                     'Activity', 'activity', 'Professor', 'professor', 'Teacher', 'teacher'].includes(firstValue)) {
+                    tipo = firstValue;
+                    console.log('Tipo detectado na primeira coluna:', tipo);
+                }
+            }
+            
+            // Try to find subject key with more flexible matching
+            let subjectKey = '';
+            const subjectKeys = Object.keys(row).filter(key => 
+                key.toLowerCase().includes('materia') || 
+                key.toLowerCase().includes('subject') ||
+                key.toLowerCase().includes('id_materia') ||
+                key.toLowerCase().includes('subjectid')
+            );
+            
+            if (subjectKeys.length > 0) {
+                subjectKey = (row[subjectKeys[0]] || '').toString().trim();
+            }
+            
+            console.log('Tipo detectado:', `"${tipo}"`);
+            console.log('Subject Key detectado:', `"${subjectKey}"`);
+            console.log('Chaves de tipo encontradas:', tipoKeys);
+            console.log('Chaves de subject encontradas:', subjectKeys);
+            
+            // Process admin password - try multiple column names
+            const adminPassword = row.Senha_Admin || row.senha_admin || row.AdminPassword || row.admin_password;
+            if ((tipo === 'Admin' || tipo === 'admin') && adminPassword) {
+                targetData.admin.password = adminPassword.trim();
+                console.log('✅ Admin password updated:', adminPassword);
+                return true;
+            }
+            
+            // If no tipo but has admin password, assume it's admin row
+            if (!tipo && adminPassword) {
+                targetData.admin.password = adminPassword.trim();
+                console.log('✅ Admin password updated (sem tipo explícito):', adminPassword);
                 return true;
             }
             
             // Skip empty rows but be more flexible
             if (!tipo || tipo === '') {
-                console.log('❌ Skipping empty row - no tipo');
+                console.log('❌ Skipping row - no tipo found');
+                console.log('Tentou buscar em:', ['Tipo', 'tipo', 'Type', 'type']);
                 return false;
             }
             
             // For non-admin rows, we need subject key
-            if (!subjectKey && tipo !== 'Admin') {
+            if (!subjectKey && !['Admin', 'admin'].includes(tipo)) {
                 console.log('❌ Skipping row - no subject key for type:', tipo);
+                console.log('Tentou buscar subject em:', ['ID_Materia', 'id_materia', 'SubjectID', 'subject_id']);
                 console.log('Available keys in row:', Object.keys(row));
                 return false;
             }
@@ -1094,59 +1279,70 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
                 return false;
             }
             
-            // Process different types
-            if (tipo === 'Professor' && row.Nome_Professor && row.Nome_Professor.trim()) {
+            // Process different types - try multiple column name variations
+            const teacherName = row.Nome_Professor || row.nome_professor || row.TeacherName || row.teacher_name;
+            const moduleName = row.Nome_Modulo || row.nome_modulo || row.ModuleName || row.module_name;
+            const activityTitle = row.Titulo_Atividade || row.titulo_atividade || row.ActivityTitle || row.activity_title;
+            const accessCode = row.Codigo_Acesso || row.codigo_acesso || row.AccessCode || row.access_code;
+            
+            if (['Professor', 'professor', 'Teacher', 'teacher'].includes(tipo) && teacherName && teacherName.trim()) {
                 // Add teacher if not exists
-                const teacherName = row.Nome_Professor.trim();
-                const existingTeacher = subject.teachers.find(t => t.name === teacherName);
+                const cleanTeacherName = teacherName.trim();
+                const existingTeacher = subject.teachers.find(t => t.name === cleanTeacherName);
                 if (!existingTeacher) {
+                    const teacherPassword = row.Senha_Professor || row.senha_professor || row.TeacherPassword || row.teacher_password || 'temp123';
+                    const teacherId = row.ID_Professor || row.id_professor || row.TeacherID || row.teacher_id || Date.now().toString();
+                    
                     subject.teachers.push({
-                        id: (row.ID_Professor || Date.now().toString()).trim(),
-                        name: teacherName,
-                        password: (row.Senha_Professor || 'temp123').trim()
+                        id: teacherId.toString().trim(),
+                        name: cleanTeacherName,
+                        password: teacherPassword.toString().trim()
                     });
-                    console.log('Added teacher:', teacherName);
+                    console.log('✅ Added teacher:', cleanTeacherName);
                 }
                 return true;
-            } else if ((tipo === 'Modulo' || tipo === 'Atividade') && row.Nome_Modulo && row.Nome_Modulo.trim()) {
-                const moduleName = row.Nome_Modulo.trim();
+            } else if (['Modulo', 'modulo', 'Module', 'module', 'Atividade', 'atividade', 'Activity', 'activity'].includes(tipo) && moduleName && moduleName.trim()) {
+                const cleanModuleName = moduleName.trim();
                 
                 // Find or create module
-                let module = subject.modules.find(m => m.name === moduleName);
+                let module = subject.modules.find(m => m.name === cleanModuleName);
                 if (!module) {
                     module = {
-                        name: moduleName,
+                        name: cleanModuleName,
                         activities: []
                     };
                     subject.modules.push(module);
-                    console.log('Created module:', moduleName);
+                    console.log('✅ Created module:', cleanModuleName);
                     
                     // Set access code if provided
-                    if (row.Codigo_Acesso && row.Codigo_Acesso.trim()) {
+                    if (accessCode && accessCode.trim()) {
                         const moduleIndex = subject.modules.length - 1;
                         const moduleKey = `${subjectKey}-${moduleIndex}`;
-                        targetData.moduleAccess[moduleKey] = row.Codigo_Acesso.trim();
-                        console.log('Set access code:', row.Codigo_Acesso.trim(), 'for', moduleKey);
+                        targetData.moduleAccess[moduleKey] = accessCode.trim();
+                        console.log('✅ Set access code:', accessCode.trim(), 'for', moduleKey);
                     }
                 }
                 
                 // Add activity if it's an activity row
-                if (tipo === 'Atividade' && row.Titulo_Atividade && row.Titulo_Atividade.trim()) {
-                    const activityTitle = row.Titulo_Atividade.trim();
-                    const existingActivity = module.activities.find(a => a.title === activityTitle);
+                if (['Atividade', 'atividade', 'Activity', 'activity'].includes(tipo) && activityTitle && activityTitle.trim()) {
+                    const cleanActivityTitle = activityTitle.trim();
+                    const existingActivity = module.activities.find(a => a.title === cleanActivityTitle);
                     if (!existingActivity) {
+                        const activityDesc = row.Descricao_Atividade || row.descricao_atividade || row.ActivityDescription || row.activity_description || '';
+                        const activityLink = row.Link_Atividade || row.link_atividade || row.ActivityLink || row.activity_link;
+                        
                         module.activities.push({
-                            title: activityTitle,
-                            description: (row.Descricao_Atividade || '').trim(),
-                            link: (row.Link_Atividade && row.Link_Atividade.trim()) ? row.Link_Atividade.trim() : null
+                            title: cleanActivityTitle,
+                            description: activityDesc.toString().trim(),
+                            link: (activityLink && activityLink.trim()) ? activityLink.trim() : null
                         });
-                        console.log('Added activity:', activityTitle);
+                        console.log('✅ Added activity:', cleanActivityTitle);
                     }
                 }
                 return true;
-            } else if (tipo === 'Materia') {
+            } else if (['Materia', 'materia', 'Subject', 'subject'].includes(tipo)) {
                 // Just creating the subject is enough
-                console.log('Subject created/updated:', subjectKey);
+                console.log('✅ Subject created/updated:', subjectKey);
                 return true;
             }
             
@@ -2520,5 +2716,5 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
             stopAutoSync();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98aeaabda51cf1ff',t:'MTc1OTg1MzQwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b09c06a0e4ffb4',t:'MTc1OTg3Mzc3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
