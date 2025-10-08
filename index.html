@@ -397,6 +397,9 @@
                             <button onclick="testWithSampleData()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 🧪 Testar com Dados Exemplo
                             </button>
+                            <button onclick="testSimpleSync()" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                                🔬 Teste Simples de Sync
+                            </button>
                             <button onclick="debugCsvContent()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 🔍 Debug CSV
                             </button>
@@ -432,7 +435,7 @@
         // Sync Configuration
         // 🔧 CONFIGURAÇÃO GLOBAL DO CSV
         // Cole aqui a URL do seu arquivo CSV do Google Drive para configuração automática
-        const GLOBAL_CSV_URL = 'https://docs.google.com/uc?export=download&id=1W1ktK5az2FFRCZcZwBaH5-ys3a0fd3H0SjWwzTQZj3Y'; // Exemplo: 'https://docs.google.com/spreadsheets/d/1Dedvy2zci1qOPSO-4NA_T260yWgG7O9r/export?format=csv'
+        const GLOBAL_CSV_URL = ''; // Exemplo: 'https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv'
         
         let syncConfig = {
             csvUrl: null,
@@ -568,23 +571,112 @@
                 return;
             }
 
+            // Auto-fix common URL formats
+            let fixedUrl = url;
+            
+            // Google Drive file link fix
+            if (url.includes('drive.google.com/file/d/') && url.includes('/view')) {
+                const fileId = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
+                if (fileId) {
+                    fixedUrl = `https://drive.google.com/uc?export=download&id=${fileId[1]}`;
+                    addToSyncLog('🔧 URL do Google Drive corrigida automaticamente');
+                }
+            }
+            
+            // Google Sheets fix
+            if (url.includes('docs.google.com/spreadsheets/d/') && !url.includes('export?format=csv')) {
+                const sheetId = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+                if (sheetId) {
+                    fixedUrl = `https://docs.google.com/spreadsheets/d/${sheetId[1]}/export?format=csv`;
+                    addToSyncLog('🔧 URL do Google Sheets corrigida automaticamente');
+                }
+            }
+            
+            // Dropbox fix
+            if (url.includes('dropbox.com') && !url.includes('?dl=1')) {
+                fixedUrl = url.replace('?dl=0', '?dl=1').replace(/\?.*/, '') + '?dl=1';
+                addToSyncLog('🔧 URL do Dropbox corrigida automaticamente');
+            }
+
             try {
-                // Test the URL
-                const response = await fetch(url, { mode: 'cors' });
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                addToSyncLog(`Testando URL: ${fixedUrl}`);
+                
+                // Try multiple fetch strategies
+                let response;
+                let fetchError;
+                
+                // Strategy 1: Normal fetch with CORS
+                try {
+                    response = await fetch(fixedUrl, { 
+                        mode: 'cors',
+                        cache: 'no-cache',
+                        headers: {
+                            'Accept': 'text/csv,text/plain,*/*'
+                        }
+                    });
+                } catch (error) {
+                    fetchError = error;
+                    addToSyncLog(`Tentativa 1 falhou: ${error.message}`);
+                }
+                
+                // Strategy 2: Try without CORS mode
+                if (!response || !response.ok) {
+                    try {
+                        response = await fetch(fixedUrl, { 
+                            cache: 'no-cache',
+                            headers: {
+                                'Accept': 'text/csv,text/plain,*/*'
+                            }
+                        });
+                        addToSyncLog('Tentativa 2: fetch sem CORS mode');
+                    } catch (error) {
+                        addToSyncLog(`Tentativa 2 falhou: ${error.message}`);
+                    }
+                }
+                
+                if (!response || !response.ok) {
+                    throw new Error(`HTTP ${response?.status || 'Network Error'} - ${fetchError?.message || 'Falha na conexão'}`);
                 }
 
-                syncConfig.csvUrl = url;
+                const csvContent = await response.text();
+                
+                // Validate CSV content
+                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
+                    csvContent.trim().toLowerCase().startsWith('<html')) {
+                    throw new Error('URL retorna HTML em vez de CSV. Verifique o formato da URL.');
+                }
+                
+                if (csvContent.length < 10) {
+                    throw new Error('Arquivo CSV muito pequeno ou vazio.');
+                }
+
+                syncConfig.csvUrl = fixedUrl;
                 saveSyncConfig();
                 updateSyncDisplay();
-                addToSyncLog(`CSV configurado: ${url}`);
+                addToSyncLog(`✅ CSV configurado com sucesso`);
                 
-                alert('✅ URL do CSV configurada com sucesso! A sincronização automática está disponível.');
+                // Update the input with the fixed URL
+                document.getElementById('csvFileUrl').value = fixedUrl;
+                
+                alert(`✅ URL do CSV configurada com sucesso!\n\n${fixedUrl !== url ? '🔧 URL foi corrigida automaticamente.\n' : ''}A sincronização automática está disponível.`);
                 
             } catch (error) {
-                addToSyncLog(`Erro ao configurar CSV: ${error.message}`);
-                alert('❌ Erro ao acessar o arquivo CSV. Verifique se a URL está correta e se o arquivo é público.');
+                addToSyncLog(`❌ Erro: ${error.message}`);
+                
+                let errorMsg = '❌ Erro ao acessar o arquivo CSV:\n\n' + error.message;
+                
+                if (error.message.includes('CORS')) {
+                    errorMsg += '\n\n🔧 SOLUÇÕES PARA CORS:\n';
+                    errorMsg += '1. Google Drive: Use https://drive.google.com/uc?export=download&id=SEU_ID\n';
+                    errorMsg += '2. Google Sheets: Use https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv\n';
+                    errorMsg += '3. Dropbox: Adicione ?dl=1 no final da URL\n';
+                    errorMsg += '4. Certifique-se que o arquivo é público';
+                } else if (error.message.includes('HTML')) {
+                    errorMsg += '\n\n🔧 A URL está retornando uma página web em vez do arquivo CSV.\n';
+                    errorMsg += 'Verifique se está usando o link direto para download do arquivo.';
+                }
+                
+                alert(errorMsg);
             }
         }
 
@@ -595,22 +687,88 @@
             }
 
             try {
-                addToSyncLog('Testando conexão com CSV...');
-                const response = await fetch(syncConfig.csvUrl, { mode: 'cors' });
+                addToSyncLog('🔍 Testando conexão com CSV...');
+                showSyncIndicator('🔍 Testando conexão...');
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                // Try multiple strategies like in configureCsvSync
+                let response;
+                let fetchError;
+                
+                try {
+                    response = await fetch(syncConfig.csvUrl, { 
+                        mode: 'cors',
+                        cache: 'no-cache',
+                        headers: {
+                            'Accept': 'text/csv,text/plain,*/*'
+                        }
+                    });
+                } catch (error) {
+                    fetchError = error;
+                    addToSyncLog(`Tentativa 1 falhou: ${error.message}`);
+                }
+                
+                if (!response || !response.ok) {
+                    try {
+                        response = await fetch(syncConfig.csvUrl, { 
+                            cache: 'no-cache',
+                            headers: {
+                                'Accept': 'text/csv,text/plain,*/*'
+                            }
+                        });
+                        addToSyncLog('Usando fetch sem CORS mode');
+                    } catch (error) {
+                        addToSyncLog(`Tentativa 2 falhou: ${error.message}`);
+                    }
+                }
+                
+                if (!response || !response.ok) {
+                    throw new Error(`HTTP ${response?.status || 'Network Error'} - ${fetchError?.message || 'Falha na conexão'}`);
                 }
 
                 const csvContent = await response.text();
-                const lines = csvContent.split('\n').filter(line => line.trim());
                 
-                addToSyncLog(`Conexão OK - ${lines.length} linhas encontradas`);
-                alert(`✅ Conexão bem-sucedida!\n\nArquivo CSV acessível com ${lines.length} linhas.`);
+                // Validate content
+                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
+                    csvContent.trim().toLowerCase().startsWith('<html')) {
+                    throw new Error('URL retorna HTML em vez de CSV');
+                }
+                
+                const lines = csvContent.split('\n').filter(line => line.trim());
+                const headers = lines.length > 0 ? parseCSVLine(lines[0]) : [];
+                
+                addToSyncLog(`✅ Conexão OK - ${lines.length} linhas, ${headers.length} colunas`);
+                showSyncIndicator('✅ Conexão OK!');
+                
+                let message = `✅ Conexão bem-sucedida!\n\n`;
+                message += `📊 Arquivo CSV acessível:\n`;
+                message += `• ${lines.length} linhas total\n`;
+                message += `• ${headers.length} colunas\n`;
+                message += `• Tamanho: ${(csvContent.length / 1024).toFixed(1)} KB\n\n`;
+                
+                if (headers.length > 0) {
+                    message += `📋 Colunas encontradas:\n${headers.slice(0, 5).join(', ')}${headers.length > 5 ? '...' : ''}`;
+                }
+                
+                alert(message);
                 
             } catch (error) {
-                addToSyncLog(`Erro na conexão: ${error.message}`);
-                alert(`❌ Erro ao conectar com o CSV:\n${error.message}`);
+                addToSyncLog(`❌ Erro na conexão: ${error.message}`);
+                showSyncIndicator('❌ Erro na conexão');
+                
+                let errorMsg = `❌ Erro ao conectar com o CSV:\n\n${error.message}`;
+                
+                if (error.message.includes('Failed to fetch') || error.message.includes('Network Error')) {
+                    errorMsg += '\n\n🔧 POSSÍVEIS SOLUÇÕES:\n';
+                    errorMsg += '• Verifique sua conexão com a internet\n';
+                    errorMsg += '• Certifique-se que o arquivo é público\n';
+                    errorMsg += '• Tente usar uma URL diferente (Google Sheets, Dropbox, etc.)\n';
+                    errorMsg += '• Verifique se não há bloqueio de CORS';
+                } else if (error.message.includes('HTML')) {
+                    errorMsg += '\n\n🔧 A URL está retornando uma página web.\n';
+                    errorMsg += 'Use o link direto para download do arquivo CSV.';
+                }
+                
+                alert(errorMsg);
             }
         }
 
@@ -622,30 +780,97 @@
 
             try {
                 showSyncIndicator('🔄 Sincronizando dados...');
-                addToSyncLog('Iniciando sincronização manual...');
+                addToSyncLog('🔄 Iniciando sincronização manual...');
                 
-                const response = await fetch(syncConfig.csvUrl, { 
-                    mode: 'cors',
-                    cache: 'no-cache'
-                });
+                // Use the same robust fetch strategy
+                let response;
+                let fetchError;
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                try {
+                    response = await fetch(syncConfig.csvUrl, { 
+                        mode: 'cors',
+                        cache: 'no-cache',
+                        headers: {
+                            'Accept': 'text/csv,text/plain,*/*'
+                        }
+                    });
+                } catch (error) {
+                    fetchError = error;
+                    addToSyncLog(`Tentativa 1 falhou: ${error.message}`);
+                }
+                
+                if (!response || !response.ok) {
+                    try {
+                        response = await fetch(syncConfig.csvUrl, { 
+                            cache: 'no-cache',
+                            headers: {
+                                'Accept': 'text/csv,text/plain,*/*'
+                            }
+                        });
+                        addToSyncLog('Usando fetch sem CORS mode');
+                    } catch (error) {
+                        addToSyncLog(`Tentativa 2 falhou: ${error.message}`);
+                    }
+                }
+                
+                if (!response || !response.ok) {
+                    throw new Error(`HTTP ${response?.status || 'Network Error'} - ${fetchError?.message || 'Falha na conexão'}`);
                 }
 
                 const csvContent = await response.text();
-                await importFromCSV(csvContent, false);
+                addToSyncLog(`Conteúdo recebido: ${csvContent.length} caracteres`);
                 
-                syncConfig.lastSync = Date.now();
-                saveSyncConfig();
-                updateSyncDisplay();
+                // Validate content before processing
+                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
+                    csvContent.trim().toLowerCase().startsWith('<html')) {
+                    throw new Error('URL retorna HTML em vez de CSV. Verifique a configuração da URL.');
+                }
                 
-                addToSyncLog('Sincronização manual concluída');
-                showSyncIndicator('✅ Dados sincronizados!');
+                // Show first few lines for debugging
+                const lines = csvContent.split('\n').slice(0, 3);
+                addToSyncLog(`Primeiras linhas: ${lines.join(' | ')}`);
+                
+                const success = await importFromCSV(csvContent, false);
+                
+                if (success) {
+                    syncConfig.lastSync = Date.now();
+                    saveSyncConfig();
+                    updateSyncDisplay();
+                    
+                    addToSyncLog('✅ Sincronização manual concluída');
+                    showSyncIndicator('✅ Dados sincronizados!');
+                    
+                    // Force reload of all UI components
+                    loadSubjects();
+                    if (currentAdminTab === 'subjects') loadSubjectsList();
+                    if (currentAdminTab === 'modules') loadModulesList();
+                    if (currentAdminTab === 'activities') loadActivitiesList();
+                    if (currentAdminTab === 'users') loadTeachersList();
+                    if (currentAdminTab === 'access') loadAccessCodesList();
+                    updateAllSelects();
+                    
+                } else {
+                    throw new Error('Falha ao processar dados do CSV');
+                }
                 
             } catch (error) {
-                addToSyncLog(`Erro na sincronização: ${error.message}`);
-                alert(`❌ Erro ao sincronizar:\n${error.message}`);
+                addToSyncLog(`❌ Erro na sincronização: ${error.message}`);
+                showSyncIndicator('❌ Erro na sincronização');
+                
+                let errorMsg = `❌ Erro ao sincronizar:\n\n${error.message}`;
+                
+                if (error.message.includes('Failed to fetch') || error.message.includes('Network Error')) {
+                    errorMsg += '\n\n🔧 POSSÍVEIS SOLUÇÕES:\n';
+                    errorMsg += '• Verifique sua conexão com a internet\n';
+                    errorMsg += '• Certifique-se que o arquivo CSV é público\n';
+                    errorMsg += '• Tente reconfigurar a URL do CSV\n';
+                    errorMsg += '• Use "🔍 Debug CSV" para mais detalhes';
+                } else if (error.message.includes('HTML')) {
+                    errorMsg += '\n\n🔧 A URL está retornando uma página web.\n';
+                    errorMsg += 'Reconfigure a URL usando o formato correto.';
+                }
+                
+                alert(errorMsg);
             }
         }
 
@@ -679,21 +904,67 @@
             syncConfig.syncInterval = setInterval(async () => {
                 if (syncConfig.csvUrl && syncConfig.autoSync) {
                     try {
-                        const response = await fetch(syncConfig.csvUrl, { 
-                            mode: 'cors',
-                            cache: 'no-cache'
-                        });
+                        // Use the same robust fetch strategy for auto-sync
+                        let response;
                         
-                        if (response.ok) {
+                        try {
+                            response = await fetch(syncConfig.csvUrl, { 
+                                mode: 'cors',
+                                cache: 'no-cache',
+                                headers: {
+                                    'Accept': 'text/csv,text/plain,*/*'
+                                }
+                            });
+                        } catch (error) {
+                            // Try without CORS mode
+                            response = await fetch(syncConfig.csvUrl, { 
+                                cache: 'no-cache',
+                                headers: {
+                                    'Accept': 'text/csv,text/plain,*/*'
+                                }
+                            });
+                        }
+                        
+                        if (response && response.ok) {
                             const csvContent = await response.text();
-                            await importFromCSV(csvContent, true); // Silent sync
                             
-                            syncConfig.lastSync = Date.now();
-                            saveSyncConfig();
-                            updateSyncDisplay();
+                            // Validate content
+                            if (!csvContent.trim().toLowerCase().startsWith('<!doctype html') && 
+                                !csvContent.trim().toLowerCase().startsWith('<html')) {
+                                
+                                const success = await importFromCSV(csvContent, true); // Silent sync
+                                
+                                if (success) {
+                                    syncConfig.lastSync = Date.now();
+                                    saveSyncConfig();
+                                    updateSyncDisplay();
+                                    
+                                    // Show subtle indicator for successful auto-sync
+                                    const indicator = document.getElementById('syncIndicator');
+                                    if (indicator) {
+                                        indicator.textContent = '✅ Sincronizado';
+                                        indicator.classList.remove('hidden');
+                                        indicator.classList.add('bg-green-500');
+                                        indicator.classList.remove('syncing');
+                                        
+                                        setTimeout(() => {
+                                            indicator.classList.add('hidden');
+                                        }, 2000);
+                                    }
+                                }
+                            }
                         }
                     } catch (error) {
                         console.error('Auto-sync error:', error);
+                        // Don't show alerts for auto-sync errors, just log them
+                        addToSyncLog(`Auto-sync falhou: ${error.message}`);
+                        
+                        // Update sync status to show error
+                        const syncStatus = document.getElementById('syncStatus');
+                        if (syncStatus) {
+                            syncStatus.innerHTML = '⚠️ Erro na sincronização automática';
+                            syncStatus.className = 'text-xs text-red-600 mt-1';
+                        }
                     }
                 }
             }, 30000); // 30 seconds
@@ -745,6 +1016,52 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
                 } else {
                     alert('❌ Teste falhou. Verifique o console (F12) para detalhes.');
                 }
+            });
+        }
+
+        function testSimpleSync() {
+            if (!syncConfig.csvUrl) {
+                alert('❌ Configure primeiro a URL do CSV para testar a sincronização.');
+                return;
+            }
+
+            addToSyncLog('🔬 Iniciando teste simples de sincronização...');
+            
+            // Create a simple test CSV with your current data
+            const currentSubjects = Object.keys(systemData.subjects);
+            addToSyncLog(`📊 Dados atuais: ${currentSubjects.length} matérias`);
+            
+            // Show current data
+            console.log('=== DADOS ATUAIS ANTES DO TESTE ===');
+            console.log('Matérias:', Object.keys(systemData.subjects));
+            console.log('Códigos de acesso:', systemData.moduleAccess);
+            console.log('Professores por matéria:');
+            Object.keys(systemData.subjects).forEach(key => {
+                const subject = systemData.subjects[key];
+                console.log(`  ${key}: ${subject.teachers.length} professores, ${subject.modules.length} módulos`);
+            });
+
+            // Test the sync
+            forceSyncFromCsv().then(success => {
+                if (success) {
+                    console.log('=== DADOS APÓS SINCRONIZAÇÃO ===');
+                    console.log('Matérias:', Object.keys(systemData.subjects));
+                    console.log('Códigos de acesso:', systemData.moduleAccess);
+                    console.log('Professores por matéria:');
+                    Object.keys(systemData.subjects).forEach(key => {
+                        const subject = systemData.subjects[key];
+                        console.log(`  ${key}: ${subject.teachers.length} professores, ${subject.modules.length} módulos`);
+                    });
+                    
+                    addToSyncLog('✅ Teste de sincronização concluído');
+                    alert('✅ Teste de sincronização concluído!\n\nVerifique:\n1. Se as matérias apareceram no carrossel\n2. Se os dados foram atualizados\n3. O console (F12) para detalhes completos');
+                } else {
+                    addToSyncLog('❌ Teste de sincronização falhou');
+                    alert('❌ Teste de sincronização falhou!\n\nVerifique o log de sincronização e o console (F12) para mais detalhes.');
+                }
+            }).catch(error => {
+                addToSyncLog(`❌ Erro no teste: ${error.message}`);
+                alert(`❌ Erro no teste de sincronização:\n${error.message}`);
             });
         }
 
@@ -988,12 +1305,8 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 // Backup current data
                 const backup = JSON.parse(JSON.stringify(systemData));
                 
-                // Don't reset completely - preserve existing structure
-                const newData = {
-                    admin: { password: 'admin123' },
-                    subjects: {},
-                    moduleAccess: {}
-                };
+                // Start with current data instead of empty - this preserves existing data
+                const newData = JSON.parse(JSON.stringify(systemData));
 
                 const lines = csvContent.split('\n').filter(line => line.trim());
                 console.log('Linhas encontradas:', lines.length);
@@ -1019,6 +1332,7 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 
                 let processedRows = 0;
                 let skippedRows = 0;
+                let updatedSubjects = new Set();
                 
                 // Process each line
                 for (let i = 1; i < lines.length; i++) {
@@ -1051,9 +1365,16 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                         console.log(`Tipo na posição ${structure.tipoColumn}:`, `"${tipoValue}"`);
                     }
                     
-                    if (processCSVRow(row, newData, structure)) {
+                    const result = processCSVRow(row, newData, structure);
+                    if (result) {
                         processedRows++;
                         console.log(`✅ Linha ${i} processada com sucesso`);
+                        
+                        // Track which subjects were updated
+                        const subjectKey = getSubjectKeyFromRow(row);
+                        if (subjectKey) {
+                            updatedSubjects.add(subjectKey);
+                        }
                     } else {
                         skippedRows++;
                         console.log(`❌ Linha ${i} foi pulada`);
@@ -1063,29 +1384,38 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 console.log(`\n=== RESULTADO DA IMPORTAÇÃO ===`);
                 console.log(`Linhas processadas: ${processedRows}`);
                 console.log(`Linhas puladas: ${skippedRows}`);
+                console.log('Matérias atualizadas:', Array.from(updatedSubjects));
                 console.log('Dados finais:', newData);
                 
                 // Only update if we processed some data
                 if (processedRows > 0) {
                     systemData = newData;
                     saveData();
-                    addToSyncLog(`${processedRows} linhas processadas com sucesso`);
+                    addToSyncLog(`${processedRows} linhas processadas, ${updatedSubjects.size} matérias atualizadas`);
                     
-                    // Reload UI
-                    loadSubjects();
-                    if (document.getElementById('subjectsList')) {
-                        loadSubjectsList();
-                    }
-                    if (document.getElementById('teachersList')) {
-                        loadTeachersList();
-                    }
-                    if (document.getElementById('accessCodesList')) {
-                        loadAccessCodesList();
-                    }
-                    updateAllSelects();
+                    // Force complete UI reload
+                    setTimeout(() => {
+                        loadSubjects();
+                        if (document.getElementById('subjectsList')) {
+                            loadSubjectsList();
+                        }
+                        if (document.getElementById('teachersList')) {
+                            loadTeachersList();
+                        }
+                        if (document.getElementById('accessCodesList')) {
+                            loadAccessCodesList();
+                        }
+                        if (document.getElementById('modulesList')) {
+                            loadModulesList();
+                        }
+                        if (document.getElementById('activitiesList')) {
+                            loadActivitiesList();
+                        }
+                        updateAllSelects();
+                    }, 100);
                     
                     if (!silent) {
-                        alert(`✅ Dados CSV importados com sucesso!\n${processedRows} registros processados.`);
+                        alert(`✅ Dados CSV importados com sucesso!\n\n📊 Resultado:\n• ${processedRows} registros processados\n• ${updatedSubjects.size} matérias atualizadas\n• ${skippedRows} linhas ignoradas`);
                     }
                 } else {
                     throw new Error('Nenhum dado válido encontrado no CSV');
@@ -1097,10 +1427,25 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 addToSyncLog(`Erro na importação: ${error.message}`);
                 console.error('CSV Import error:', error);
                 if (!silent) {
-                    alert(`❌ Erro ao processar arquivo CSV:\n${error.message}\n\nVerifique o formato do arquivo.`);
+                    alert(`❌ Erro ao processar arquivo CSV:\n${error.message}\n\nVerifique o formato do arquivo e use "🔍 Debug CSV" para mais detalhes.`);
                 }
                 return false;
             }
+        }
+
+        function getSubjectKeyFromRow(row) {
+            // Try to extract subject key from row
+            const subjectKeys = Object.keys(row).filter(key => 
+                key.toLowerCase().includes('materia') || 
+                key.toLowerCase().includes('subject') ||
+                key.toLowerCase().includes('id_materia') ||
+                key.toLowerCase().includes('subjectid')
+            );
+            
+            if (subjectKeys.length > 0) {
+                return (row[subjectKeys[0]] || '').toString().trim();
+            }
+            return null;
         }
 
         function detectCSVStructure(headers) {
@@ -2744,5 +3089,5 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             stopAutoSync();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b1b4366568cae4',t:'MTc1OTg4NTI1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b20ac9a14ecae4',t:'MTc1OTg4ODgwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
