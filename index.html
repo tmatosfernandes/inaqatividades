@@ -1722,59 +1722,6 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             console.log('Row not processed - tipo:', `"${tipo}"`, 'keys:', Object.keys(row));
             return false;
         }
-
-        // Initialize system with sample data
-        systemData.subjects = {
-            math: {
-                name: 'Matemática',
-                description: 'Álgebra, Geometria e Cálculo',
-                emoji: '📊',
-                color: 'blue-500',
-                teachers: [], // professores vinculados
-                modules: [
-                    { name: 'Módulo 1: Álgebra Básica', activities: [] },
-                    { name: 'Módulo 2: Geometria Plana', activities: [] },
-                    { name: 'Módulo 3: Funções', activities: [] },
-                    { name: 'Módulo 4: Trigonometria', activities: [] }
-                ]
-            },
-            portuguese: {
-                name: 'Português',
-                description: 'Gramática, Literatura e Redação',
-                emoji: '📚',
-                color: 'green-500',
-                teachers: [],
-                modules: [
-                    { name: 'Módulo 1: Gramática', activities: [] },
-                    { name: 'Módulo 2: Literatura Clássica', activities: [] },
-                    { name: 'Módulo 3: Redação', activities: [] },
-                    { name: 'Módulo 4: Interpretação de Texto', activities: [] }
-                ]
-            },
-            history: {
-                name: 'História',
-                description: 'Brasil, Mundo e Contemporânea',
-                emoji: '🏛️',
-                color: 'purple-500',
-                teachers: [],
-                modules: [
-                    { name: 'Módulo 1: Brasil Colonial', activities: [] },
-                    { name: 'Módulo 2: Independência', activities: [] },
-                    { name: 'Módulo 3: República', activities: [] },
-                    { name: 'Módulo 4: História Contemporânea', activities: [] }
-                ]
-            }
-        };
-
-        // Códigos de acesso para módulos (formato: subjectKey-moduleIndex: código)
-        systemData.moduleAccess = {
-            'math-0': 'MAT01',
-            'portuguese-0': 'PORT01',
-            'history-0': 'HIST01'
-        };
-
-        let currentAdminTab = 'subjects';
-
         // User type selection
         function selectUserType(type) {
             currentUser.type = type;
