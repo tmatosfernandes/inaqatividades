@@ -361,7 +361,7 @@
                             <p class="text-sm text-blue-800">
                                 <strong>🎯 CONFIGURAÇÃO PERMANENTE:</strong><br>
                                 Para que todos os navegadores se conectem automaticamente, cole a URL do CSV diretamente no código na linha 426:<br>
-                                <code class="bg-blue-100 px-2 py-1 rounded text-xs">const GLOBAL_CSV_URL = 'https://drive.google.com/uc?export=download&id=1Dedvy2zci1qOPSO-4NA_T260yWgG7O9r';</code>
+                                <code class="bg-blue-100 px-2 py-1 rounded text-xs">const GLOBAL_CSV_URL = 'SUA_URL_AQUI';</code>
                             </p>
                         </div>
                         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
@@ -432,7 +432,7 @@
         // Sync Configuration
         // 🔧 CONFIGURAÇÃO GLOBAL DO CSV
         // Cole aqui a URL do seu arquivo CSV do Google Drive para configuração automática
-        const GLOBAL_CSV_URL = 'https://drive.google.com/uc?export=download&id=1Dedvy2zci1qOPSO-4NA_T260yWgG7O9r'; // Exemplo: 'https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv'
+        const GLOBAL_CSV_URL = 'https://docs.google.com/spreadsheets/d/1Dedvy2zci1qOPSO-4NA_T260yWgG7O9r/export?format=csv'; // Exemplo: 'https://docs.google.com/spreadsheets/d/1Dedvy2zci1qOPSO-4NA_T260yWgG7O9r/export?format=csv'
         
         let syncConfig = {
             csvUrl: null,
@@ -767,9 +767,37 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
 
                 const csvContent = await response.text();
                 
+                // Check if content is HTML instead of CSV
+                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
+                    csvContent.trim().toLowerCase().startsWith('<html')) {
+                    console.log('❌ ERRO: CONTEÚDO É HTML, NÃO CSV!');
+                    console.log('Primeiros 500 caracteres:', csvContent.substring(0, 500));
+                    
+                    alert(`❌ ERRO: A URL está retornando uma página HTML, não um arquivo CSV!
+
+🔧 SOLUÇÕES:
+
+1. **Google Drive**: Use o formato correto:
+   ❌ Errado: https://drive.google.com/file/d/SEU_ID/view
+   ✅ Correto: https://drive.google.com/uc?export=download&id=SEU_ID
+
+2. **Google Sheets**: Use o formato de exportação:
+   ✅ Correto: https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv
+
+3. **Dropbox**: Adicione ?dl=1 no final:
+   ✅ Correto: https://dropbox.com/s/SEU_ID/arquivo.csv?dl=1
+
+4. **Verifique se o arquivo é público** e acessível diretamente.
+
+A URL atual está retornando uma página web em vez do arquivo CSV.`);
+                    
+                    addToSyncLog('ERRO: URL retorna HTML em vez de CSV');
+                    return;
+                }
+                
                 // Show raw content
                 console.log('=== CONTEÚDO BRUTO DO CSV ===');
-                console.log(csvContent);
+                console.log('Primeiros 1000 caracteres:', csvContent.substring(0, 1000));
                 console.log('Tamanho do conteúdo:', csvContent.length, 'caracteres');
                 
                 // Parse and show structure
@@ -2716,5 +2744,5 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
             stopAutoSync();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b09c06a0e4ffb4',t:'MTc1OTg3Mzc3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b1b4366568cae4',t:'MTc1OTg4NTI1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
