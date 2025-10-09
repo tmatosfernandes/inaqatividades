@@ -79,7 +79,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-orange-50 to-amber-100 min-h-screen">
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     <!-- Sync Indicator -->
     <div id="syncIndicator" class="sync-indicator bg-green-500 text-white px-3 py-1 rounded-full text-sm hidden">
         🔄 Sincronizando...
@@ -89,7 +89,7 @@
     <div id="loginOverlay" class="fixed inset-0 bg-black bg-opacity-50 login-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                     </svg>
@@ -100,7 +100,7 @@
             
             <div class="space-y-4 mb-6">
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="selectUserType('student')" id="studentBtn" class="py-2 px-3 border-2 border-orange-500 text-orange-500 rounded-lg transition duration-200 hover:bg-orange-50 text-sm">
+                    <button onclick="selectUserType('student')" id="studentBtn" class="py-2 px-3 border-2 border-blue-500 text-blue-500 rounded-lg transition duration-200 hover:bg-blue-50 text-sm">
                         👨‍🎓 Aluno
                     </button>
                     <button onclick="selectUserType('teacher')" id="teacherBtn" class="py-2 px-3 border-2 border-gray-300 text-gray-500 rounded-lg transition duration-200 hover:bg-gray-50 text-sm">
@@ -122,14 +122,14 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         <span id="passwordLabel">Senha de Acesso</span>
                     </label>
-                    <input type="password" id="passwordInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Digite sua senha">
+                    <input type="password" id="passwordInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Digite sua senha">
                     <div class="mt-2 text-xs text-gray-500">
                         <div id="studentHint" class="block">💡 Digite o código de acesso do módulo</div>
                         <div id="teacherHint" class="hidden">💡 Digite sua senha de professor</div>
                         <div id="adminHint" class="hidden">💡 Senha do administrador: <span class="font-mono">admin123</span></div>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
                     Entrar
                 </button>
                 <div id="errorMessage" class="text-red-500 text-sm text-center hidden">Senha incorreta. Tente novamente.</div>
@@ -179,12 +179,12 @@
 
                 <!-- Navigation Arrows -->
                 <div class="flex justify-between items-center mt-6">
-                    <button onclick="previousSubject()" class="bg-orange-200 hover:bg-orange-300 text-orange-700 p-3 rounded-full transition duration-200">
+                    <button onclick="previousSubject()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-3 rounded-full transition duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
                     </button>
-                    <button onclick="nextSubject()" class="bg-orange-200 hover:bg-orange-300 text-orange-700 p-3 rounded-full transition duration-200">
+                    <button onclick="nextSubject()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-3 rounded-full transition duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -198,7 +198,7 @@
             <!-- Admin Navigation Tabs -->
             <div class="bg-white rounded-2xl shadow-xl mb-6">
                 <div class="flex border-b border-gray-200 flex-wrap" id="adminTabs">
-                    <button onclick="showAdminTab('subjects')" id="subjectsTab" class="flex-1 py-4 px-4 text-center font-semibold text-orange-600 border-b-2 border-orange-600 bg-orange-50 text-sm admin-only">
+                    <button onclick="showAdminTab('subjects')" id="subjectsTab" class="flex-1 py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm admin-only">
                         📚 Matérias
                     </button>
                     <button onclick="showAdminTab('modules')" id="modulesTab" class="flex-1 py-4 px-4 text-center font-semibold text-gray-500 hover:text-gray-700 text-sm admin-only">
@@ -230,7 +230,7 @@
                         <input type="text" id="newSubjectDescription" placeholder="Descrição (ex: Mecânica e Eletricidade)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <input type="text" id="newSubjectEmoji" placeholder="Emoji (ex: ⚡)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <input type="text" id="newSubjectColor" placeholder="Cor (ex: red-500)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="addSubject()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addSubject()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Matéria
                         </button>
                     </div>
@@ -250,7 +250,7 @@
                         <select id="moduleSubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         </select>
                         <input type="text" id="newModuleName" placeholder="Nome do módulo" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="addModule()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addModule()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Módulo
                         </button>
                     </div>
@@ -276,7 +276,7 @@
                         <input type="text" id="activityTitle" placeholder="Título da atividade" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <textarea id="activityDescription" placeholder="Descrição da atividade" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 h-20"></textarea>
                         <input type="url" id="activityLink" placeholder="Link da atividade (opcional)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="addActivity()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addActivity()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Atividade
                         </button>
                     </div>
@@ -301,7 +301,7 @@
                         <input type="password" id="newTeacherPassword" placeholder="Senha do professor" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <select id="teacherSubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         </select>
-                        <button onclick="addTeacher()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addTeacher()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Professor
                         </button>
                     </div>
@@ -323,7 +323,7 @@
                         <select id="accessModuleSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         </select>
                         <input type="text" id="moduleAccessCode" placeholder="Código de acesso (ex: MAT01)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="setModuleAccess()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="setModuleAccess()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Definir Código
                         </button>
                     </div>
@@ -357,13 +357,6 @@
                     <!-- CSV Configuration -->
                     <div>
                         <h4 class="font-semibold text-gray-700 mb-3">📁 Configurar Arquivo CSV Compartilhado</h4>
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                            <p class="text-sm text-blue-800">
-                                <strong>🎯 CONFIGURAÇÃO PERMANENTE:</strong><br>
-                                Para que todos os navegadores se conectem automaticamente, cole a URL do CSV diretamente no código na linha 426:<br>
-                                <code class="bg-blue-100 px-2 py-1 rounded text-xs">const GLOBAL_CSV_URL = 'SUA_URL_AQUI';</code>
-                            </p>
-                        </div>
                         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
                             <p class="text-sm text-yellow-800">
                                 <strong>💡 Como funciona:</strong><br>
@@ -373,10 +366,10 @@
                             </p>
                         </div>
                         <input type="url" id="csvFileUrl" placeholder="URL do arquivo CSV compartilhado" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="configureCsvSync()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200 mb-2">
+                        <button onclick="configureCsvSync()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200 mb-2">
                             Configurar Sincronização
                         </button>
-                        <button onclick="testCsvConnection()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="testCsvConnection()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Testar Conexão
                         </button>
                     </div>
@@ -385,20 +378,14 @@
                     <div>
                         <h4 class="font-semibold text-gray-700 mb-3">🔄 Sincronização Manual</h4>
                         <div class="space-y-2">
-                            <button onclick="forceSyncFromCsv()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            <button onclick="forceSyncFromCsv()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📥 Sincronizar do CSV
                             </button>
-                            <button onclick="exportToCsvFile()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            <button onclick="exportToCsvFile()" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📤 Exportar para CSV
                             </button>
-                            <button onclick="generateSampleCsv()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            <button onclick="generateSampleCsv()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📋 Gerar CSV Modelo
-                            </button>
-                            <button onclick="testWithSampleData()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
-                                🧪 Testar com Dados Exemplo
-                            </button>
-                            <button onclick="testSimpleSync()" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition duration-200">
-                                🔬 Teste Simples de Sync
                             </button>
                             <button onclick="debugCsvContent()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 🔍 Debug CSV
@@ -433,10 +420,6 @@
         const SYNC_CONFIG_KEY = 'portal_sync_config';
         
         // Sync Configuration
-        // 🔧 CONFIGURAÇÃO GLOBAL DO CSV
-        // Cole aqui a URL do seu arquivo CSV do Google Drive para configuração automática
-        const GLOBAL_CSV_URL = 'https://docs.google.com/spreadsheets/d/1W1ktK5az2FFRCZcZwBaH5-ys3a0fd3H0SjWwzTQZj3Y/export?format=csv'; // Exemplo: 'https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv'
-        
         let syncConfig = {
             csvUrl: null,
             autoSync: false,
@@ -466,17 +449,10 @@
                 const saved = localStorage.getItem(SYNC_CONFIG_KEY);
                 if (saved) {
                     syncConfig = { ...syncConfig, ...JSON.parse(saved) };
-                } else if (GLOBAL_CSV_URL) {
-                    // Se não há configuração salva mas há URL global, use ela
-                    syncConfig.csvUrl = GLOBAL_CSV_URL;
-                    syncConfig.autoSync = true; // Ativa automaticamente
-                    saveSyncConfig();
-                    addToSyncLog('URL global configurada automaticamente');
-                }
-                
-                updateSyncDisplay();
-                if (syncConfig.autoSync && syncConfig.csvUrl) {
-                    startAutoSync();
+                    updateSyncDisplay();
+                    if (syncConfig.autoSync && syncConfig.csvUrl) {
+                        startAutoSync();
+                    }
                 }
             } catch (error) {
                 console.error('Erro ao carregar configuração de sincronização:', error);
@@ -571,112 +547,23 @@
                 return;
             }
 
-            // Auto-fix common URL formats
-            let fixedUrl = url;
-            
-            // Google Drive file link fix
-            if (url.includes('drive.google.com/file/d/') && url.includes('/view')) {
-                const fileId = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
-                if (fileId) {
-                    fixedUrl = `https://drive.google.com/uc?export=download&id=${fileId[1]}`;
-                    addToSyncLog('🔧 URL do Google Drive corrigida automaticamente');
-                }
-            }
-            
-            // Google Sheets fix
-            if (url.includes('docs.google.com/spreadsheets/d/') && !url.includes('export?format=csv')) {
-                const sheetId = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-                if (sheetId) {
-                    fixedUrl = `https://docs.google.com/spreadsheets/d/${sheetId[1]}/export?format=csv`;
-                    addToSyncLog('🔧 URL do Google Sheets corrigida automaticamente');
-                }
-            }
-            
-            // Dropbox fix
-            if (url.includes('dropbox.com') && !url.includes('?dl=1')) {
-                fixedUrl = url.replace('?dl=0', '?dl=1').replace(/\?.*/, '') + '?dl=1';
-                addToSyncLog('🔧 URL do Dropbox corrigida automaticamente');
-            }
-
             try {
-                addToSyncLog(`Testando URL: ${fixedUrl}`);
-                
-                // Try multiple fetch strategies
-                let response;
-                let fetchError;
-                
-                // Strategy 1: Normal fetch with CORS
-                try {
-                    response = await fetch(fixedUrl, { 
-                        mode: 'cors',
-                        cache: 'no-cache',
-                        headers: {
-                            'Accept': 'text/csv,text/plain,*/*'
-                        }
-                    });
-                } catch (error) {
-                    fetchError = error;
-                    addToSyncLog(`Tentativa 1 falhou: ${error.message}`);
-                }
-                
-                // Strategy 2: Try without CORS mode
-                if (!response || !response.ok) {
-                    try {
-                        response = await fetch(fixedUrl, { 
-                            cache: 'no-cache',
-                            headers: {
-                                'Accept': 'text/csv,text/plain,*/*'
-                            }
-                        });
-                        addToSyncLog('Tentativa 2: fetch sem CORS mode');
-                    } catch (error) {
-                        addToSyncLog(`Tentativa 2 falhou: ${error.message}`);
-                    }
-                }
-                
-                if (!response || !response.ok) {
-                    throw new Error(`HTTP ${response?.status || 'Network Error'} - ${fetchError?.message || 'Falha na conexão'}`);
+                // Test the URL
+                const response = await fetch(url, { mode: 'cors' });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
                 }
 
-                const csvContent = await response.text();
-                
-                // Validate CSV content
-                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
-                    csvContent.trim().toLowerCase().startsWith('<html')) {
-                    throw new Error('URL retorna HTML em vez de CSV. Verifique o formato da URL.');
-                }
-                
-                if (csvContent.length < 10) {
-                    throw new Error('Arquivo CSV muito pequeno ou vazio.');
-                }
-
-                syncConfig.csvUrl = fixedUrl;
+                syncConfig.csvUrl = url;
                 saveSyncConfig();
                 updateSyncDisplay();
-                addToSyncLog(`✅ CSV configurado com sucesso`);
+                addToSyncLog(`CSV configurado: ${url}`);
                 
-                // Update the input with the fixed URL
-                document.getElementById('csvFileUrl').value = fixedUrl;
-                
-                alert(`✅ URL do CSV configurada com sucesso!\n\n${fixedUrl !== url ? '🔧 URL foi corrigida automaticamente.\n' : ''}A sincronização automática está disponível.`);
+                alert('✅ URL do CSV configurada com sucesso! A sincronização automática está disponível.');
                 
             } catch (error) {
-                addToSyncLog(`❌ Erro: ${error.message}`);
-                
-                let errorMsg = '❌ Erro ao acessar o arquivo CSV:\n\n' + error.message;
-                
-                if (error.message.includes('CORS')) {
-                    errorMsg += '\n\n🔧 SOLUÇÕES PARA CORS:\n';
-                    errorMsg += '1. Google Drive: Use https://drive.google.com/uc?export=download&id=SEU_ID\n';
-                    errorMsg += '2. Google Sheets: Use https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv\n';
-                    errorMsg += '3. Dropbox: Adicione ?dl=1 no final da URL\n';
-                    errorMsg += '4. Certifique-se que o arquivo é público';
-                } else if (error.message.includes('HTML')) {
-                    errorMsg += '\n\n🔧 A URL está retornando uma página web em vez do arquivo CSV.\n';
-                    errorMsg += 'Verifique se está usando o link direto para download do arquivo.';
-                }
-                
-                alert(errorMsg);
+                addToSyncLog(`Erro ao configurar CSV: ${error.message}`);
+                alert('❌ Erro ao acessar o arquivo CSV. Verifique se a URL está correta e se o arquivo é público.');
             }
         }
 
@@ -687,88 +574,22 @@
             }
 
             try {
-                addToSyncLog('🔍 Testando conexão com CSV...');
-                showSyncIndicator('🔍 Testando conexão...');
+                addToSyncLog('Testando conexão com CSV...');
+                const response = await fetch(syncConfig.csvUrl, { mode: 'cors' });
                 
-                // Try multiple strategies like in configureCsvSync
-                let response;
-                let fetchError;
-                
-                try {
-                    response = await fetch(syncConfig.csvUrl, { 
-                        mode: 'cors',
-                        cache: 'no-cache',
-                        headers: {
-                            'Accept': 'text/csv,text/plain,*/*'
-                        }
-                    });
-                } catch (error) {
-                    fetchError = error;
-                    addToSyncLog(`Tentativa 1 falhou: ${error.message}`);
-                }
-                
-                if (!response || !response.ok) {
-                    try {
-                        response = await fetch(syncConfig.csvUrl, { 
-                            cache: 'no-cache',
-                            headers: {
-                                'Accept': 'text/csv,text/plain,*/*'
-                            }
-                        });
-                        addToSyncLog('Usando fetch sem CORS mode');
-                    } catch (error) {
-                        addToSyncLog(`Tentativa 2 falhou: ${error.message}`);
-                    }
-                }
-                
-                if (!response || !response.ok) {
-                    throw new Error(`HTTP ${response?.status || 'Network Error'} - ${fetchError?.message || 'Falha na conexão'}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
                 }
 
                 const csvContent = await response.text();
-                
-                // Validate content
-                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
-                    csvContent.trim().toLowerCase().startsWith('<html')) {
-                    throw new Error('URL retorna HTML em vez de CSV');
-                }
-                
                 const lines = csvContent.split('\n').filter(line => line.trim());
-                const headers = lines.length > 0 ? parseCSVLine(lines[0]) : [];
                 
-                addToSyncLog(`✅ Conexão OK - ${lines.length} linhas, ${headers.length} colunas`);
-                showSyncIndicator('✅ Conexão OK!');
-                
-                let message = `✅ Conexão bem-sucedida!\n\n`;
-                message += `📊 Arquivo CSV acessível:\n`;
-                message += `• ${lines.length} linhas total\n`;
-                message += `• ${headers.length} colunas\n`;
-                message += `• Tamanho: ${(csvContent.length / 1024).toFixed(1)} KB\n\n`;
-                
-                if (headers.length > 0) {
-                    message += `📋 Colunas encontradas:\n${headers.slice(0, 5).join(', ')}${headers.length > 5 ? '...' : ''}`;
-                }
-                
-                alert(message);
+                addToSyncLog(`Conexão OK - ${lines.length} linhas encontradas`);
+                alert(`✅ Conexão bem-sucedida!\n\nArquivo CSV acessível com ${lines.length} linhas.`);
                 
             } catch (error) {
-                addToSyncLog(`❌ Erro na conexão: ${error.message}`);
-                showSyncIndicator('❌ Erro na conexão');
-                
-                let errorMsg = `❌ Erro ao conectar com o CSV:\n\n${error.message}`;
-                
-                if (error.message.includes('Failed to fetch') || error.message.includes('Network Error')) {
-                    errorMsg += '\n\n🔧 POSSÍVEIS SOLUÇÕES:\n';
-                    errorMsg += '• Verifique sua conexão com a internet\n';
-                    errorMsg += '• Certifique-se que o arquivo é público\n';
-                    errorMsg += '• Tente usar uma URL diferente (Google Sheets, Dropbox, etc.)\n';
-                    errorMsg += '• Verifique se não há bloqueio de CORS';
-                } else if (error.message.includes('HTML')) {
-                    errorMsg += '\n\n🔧 A URL está retornando uma página web.\n';
-                    errorMsg += 'Use o link direto para download do arquivo CSV.';
-                }
-                
-                alert(errorMsg);
+                addToSyncLog(`Erro na conexão: ${error.message}`);
+                alert(`❌ Erro ao conectar com o CSV:\n${error.message}`);
             }
         }
 
@@ -780,97 +601,30 @@
 
             try {
                 showSyncIndicator('🔄 Sincronizando dados...');
-                addToSyncLog('🔄 Iniciando sincronização manual...');
+                addToSyncLog('Iniciando sincronização manual...');
                 
-                // Use the same robust fetch strategy
-                let response;
-                let fetchError;
+                const response = await fetch(syncConfig.csvUrl, { 
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
                 
-                try {
-                    response = await fetch(syncConfig.csvUrl, { 
-                        mode: 'cors',
-                        cache: 'no-cache',
-                        headers: {
-                            'Accept': 'text/csv,text/plain,*/*'
-                        }
-                    });
-                } catch (error) {
-                    fetchError = error;
-                    addToSyncLog(`Tentativa 1 falhou: ${error.message}`);
-                }
-                
-                if (!response || !response.ok) {
-                    try {
-                        response = await fetch(syncConfig.csvUrl, { 
-                            cache: 'no-cache',
-                            headers: {
-                                'Accept': 'text/csv,text/plain,*/*'
-                            }
-                        });
-                        addToSyncLog('Usando fetch sem CORS mode');
-                    } catch (error) {
-                        addToSyncLog(`Tentativa 2 falhou: ${error.message}`);
-                    }
-                }
-                
-                if (!response || !response.ok) {
-                    throw new Error(`HTTP ${response?.status || 'Network Error'} - ${fetchError?.message || 'Falha na conexão'}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
                 }
 
                 const csvContent = await response.text();
-                addToSyncLog(`Conteúdo recebido: ${csvContent.length} caracteres`);
+                await importFromCSV(csvContent, false);
                 
-                // Validate content before processing
-                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
-                    csvContent.trim().toLowerCase().startsWith('<html')) {
-                    throw new Error('URL retorna HTML em vez de CSV. Verifique a configuração da URL.');
-                }
+                syncConfig.lastSync = Date.now();
+                saveSyncConfig();
+                updateSyncDisplay();
                 
-                // Show first few lines for debugging
-                const lines = csvContent.split('\n').slice(0, 3);
-                addToSyncLog(`Primeiras linhas: ${lines.join(' | ')}`);
-                
-                const success = await importFromCSV(csvContent, false);
-                
-                if (success) {
-                    syncConfig.lastSync = Date.now();
-                    saveSyncConfig();
-                    updateSyncDisplay();
-                    
-                    addToSyncLog('✅ Sincronização manual concluída');
-                    showSyncIndicator('✅ Dados sincronizados!');
-                    
-                    // Force reload of all UI components
-                    loadSubjects();
-                    if (currentAdminTab === 'subjects') loadSubjectsList();
-                    if (currentAdminTab === 'modules') loadModulesList();
-                    if (currentAdminTab === 'activities') loadActivitiesList();
-                    if (currentAdminTab === 'users') loadTeachersList();
-                    if (currentAdminTab === 'access') loadAccessCodesList();
-                    updateAllSelects();
-                    
-                } else {
-                    throw new Error('Falha ao processar dados do CSV');
-                }
+                addToSyncLog('Sincronização manual concluída');
+                showSyncIndicator('✅ Dados sincronizados!');
                 
             } catch (error) {
-                addToSyncLog(`❌ Erro na sincronização: ${error.message}`);
-                showSyncIndicator('❌ Erro na sincronização');
-                
-                let errorMsg = `❌ Erro ao sincronizar:\n\n${error.message}`;
-                
-                if (error.message.includes('Failed to fetch') || error.message.includes('Network Error')) {
-                    errorMsg += '\n\n🔧 POSSÍVEIS SOLUÇÕES:\n';
-                    errorMsg += '• Verifique sua conexão com a internet\n';
-                    errorMsg += '• Certifique-se que o arquivo CSV é público\n';
-                    errorMsg += '• Tente reconfigurar a URL do CSV\n';
-                    errorMsg += '• Use "🔍 Debug CSV" para mais detalhes';
-                } else if (error.message.includes('HTML')) {
-                    errorMsg += '\n\n🔧 A URL está retornando uma página web.\n';
-                    errorMsg += 'Reconfigure a URL usando o formato correto.';
-                }
-                
-                alert(errorMsg);
+                addToSyncLog(`Erro na sincronização: ${error.message}`);
+                alert(`❌ Erro ao sincronizar:\n${error.message}`);
             }
         }
 
@@ -904,67 +658,21 @@
             syncConfig.syncInterval = setInterval(async () => {
                 if (syncConfig.csvUrl && syncConfig.autoSync) {
                     try {
-                        // Use the same robust fetch strategy for auto-sync
-                        let response;
+                        const response = await fetch(syncConfig.csvUrl, { 
+                            mode: 'cors',
+                            cache: 'no-cache'
+                        });
                         
-                        try {
-                            response = await fetch(syncConfig.csvUrl, { 
-                                mode: 'cors',
-                                cache: 'no-cache',
-                                headers: {
-                                    'Accept': 'text/csv,text/plain,*/*'
-                                }
-                            });
-                        } catch (error) {
-                            // Try without CORS mode
-                            response = await fetch(syncConfig.csvUrl, { 
-                                cache: 'no-cache',
-                                headers: {
-                                    'Accept': 'text/csv,text/plain,*/*'
-                                }
-                            });
-                        }
-                        
-                        if (response && response.ok) {
+                        if (response.ok) {
                             const csvContent = await response.text();
+                            await importFromCSV(csvContent, true); // Silent sync
                             
-                            // Validate content
-                            if (!csvContent.trim().toLowerCase().startsWith('<!doctype html') && 
-                                !csvContent.trim().toLowerCase().startsWith('<html')) {
-                                
-                                const success = await importFromCSV(csvContent, true); // Silent sync
-                                
-                                if (success) {
-                                    syncConfig.lastSync = Date.now();
-                                    saveSyncConfig();
-                                    updateSyncDisplay();
-                                    
-                                    // Show subtle indicator for successful auto-sync
-                                    const indicator = document.getElementById('syncIndicator');
-                                    if (indicator) {
-                                        indicator.textContent = '✅ Sincronizado';
-                                        indicator.classList.remove('hidden');
-                                        indicator.classList.add('bg-green-500');
-                                        indicator.classList.remove('syncing');
-                                        
-                                        setTimeout(() => {
-                                            indicator.classList.add('hidden');
-                                        }, 2000);
-                                    }
-                                }
-                            }
+                            syncConfig.lastSync = Date.now();
+                            saveSyncConfig();
+                            updateSyncDisplay();
                         }
                     } catch (error) {
                         console.error('Auto-sync error:', error);
-                        // Don't show alerts for auto-sync errors, just log them
-                        addToSyncLog(`Auto-sync falhou: ${error.message}`);
-                        
-                        // Update sync status to show error
-                        const syncStatus = document.getElementById('syncStatus');
-                        if (syncStatus) {
-                            syncStatus.innerHTML = '⚠️ Erro na sincronização automática';
-                            syncStatus.className = 'text-xs text-red-600 mt-1';
-                        }
                     }
                 }
             }, 30000); // 30 seconds
@@ -999,144 +707,6 @@
             alert('📋 Arquivo CSV modelo gerado! Use este arquivo como base para configurar a sincronização.');
         }
 
-        function testWithSampleData() {
-            const sampleCsv = `Tipo,ID_Materia,Nome_Materia,Descricao_Materia,Emoji_Materia,Cor_Materia,Nome_Modulo,ID_Professor,Nome_Professor,Senha_Professor,Titulo_Atividade,Descricao_Atividade,Link_Atividade,Codigo_Acesso,Senha_Admin
-Admin,,,,,,,,,,,,,"admin123"
-Materia,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,,,,,,,
-Modulo,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,,,,,"MAT01",
-Atividade,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,"Exercícios de Equações","Resolva as equações propostas","https://exemplo.com/exercicios","MAT01",
-Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"prof1","Prof. João Silva","mat123",,,,`;
-
-            console.log('=== TESTANDO COM DADOS EXEMPLO ===');
-            addToSyncLog('Testando importação com dados exemplo...');
-            
-            importFromCSV(sampleCsv, false).then(success => {
-                if (success) {
-                    alert('✅ Teste concluído com sucesso!\n\nVerifique o console (F12) para detalhes completos.');
-                } else {
-                    alert('❌ Teste falhou. Verifique o console (F12) para detalhes.');
-                }
-            });
-        }
-
-        async function testSimpleSync() {
-            if (!syncConfig.csvUrl) {
-                alert('❌ Configure primeiro a URL do CSV para testar a sincronização.');
-                return;
-            }
-
-            addToSyncLog('🔬 Iniciando teste simples de sincronização...');
-            
-            // Create a simple test CSV with your current data
-            const currentSubjects = Object.keys(systemData.subjects);
-            addToSyncLog(`📊 Dados atuais: ${currentSubjects.length} matérias`);
-            
-            // Show current data
-            console.log('=== DADOS ATUAIS ANTES DO TESTE ===');
-            console.log('Matérias:', Object.keys(systemData.subjects));
-            console.log('Códigos de acesso:', systemData.moduleAccess);
-            console.log('Professores por matéria:');
-            Object.keys(systemData.subjects).forEach(key => {
-                const subject = systemData.subjects[key];
-                console.log(`  ${key}: ${subject.teachers.length} professores, ${subject.modules.length} módulos`);
-            });
-
-            try {
-                // First, test the connection
-                addToSyncLog('🔍 Testando conexão com o CSV...');
-                
-                let response;
-                try {
-                    response = await fetch(syncConfig.csvUrl, { 
-                        mode: 'cors',
-                        cache: 'no-cache',
-                        headers: {
-                            'Accept': 'text/csv,text/plain,*/*'
-                        }
-                    });
-                } catch (error) {
-                    addToSyncLog(`Tentativa 1 falhou: ${error.message}`);
-                    try {
-                        response = await fetch(syncConfig.csvUrl, { 
-                            cache: 'no-cache',
-                            headers: {
-                                'Accept': 'text/csv,text/plain,*/*'
-                            }
-                        });
-                        addToSyncLog('Tentativa 2: fetch sem CORS mode');
-                    } catch (error2) {
-                        throw new Error(`Falha na conexão: ${error2.message}`);
-                    }
-                }
-                
-                if (!response || !response.ok) {
-                    throw new Error(`HTTP ${response?.status || 'Network Error'} - Falha na resposta do servidor`);
-                }
-
-                const csvContent = await response.text();
-                addToSyncLog(`Conteúdo recebido: ${csvContent.length} caracteres`);
-                
-                // Validate content
-                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
-                    csvContent.trim().toLowerCase().startsWith('<html')) {
-                    throw new Error('URL retorna HTML em vez de CSV. Verifique a configuração da URL.');
-                }
-                
-                if (csvContent.length < 10) {
-                    throw new Error('Arquivo CSV muito pequeno ou vazio.');
-                }
-                
-                // Show first few lines for debugging
-                const lines = csvContent.split('\n').slice(0, 5);
-                addToSyncLog(`Primeiras 5 linhas do CSV:`);
-                lines.forEach((line, idx) => {
-                    addToSyncLog(`  ${idx}: "${line.substring(0, 100)}${line.length > 100 ? '...' : ''}"`);
-                });
-                
-                // Test the sync
-                const success = await importFromCSV(csvContent, false);
-                
-                if (success) {
-                    console.log('=== DADOS APÓS SINCRONIZAÇÃO ===');
-                    console.log('Matérias:', Object.keys(systemData.subjects));
-                    console.log('Códigos de acesso:', systemData.moduleAccess);
-                    console.log('Professores por matéria:');
-                    Object.keys(systemData.subjects).forEach(key => {
-                        const subject = systemData.subjects[key];
-                        console.log(`  ${key}: ${subject.teachers.length} professores, ${subject.modules.length} módulos`);
-                    });
-                    
-                    addToSyncLog('✅ Teste de sincronização concluído com sucesso');
-                    alert('✅ Teste de sincronização concluído!\n\nVerifique:\n1. Se as matérias apareceram no carrossel\n2. Se os dados foram atualizados\n3. O console (F12) para detalhes completos');
-                } else {
-                    addToSyncLog('❌ Teste de sincronização falhou - nenhum dado foi processado');
-                    alert('❌ Teste de sincronização falhou!\n\nO CSV foi acessado mas nenhum dado válido foi encontrado.\n\nVerifique:\n1. Se o formato do CSV está correto\n2. Se as colunas têm os nomes esperados\n3. Use "🔍 Debug CSV" para análise detalhada');
-                }
-                
-            } catch (error) {
-                addToSyncLog(`❌ Erro no teste: ${error.message}`);
-                console.error('Erro completo do teste:', error);
-                
-                let errorMsg = `❌ Erro no teste de sincronização:\n\n${error.message}`;
-                
-                if (error.message.includes('Failed to fetch') || error.message.includes('Network Error')) {
-                    errorMsg += '\n\n🔧 POSSÍVEIS SOLUÇÕES:\n';
-                    errorMsg += '• Verifique sua conexão com a internet\n';
-                    errorMsg += '• Certifique-se que o arquivo CSV é público\n';
-                    errorMsg += '• Tente reconfigurar a URL do CSV\n';
-                    errorMsg += '• Use "🔍 Debug CSV" para mais detalhes';
-                } else if (error.message.includes('HTML')) {
-                    errorMsg += '\n\n🔧 A URL está retornando uma página web.\n';
-                    errorMsg += 'Reconfigure a URL usando o formato correto para CSV.';
-                } else if (error.message.includes('HTTP')) {
-                    errorMsg += '\n\n🔧 Problema de acesso ao arquivo.\n';
-                    errorMsg += 'Verifique se o arquivo é público e a URL está correta.';
-                }
-                
-                alert(errorMsg);
-            }
-        }
-
         async function debugCsvContent() {
             if (!syncConfig.csvUrl) {
                 alert('Configure primeiro a URL do arquivo CSV.');
@@ -1156,130 +726,40 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
 
                 const csvContent = await response.text();
                 
-                // Check if content is HTML instead of CSV
-                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
-                    csvContent.trim().toLowerCase().startsWith('<html')) {
-                    console.log('❌ ERRO: CONTEÚDO É HTML, NÃO CSV!');
-                    console.log('Primeiros 500 caracteres:', csvContent.substring(0, 500));
-                    
-                    alert(`❌ ERRO: A URL está retornando uma página HTML, não um arquivo CSV!
-
-🔧 SOLUÇÕES:
-
-1. **Google Drive**: Use o formato correto:
-   ❌ Errado: https://drive.google.com/file/d/SEU_ID/view
-   ✅ Correto: https://drive.google.com/uc?export=download&id=SEU_ID
-
-2. **Google Sheets**: Use o formato de exportação:
-   ✅ Correto: https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv
-
-3. **Dropbox**: Adicione ?dl=1 no final:
-   ✅ Correto: https://dropbox.com/s/SEU_ID/arquivo.csv?dl=1
-
-4. **Verifique se o arquivo é público** e acessível diretamente.
-
-A URL atual está retornando uma página web em vez do arquivo CSV.`);
-                    
-                    addToSyncLog('ERRO: URL retorna HTML em vez de CSV');
-                    return;
-                }
-                
                 // Show raw content
                 console.log('=== CONTEÚDO BRUTO DO CSV ===');
-                console.log('Primeiros 1000 caracteres:', csvContent.substring(0, 1000));
-                console.log('Tamanho do conteúdo:', csvContent.length, 'caracteres');
+                console.log(csvContent);
                 
                 // Parse and show structure
                 const lines = csvContent.split('\n').filter(line => line.trim());
                 console.log('=== ANÁLISE DO CSV ===');
                 console.log(`Total de linhas: ${lines.length}`);
                 
-                if (lines.length === 0) {
-                    console.log('❌ ARQUIVO VAZIO!');
-                    alert('❌ O arquivo CSV está vazio!');
-                    return;
-                }
-                
-                console.log('Linha 0 (headers) bruta:', `"${lines[0]}"`);
-                const headers = parseCSVLine(lines[0]);
-                console.log('Headers parseados:', headers);
-                console.log('Número de headers:', headers.length);
-                
-                // Check for common header patterns
-                const headerCheck = {
-                    tipo: headers.some(h => ['Tipo', 'tipo', 'Type', 'type'].includes(h.replace(/"/g, '').trim())),
-                    materia: headers.some(h => ['ID_Materia', 'id_materia', 'SubjectID', 'subject_id'].includes(h.replace(/"/g, '').trim())),
-                    admin: headers.some(h => ['Senha_Admin', 'senha_admin', 'AdminPassword', 'admin_password'].includes(h.replace(/"/g, '').trim()))
-                };
-                
-                console.log('=== VERIFICAÇÃO DE HEADERS ===');
-                console.log('Tem coluna de Tipo?', headerCheck.tipo);
-                console.log('Tem coluna de Matéria?', headerCheck.materia);
-                console.log('Tem coluna de Admin?', headerCheck.admin);
-                
-                if (!headerCheck.tipo) {
-                    console.log('⚠️ AVISO: Não foi encontrada coluna de Tipo. Procurou por:', ['Tipo', 'tipo', 'Type', 'type']);
-                }
-                
-                // Process all lines for detailed analysis
-                for (let i = 1; i < lines.length; i++) {
-                    console.log(`\n=== LINHA ${i} ===`);
-                    console.log('Linha bruta:', `"${lines[i]}"`);
+                if (lines.length > 0) {
+                    const headers = parseCSVLine(lines[0]);
+                    console.log('Headers:', headers);
                     
-                    if (!lines[i].trim()) {
-                        console.log('❌ Linha vazia');
-                        continue;
-                    }
-                    
-                    const values = parseCSVLine(lines[i]);
-                    console.log(`Valores parseados (${values.length}):`, values);
-                    
-                    const row = {};
-                    headers.forEach((header, index) => {
-                        const cleanHeader = header.replace(/"/g, '').trim();
-                        const cleanValue = (values[index] || '').replace(/"/g, '').trim();
-                        row[cleanHeader] = cleanValue;
-                    });
-                    console.log(`Linha ${i} como objeto:`, row);
-                    
-                    // Check what data is available
-                    const dataCheck = {
-                        hasAnyData: Object.values(row).some(v => v && v.trim() !== ''),
-                        tipo: row.Tipo || row.tipo || row.Type || row.type,
-                        materia: row.ID_Materia || row.id_materia || row.SubjectID || row.subject_id,
-                        admin: row.Senha_Admin || row.senha_admin || row.AdminPassword || row.admin_password
-                    };
-                    
-                    console.log(`Dados detectados:`, dataCheck);
-                    
-                    // Test processing
-                    const testData = {
-                        admin: { password: 'admin123' },
-                        subjects: {},
-                        moduleAccess: {}
-                    };
-                    
-                    console.log('Tentando processar linha...');
-                    const processed = processCSVRow(row, testData);
-                    console.log(`Resultado do processamento:`, processed ? '✅ SUCESSO' : '❌ FALHOU');
-                    
-                    if (processed) {
-                        console.log('Estado após processamento:', testData);
+                    for (let i = 1; i < Math.min(lines.length, 6); i++) {
+                        const values = parseCSVLine(lines[i]);
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header.replace(/"/g, '').trim()] = (values[index] || '').replace(/"/g, '').trim();
+                        });
+                        console.log(`Linha ${i}:`, row);
                     }
                 }
                 
                 // Show current system data
-                console.log('\n=== DADOS ATUAIS DO SISTEMA ===');
+                console.log('=== DADOS ATUAIS DO SISTEMA ===');
                 console.log('Subjects:', Object.keys(systemData.subjects));
                 console.log('Module Access:', systemData.moduleAccess);
                 console.log('Admin Password:', systemData.admin.password);
                 
                 addToSyncLog('Debug concluído - verifique o console do navegador');
-                alert('🔍 Debug concluído!\n\nAbra o console do navegador (F12) para ver a análise completa.\n\nProcure por "VERIFICAÇÃO DE HEADERS" para ver se as colunas estão corretas.');
+                alert('🔍 Debug concluído!\n\nAbra o console do navegador (F12) para ver os detalhes do CSV e dados do sistema.');
                 
             } catch (error) {
                 addToSyncLog(`Erro no debug: ${error.message}`);
-                console.error('Erro completo:', error);
                 alert(`❌ Erro ao fazer debug do CSV:\n${error.message}`);
             }
         }
@@ -1370,196 +850,69 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                     addToSyncLog('Iniciando importação do CSV...');
                 }
                 
-                console.log('=== INÍCIO DA IMPORTAÇÃO CSV ===');
-                console.log('Conteúdo CSV (primeiros 500 chars):', csvContent.substring(0, 500));
-                console.log('Tamanho total do CSV:', csvContent.length);
-                
                 // Backup current data
                 const backup = JSON.parse(JSON.stringify(systemData));
-                console.log('Backup dos dados atuais criado');
                 
-                // Start with current data structure to preserve existing data
+                // Don't reset completely - preserve existing structure
                 const newData = {
-                    admin: { password: systemData.admin.password },
-                    subjects: JSON.parse(JSON.stringify(systemData.subjects)), // Preserve existing subjects
-                    moduleAccess: { ...systemData.moduleAccess } // Preserve existing access codes
+                    admin: { password: 'admin123' },
+                    subjects: {},
+                    moduleAccess: {}
                 };
 
                 const lines = csvContent.split('\n').filter(line => line.trim());
-                console.log('Linhas encontradas:', lines.length);
-                
                 if (lines.length === 0) {
                     throw new Error('Arquivo CSV vazio');
                 }
                 
-                console.log('Linha 0 (headers):', lines[0]);
                 const headers = parseCSVLine(lines[0]).map(h => h.replace(/"/g, '').trim());
-                console.log('Headers parseados:', headers);
                 addToSyncLog(`Headers encontrados: ${headers.join(', ')}`);
                 
-                // Auto-detect CSV structure
-                console.log('\n=== AUTO-DETECÇÃO DE ESTRUTURA ===');
-                const structure = detectCSVStructure(headers);
-                console.log('Estrutura detectada:', structure);
-                
-                if (!structure.isValid) {
-                    console.log('⚠️ ESTRUTURA NÃO RECONHECIDA - tentando processar mesmo assim...');
-                    addToSyncLog('Estrutura CSV não reconhecida - tentando processar...');
-                }
-                
                 let processedRows = 0;
-                let skippedRows = 0;
-                let updatedSubjects = new Set();
                 
                 // Process each line
                 for (let i = 1; i < lines.length; i++) {
                     const line = lines[i].trim();
-                    console.log(`\n--- PROCESSANDO LINHA ${i} ---`);
-                    console.log('Linha bruta:', `"${line}"`);
-                    
-                    if (!line) {
-                        console.log('Linha vazia, pulando...');
-                        continue;
-                    }
+                    if (!line) continue;
                     
                     const values = parseCSVLine(line);
-                    if (values.length === 0) {
-                        console.log('Nenhum valor encontrado, pulando...');
-                        continue;
-                    }
+                    if (values.length === 0) continue;
                     
                     const row = {};
                     headers.forEach((header, index) => {
                         row[header] = (values[index] || '').replace(/"/g, '').trim();
                     });
                     
-                    console.log('Row construída:', row);
-                    console.log('Valores por posição:', values.map((v, idx) => `${idx}: "${v}"`));
-                    
-                    // Use detected structure to help processing
-                    if (structure.tipoColumn !== null) {
-                        const tipoValue = values[structure.tipoColumn] || '';
-                        console.log(`Tipo na posição ${structure.tipoColumn}:`, `"${tipoValue}"`);
-                    }
-                    
-                    const result = processCSVRow(row, newData, structure);
-                    if (result) {
+                    if (processCSVRow(row, newData)) {
                         processedRows++;
-                        console.log(`✅ Linha ${i} processada com sucesso`);
-                        
-                        // Track which subjects were updated
-                        const subjectKey = getSubjectKeyFromRow(row);
-                        if (subjectKey) {
-                            updatedSubjects.add(subjectKey);
-                        }
-                    } else {
-                        skippedRows++;
-                        console.log(`❌ Linha ${i} foi pulada`);
                     }
                 }
                 
-                console.log(`\n=== RESULTADO DA IMPORTAÇÃO ===`);
-                console.log(`Linhas processadas: ${processedRows}`);
-                console.log(`Linhas puladas: ${skippedRows}`);
-                console.log('Matérias atualizadas:', Array.from(updatedSubjects));
-                console.log('Dados finais:', newData);
-                
-                // Apply changes if any data was processed
+                // Only update if we processed some data
                 if (processedRows > 0) {
-                    // Remove duplicates and validate data integrity
-                    cleanupDuplicateData(newData);
-                    
                     systemData = newData;
                     saveData();
-                    addToSyncLog(`${processedRows} linhas processadas, ${updatedSubjects.size} matérias atualizadas`);
+                    addToSyncLog(`${processedRows} linhas processadas com sucesso`);
                     
-                    // Force complete UI reload
-                    setTimeout(() => {
-                        loadSubjects();
-                        if (document.getElementById('subjectsList')) {
-                            loadSubjectsList();
-                        }
-                        if (document.getElementById('teachersList')) {
-                            loadTeachersList();
-                        }
-                        if (document.getElementById('accessCodesList')) {
-                            loadAccessCodesList();
-                        }
-                        if (document.getElementById('modulesList')) {
-                            loadModulesList();
-                        }
-                        if (document.getElementById('activitiesList')) {
-                            loadActivitiesList();
-                        }
-                        updateAllSelects();
-                    }, 100);
+                    // Reload UI
+                    loadSubjects();
+                    if (document.getElementById('subjectsList')) {
+                        loadSubjectsList();
+                    }
+                    if (document.getElementById('teachersList')) {
+                        loadTeachersList();
+                    }
+                    if (document.getElementById('accessCodesList')) {
+                        loadAccessCodesList();
+                    }
+                    updateAllSelects();
                     
                     if (!silent) {
-                        alert(`✅ Dados CSV importados com sucesso!\n\n📊 Resultado:\n• ${processedRows} registros processados\n• ${updatedSubjects.size} matérias atualizadas\n• ${skippedRows} linhas ignoradas`);
+                        alert(`✅ Dados CSV importados com sucesso!\n${processedRows} registros processados.`);
                     }
                 } else {
                     throw new Error('Nenhum dado válido encontrado no CSV');
                 }
-                
-            } catch (error) {
-                addToSyncLog(`Erro na importação: ${error.message}`);
-                console.error('CSV Import error:', error);
-                if (!silent) {
-                    alert(`❌ Erro ao processar arquivo CSV:\n${error.message}\n\nVerifique o formato do arquivo e use "🔍 Debug CSV" para mais detalhes.`);
-                }
-                return false;
-            }
-        }
-
-        // Clean up duplicate data and ensure integrity
-        function cleanupDuplicateData(data) {
-            console.log('🧹 Limpando dados duplicados...');
-            
-            Object.keys(data.subjects).forEach(subjectKey => {
-                const subject = data.subjects[subjectKey];
-                
-                // Remove duplicate teachers
-                const uniqueTeachers = [];
-                const seenTeacherPasswords = new Set();
-                const seenTeacherNames = new Set();
-                
-                subject.teachers.forEach(teacher => {
-                    const key = `${teacher.name}-${teacher.password}`;
-                    if (!seenTeacherPasswords.has(teacher.password) && !seenTeacherNames.has(teacher.name)) {
-                        uniqueTeachers.push(teacher);
-                        seenTeacherPasswords.add(teacher.password);
-                        seenTeacherNames.add(teacher.name);
-                    }
-                });
-                subject.teachers = uniqueTeachers;
-                
-                // Remove duplicate modules
-                const uniqueModules = [];
-                const seenModuleNames = new Set();
-                
-                subject.modules.forEach(module => {
-                    if (!seenModuleNames.has(module.name)) {
-                        // Remove duplicate activities within module
-                        const uniqueActivities = [];
-                        const seenActivityTitles = new Set();
-                        
-                        module.activities.forEach(activity => {
-                            if (!seenActivityTitles.has(activity.title)) {
-                                uniqueActivities.push(activity);
-                                seenActivityTitles.add(activity.title);
-                            }
-                        });
-                        
-                        module.activities = uniqueActivities;
-                        uniqueModules.push(module);
-                        seenModuleNames.add(module.name);
-                    }
-                });
-                subject.modules = uniqueModules;
-            });
-            
-            console.log('✅ Limpeza de dados concluída');
-        }
                 
                 return true;
                 
@@ -1567,112 +920,13 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 addToSyncLog(`Erro na importação: ${error.message}`);
                 console.error('CSV Import error:', error);
                 if (!silent) {
-                    alert(`❌ Erro ao processar arquivo CSV:\n${error.message}\n\nVerifique o formato do arquivo e use "🔍 Debug CSV" para mais detalhes.`);
+                    alert(`❌ Erro ao processar arquivo CSV:\n${error.message}\n\nVerifique o formato do arquivo.`);
                 }
                 return false;
             }
         }
 
-        // Helper function to find value in row using multiple possible column names
-        function findValueInRow(row, possibleKeys) {
-            for (const key of possibleKeys) {
-                if (row[key] && row[key].toString().trim()) {
-                    return row[key].toString().trim();
-                }
-                
-                // Also try case-insensitive matching
-                const foundKey = Object.keys(row).find(rowKey => 
-                    rowKey.toLowerCase().trim() === key.toLowerCase().trim()
-                );
-                if (foundKey && row[foundKey] && row[foundKey].toString().trim()) {
-                    return row[foundKey].toString().trim();
-                }
-            }
-            return '';
-        }
-
-        function getSubjectKeyFromRow(row) {
-            // Try to extract subject key from row
-            const subjectKeys = Object.keys(row).filter(key => 
-                key.toLowerCase().includes('materia') || 
-                key.toLowerCase().includes('subject') ||
-                key.toLowerCase().includes('id_materia') ||
-                key.toLowerCase().includes('subjectid')
-            );
-            
-            if (subjectKeys.length > 0) {
-                return (row[subjectKeys[0]] || '').toString().trim();
-            }
-            return null;
-        }
-
-        function detectCSVStructure(headers) {
-            console.log('Analisando headers:', headers);
-            
-            const structure = {
-                isValid: false,
-                tipoColumn: null,
-                materiaColumn: null,
-                adminColumn: null,
-                suggestions: []
-            };
-            
-            // Try to find tipo column
-            const tipoPatterns = ['tipo', 'type'];
-            for (let i = 0; i < headers.length; i++) {
-                const header = headers[i].toLowerCase().trim();
-                if (tipoPatterns.some(pattern => header.includes(pattern))) {
-                    structure.tipoColumn = i;
-                    console.log(`Coluna de tipo encontrada: ${headers[i]} (índice ${i})`);
-                    break;
-                }
-            }
-            
-            // If no tipo column, assume first column
-            if (structure.tipoColumn === null) {
-                structure.tipoColumn = 0;
-                structure.suggestions.push(`Assumindo primeira coluna "${headers[0]}" como tipo`);
-                console.log(`Assumindo primeira coluna como tipo: ${headers[0]}`);
-            }
-            
-            // Try to find materia column
-            const materiaPatterns = ['materia', 'subject', 'id_materia', 'subjectid'];
-            for (let i = 0; i < headers.length; i++) {
-                const header = headers[i].toLowerCase().trim();
-                if (materiaPatterns.some(pattern => header.includes(pattern))) {
-                    structure.materiaColumn = i;
-                    console.log(`Coluna de matéria encontrada: ${headers[i]} (índice ${i})`);
-                    break;
-                }
-            }
-            
-            // Try to find admin column
-            const adminPatterns = ['admin', 'senha_admin', 'adminpassword'];
-            for (let i = 0; i < headers.length; i++) {
-                const header = headers[i].toLowerCase().trim();
-                if (adminPatterns.some(pattern => header.includes(pattern))) {
-                    structure.adminColumn = i;
-                    console.log(`Coluna de admin encontrada: ${headers[i]} (índice ${i})`);
-                    break;
-                }
-            }
-            
-            // Check if structure is valid
-            structure.isValid = structure.tipoColumn !== null;
-            
-            if (!structure.materiaColumn) {
-                structure.suggestions.push('Coluna de matéria não encontrada - pode causar problemas');
-            }
-            
-            if (!structure.adminColumn) {
-                structure.suggestions.push('Coluna de admin não encontrada - senha padrão será mantida');
-            }
-            
-            return structure;
-        }
-
         function parseCSVLine(line) {
-            console.log('Parsing line:', `"${line}"`);
             const values = [];
             let current = '';
             let inQuotes = false;
@@ -1681,13 +935,7 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 const char = line[i];
                 
                 if (char === '"') {
-                    if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
-                        // Handle escaped quotes
-                        current += '"';
-                        i++; // Skip next quote
-                    } else {
-                        inQuotes = !inQuotes;
-                    }
+                    inQuotes = !inQuotes;
                 } else if (char === ',' && !inQuotes) {
                     values.push(current.trim());
                     current = '';
@@ -1697,128 +945,35 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             }
             
             values.push(current.trim());
-            const cleanValues = values.map(v => v.replace(/^"|"$/g, '')); // Remove surrounding quotes
-            console.log('Parsed values:', cleanValues);
-            return cleanValues;
+            return values;
         }
 
-        function processCSVRow(row, targetData, structure = null) {
-            console.log('=== PROCESSANDO LINHA ===');
-            console.log('Row completa:', row);
+        function processCSVRow(row, targetData) {
+            const tipo = row.Tipo;
+            const subjectKey = row.ID_Materia;
             
-            // Check if row has any meaningful data first
-            const hasAnyData = Object.values(row).some(value => value && value.toString().trim() !== '');
-            
-            if (!hasAnyData) {
-                console.log('❌ Linha completamente vazia - pulando');
-                return false;
-            }
-            
-            // Try multiple strategies to find tipo
-            let tipo = '';
-            
-            // Strategy 1: Look for explicit tipo columns
-            const tipoKeys = Object.keys(row).filter(key => {
-                const lowerKey = key.toLowerCase().trim();
-                return lowerKey === 'tipo' || lowerKey === 'type' || 
-                       lowerKey.includes('tipo') || lowerKey.includes('type');
-            });
-            
-            if (tipoKeys.length > 0) {
-                tipo = (row[tipoKeys[0]] || '').toString().trim();
-                console.log('Tipo encontrado via coluna específica:', tipo);
-            }
-            
-            // Strategy 2: Try first column if no tipo column found
-            if (!tipo) {
-                const firstKey = Object.keys(row)[0];
-                const firstValue = (row[firstKey] || '').toString().trim();
-                console.log('Testando primeira coluna:', firstKey, '=', `"${firstValue}"`);
-                
-                // Check if first value looks like a tipo
-                const validTipos = [
-                    'Admin', 'admin', 'ADMIN',
-                    'Materia', 'materia', 'MATERIA', 'Subject', 'subject', 'SUBJECT',
-                    'Modulo', 'modulo', 'MODULO', 'Module', 'module', 'MODULE',
-                    'Atividade', 'atividade', 'ATIVIDADE', 'Activity', 'activity', 'ACTIVITY',
-                    'Professor', 'professor', 'PROFESSOR', 'Teacher', 'teacher', 'TEACHER'
-                ];
-                
-                if (validTipos.includes(firstValue)) {
-                    tipo = firstValue;
-                    console.log('Tipo detectado na primeira coluna:', tipo);
-                }
-            }
-            
-            // Strategy 3: Try to infer tipo from available data
-            if (!tipo) {
-                const adminPassword = findValueInRow(row, ['Senha_Admin', 'senha_admin', 'AdminPassword', 'admin_password']);
-                const teacherName = findValueInRow(row, ['Nome_Professor', 'nome_professor', 'TeacherName', 'teacher_name']);
-                const moduleName = findValueInRow(row, ['Nome_Modulo', 'nome_modulo', 'ModuleName', 'module_name']);
-                const activityTitle = findValueInRow(row, ['Titulo_Atividade', 'titulo_atividade', 'ActivityTitle', 'activity_title']);
-                const subjectName = findValueInRow(row, ['Nome_Materia', 'nome_materia', 'SubjectName', 'subject_name']);
-                
-                if (adminPassword) {
-                    tipo = 'Admin';
-                    console.log('Tipo inferido como Admin (tem senha admin)');
-                } else if (teacherName) {
-                    tipo = 'Professor';
-                    console.log('Tipo inferido como Professor (tem nome professor)');
-                } else if (activityTitle) {
-                    tipo = 'Atividade';
-                    console.log('Tipo inferido como Atividade (tem título atividade)');
-                } else if (moduleName) {
-                    tipo = 'Modulo';
-                    console.log('Tipo inferido como Modulo (tem nome módulo)');
-                } else if (subjectName) {
-                    tipo = 'Materia';
-                    console.log('Tipo inferido como Materia (tem nome matéria)');
-                }
-            }
-            
-            // Try to find subject key with more flexible matching
-            let subjectKey = findValueInRow(row, [
-                'ID_Materia', 'id_materia', 'SubjectID', 'subject_id', 'subjectid',
-                'Materia', 'materia', 'Subject', 'subject'
-            ]);
-            
-            console.log('Tipo detectado:', `"${tipo}"`);
-            console.log('Subject Key detectado:', `"${subjectKey}"`);
-            console.log('Chaves de tipo encontradas:', tipoKeys);
-            console.log('Chaves de subject encontradas:', subjectKeys);
+            console.log('Processando linha:', row);
             
             // Process admin password
-            const adminPassword = findValueInRow(row, ['Senha_Admin', 'senha_admin', 'AdminPassword', 'admin_password']);
-            if ((tipo.toLowerCase().includes('admin') || !tipo) && adminPassword) {
-                targetData.admin.password = adminPassword;
-                console.log('✅ Admin password updated:', adminPassword);
+            if (tipo === 'Admin' && row.Senha_Admin) {
+                targetData.admin.password = row.Senha_Admin;
+                console.log('Admin password updated:', row.Senha_Admin);
                 return true;
             }
             
-            // Skip if no tipo found
-            if (!tipo) {
-                console.log('❌ Skipping row - no tipo found or inferred');
-                return false;
-            }
-            
-            // For non-admin rows, we need subject key
-            if (!subjectKey && !tipo.toLowerCase().includes('admin')) {
-                console.log('❌ Skipping row - no subject key for type:', tipo);
+            // Skip if no subject key for non-admin rows
+            if (!subjectKey && tipo !== 'Admin') {
+                console.log('Skipping row - no subject key');
                 return false;
             }
             
             // Ensure subject exists
             if (subjectKey && !targetData.subjects[subjectKey]) {
-                const subjectName = findValueInRow(row, ['Nome_Materia', 'nome_materia', 'SubjectName', 'subject_name']) || subjectKey;
-                const subjectDesc = findValueInRow(row, ['Descricao_Materia', 'descricao_materia', 'SubjectDescription', 'subject_description']) || '';
-                const subjectEmoji = findValueInRow(row, ['Emoji_Materia', 'emoji_materia', 'SubjectEmoji', 'subject_emoji']) || '📚';
-                const subjectColor = findValueInRow(row, ['Cor_Materia', 'cor_materia', 'SubjectColor', 'subject_color']) || 'blue-500';
-                
                 targetData.subjects[subjectKey] = {
-                    name: subjectName,
-                    description: subjectDesc,
-                    emoji: subjectEmoji,
-                    color: subjectColor,
+                    name: row.Nome_Materia || subjectKey,
+                    description: row.Descricao_Materia || '',
+                    emoji: row.Emoji_Materia || '📚',
+                    color: row.Cor_Materia || 'blue-500',
                     teachers: [],
                     modules: []
                 };
@@ -1826,180 +981,115 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             }
             
             const subject = targetData.subjects[subjectKey];
-            if (!subject && !tipo.toLowerCase().includes('admin')) {
+            if (!subject && tipo !== 'Admin') {
                 console.log('No subject found for:', subjectKey);
                 return false;
             }
             
-            // Get data using flexible column matching
-            const teacherName = findValueInRow(row, ['Nome_Professor', 'nome_professor', 'TeacherName', 'teacher_name']);
-            const moduleName = findValueInRow(row, ['Nome_Modulo', 'nome_modulo', 'ModuleName', 'module_name']);
-            const activityTitle = findValueInRow(row, ['Titulo_Atividade', 'titulo_atividade', 'ActivityTitle', 'activity_title']);
-            const accessCode = findValueInRow(row, ['Codigo_Acesso', 'codigo_acesso', 'AccessCode', 'access_code']);
-            
-            // Process based on tipo
-            const tipoLower = tipo.toLowerCase();
-            
-            if (tipoLower.includes('professor') || tipoLower.includes('teacher')) {
-                if (teacherName) {
-                    const existingTeacher = subject.teachers.find(t => t.name === teacherName);
-                    if (!existingTeacher) {
-                        const teacherPassword = findValueInRow(row, ['Senha_Professor', 'senha_professor', 'TeacherPassword', 'teacher_password']) || 'temp123';
-                        const teacherId = findValueInRow(row, ['ID_Professor', 'id_professor', 'TeacherID', 'teacher_id']) || Date.now().toString();
-                        
-                        subject.teachers.push({
-                            id: teacherId,
-                            name: teacherName,
-                            password: teacherPassword
-                        });
-                        console.log('✅ Added teacher:', teacherName);
-                    }
-                    return true;
+            // Process different types
+            if (tipo === 'Professor' && row.Nome_Professor) {
+                // Add teacher if not exists
+                const existingTeacher = subject.teachers.find(t => t.name === row.Nome_Professor);
+                if (!existingTeacher) {
+                    subject.teachers.push({
+                        id: row.ID_Professor || Date.now().toString(),
+                        name: row.Nome_Professor,
+                        password: row.Senha_Professor || 'temp123'
+                    });
+                    console.log('Added teacher:', row.Nome_Professor);
                 }
-            } else if ((tipoLower.includes('modulo') || tipoLower.includes('module') || 
-                       tipoLower.includes('atividade') || tipoLower.includes('activity')) && moduleName) {
-                
+                return true;
+            } else if ((tipo === 'Modulo' || tipo === 'Atividade') && row.Nome_Modulo) {
                 // Find or create module
-                let module = subject.modules.find(m => m.name === moduleName);
+                let module = subject.modules.find(m => m.name === row.Nome_Modulo);
                 if (!module) {
                     module = {
-                        name: moduleName,
+                        name: row.Nome_Modulo,
                         activities: []
                     };
                     subject.modules.push(module);
-                    console.log('✅ Created module:', moduleName);
+                    console.log('Created module:', row.Nome_Modulo);
                     
                     // Set access code if provided
-                    if (accessCode) {
+                    if (row.Codigo_Acesso) {
                         const moduleIndex = subject.modules.length - 1;
                         const moduleKey = `${subjectKey}-${moduleIndex}`;
-                        targetData.moduleAccess[moduleKey] = accessCode;
-                        console.log('✅ Set access code:', accessCode, 'for', moduleKey);
+                        targetData.moduleAccess[moduleKey] = row.Codigo_Acesso;
+                        console.log('Set access code:', row.Codigo_Acesso, 'for', moduleKey);
                     }
                 }
                 
                 // Add activity if it's an activity row
-                if ((tipoLower.includes('atividade') || tipoLower.includes('activity')) && activityTitle) {
-                    const existingActivity = module.activities.find(a => a.title === activityTitle);
+                if (tipo === 'Atividade' && row.Titulo_Atividade) {
+                    const existingActivity = module.activities.find(a => a.title === row.Titulo_Atividade);
                     if (!existingActivity) {
-                        const activityDesc = findValueInRow(row, ['Descricao_Atividade', 'descricao_atividade', 'ActivityDescription', 'activity_description']) || '';
-                        const activityLink = findValueInRow(row, ['Link_Atividade', 'link_atividade', 'ActivityLink', 'activity_link']);
-                        
                         module.activities.push({
-                            title: activityTitle,
-                            description: activityDesc,
-                            link: activityLink || null
+                            title: row.Titulo_Atividade,
+                            description: row.Descricao_Atividade || '',
+                            link: row.Link_Atividade || null
                         });
-                        console.log('✅ Added activity:', activityTitle);
+                        console.log('Added activity:', row.Titulo_Atividade);
                     }
                 }
                 return true;
-            } else if (tipoLower.includes('materia') || tipoLower.includes('subject')) {
-                // Subject already created above
-                console.log('✅ Subject processed:', subjectKey);
+            } else if (tipo === 'Materia') {
+                // Just creating the subject is enough
+                console.log('Subject created/updated:', subjectKey);
                 return true;
             }
             
-            console.log('❌ Row not processed - tipo:', `"${tipo}"`);
+            console.log('Row not processed:', tipo);
             return false;
         }
 
-        // Default sample data structure - only used if no saved data exists
-        const DEFAULT_SAMPLE_DATA = {
-            subjects: {
-                math: {
-                    name: 'Matemática',
-                    description: 'Álgebra, Geometria e Cálculo',
-                    emoji: '📊',
-                    color: 'blue-500',
-                    teachers: [
-                        {
-                            name: 'Prof. Maria Silva',
-                            password: 'mat123',
-                            id: '1'
-                        }
-                    ],
-                    modules: [
-                        { 
-                            name: 'Módulo 1: Álgebra Básica', 
-                            activities: [
-                                {
-                                    title: 'Exercícios de Equações',
-                                    description: 'Resolva as equações do primeiro grau propostas.',
-                                    link: 'https://example.com/exercicios-equacoes'
-                                }
-                            ]
-                        },
-                        { name: 'Módulo 2: Geometria Plana', activities: [] },
-                        { name: 'Módulo 3: Funções', activities: [] },
-                        { name: 'Módulo 4: Trigonometria', activities: [] }
-                    ]
-                },
-                portuguese: {
-                    name: 'Português',
-                    description: 'Gramática, Literatura e Redação',
-                    emoji: '📚',
-                    color: 'green-500',
-                    teachers: [
-                        {
-                            name: 'Prof. João Santos',
-                            password: 'port123',
-                            id: '2'
-                        }
-                    ],
-                    modules: [
-                        { 
-                            name: 'Módulo 1: Gramática', 
-                            activities: [
-                                {
-                                    title: 'Análise Sintática',
-                                    description: 'Identifique os termos das orações nos textos fornecidos.',
-                                    link: null
-                                }
-                            ]
-                        },
-                        { name: 'Módulo 2: Literatura Clássica', activities: [] },
-                        { name: 'Módulo 3: Redação', activities: [] },
-                        { name: 'Módulo 4: Interpretação de Texto', activities: [] }
-                    ]
-                },
-                history: {
-                    name: 'História',
-                    description: 'Brasil, Mundo e Contemporânea',
-                    emoji: '🏛️',
-                    color: 'purple-500',
-                    teachers: [
-                        {
-                            name: 'Prof. Ana Costa',
-                            password: 'hist123',
-                            id: '3'
-                        }
-                    ],
-                    modules: [
-                        { 
-                            name: 'Módulo 1: Brasil Colonial', 
-                            activities: [
-                                {
-                                    title: 'Período Colonial',
-                                    description: 'Estude sobre a colonização do Brasil.',
-                                    link: null
-                                }
-                            ]
-                        },
-                        { name: 'Módulo 2: Independência', activities: [] },
-                        { name: 'Módulo 3: República', activities: [] },
-                        { name: 'Módulo 4: História Contemporânea', activities: [] }
-                    ]
-                }
+        // Initialize system with sample data
+        systemData.subjects = {
+            math: {
+                name: 'Matemática',
+                description: 'Álgebra, Geometria e Cálculo',
+                emoji: '📊',
+                color: 'blue-500',
+                teachers: [], // professores vinculados
+                modules: [
+                    { name: 'Módulo 1: Álgebra Básica', activities: [] },
+                    { name: 'Módulo 2: Geometria Plana', activities: [] },
+                    { name: 'Módulo 3: Funções', activities: [] },
+                    { name: 'Módulo 4: Trigonometria', activities: [] }
+                ]
             },
-            moduleAccess: {
-                'math-0': 'MAT01',
-                'math-1': 'MAT02',
-                'portuguese-0': 'PORT01',
-                'portuguese-1': 'PORT02',
-                'history-0': 'HIST01',
-                'history-1': 'HIST02'
+            portuguese: {
+                name: 'Português',
+                description: 'Gramática, Literatura e Redação',
+                emoji: '📚',
+                color: 'green-500',
+                teachers: [],
+                modules: [
+                    { name: 'Módulo 1: Gramática', activities: [] },
+                    { name: 'Módulo 2: Literatura Clássica', activities: [] },
+                    { name: 'Módulo 3: Redação', activities: [] },
+                    { name: 'Módulo 4: Interpretação de Texto', activities: [] }
+                ]
+            },
+            history: {
+                name: 'História',
+                description: 'Brasil, Mundo e Contemporânea',
+                emoji: '🏛️',
+                color: 'purple-500',
+                teachers: [],
+                modules: [
+                    { name: 'Módulo 1: Brasil Colonial', activities: [] },
+                    { name: 'Módulo 2: Independência', activities: [] },
+                    { name: 'Módulo 3: República', activities: [] },
+                    { name: 'Módulo 4: História Contemporânea', activities: [] }
+                ]
             }
+        };
+
+        // Códigos de acesso para módulos (formato: subjectKey-moduleIndex: código)
+        systemData.moduleAccess = {
+            'math-0': 'MAT01',
+            'portuguese-0': 'PORT01',
+            'history-0': 'HIST01'
         };
 
         let currentAdminTab = 'subjects';
@@ -2025,13 +1115,13 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             const passwordLabel = document.getElementById('passwordLabel');
             
             if (type === 'student') {
-                document.getElementById('studentBtn').className = 'py-2 px-3 border-2 border-orange-500 bg-orange-500 text-white rounded-lg transition duration-200 text-sm';
+                document.getElementById('studentBtn').className = 'py-2 px-3 border-2 border-blue-500 bg-blue-500 text-white rounded-lg transition duration-200 text-sm';
                 document.getElementById('studentHint').classList.remove('hidden');
                 subjectSelectDiv.classList.remove('hidden');
                 passwordLabel.textContent = 'Código de Acesso do Módulo';
                 updateLoginSubjectSelect();
             } else if (type === 'teacher') {
-                document.getElementById('teacherBtn').className = 'py-2 px-3 border-2 border-amber-500 bg-amber-500 text-white rounded-lg transition duration-200 text-sm';
+                document.getElementById('teacherBtn').className = 'py-2 px-3 border-2 border-purple-500 bg-purple-500 text-white rounded-lg transition duration-200 text-sm';
                 document.getElementById('teacherHint').classList.remove('hidden');
                 subjectSelectDiv.classList.add('hidden');
                 passwordLabel.textContent = 'Senha do Professor';
@@ -2086,7 +1176,6 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                     if (systemData.moduleAccess[key] === password && key.startsWith(selectedSubject + '-')) {
                         currentUser.name = 'Aluno';
                         currentUser.subjectKey = selectedSubject;
-                        currentUser.moduleIndex = parseInt(key.split('-')[1]); // Store allowed module index
                         loginSuccess = true;
                     }
                 });
@@ -2107,20 +1196,11 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                     document.getElementById('adminPanel').classList.add('hidden');
                 }
                 
-                // Sync data first if CSV is configured
-                if (syncConfig.csvUrl) {
-                    forceSyncFromCsv().then(() => {
-                        loadSubjects();
-                    }).catch(() => {
-                        loadSubjects(); // Load anyway if sync fails
-                    });
-                    
-                    // Start auto-sync
-                    if (syncConfig.autoSync) {
-                        startAutoSync();
-                    }
-                } else {
-                    loadSubjects();
+                loadSubjects();
+                
+                // Start auto-sync if configured
+                if (syncConfig.csvUrl && syncConfig.autoSync) {
+                    startAutoSync();
                 }
             } else {
                 document.getElementById('errorMessage').classList.remove('hidden');
@@ -2141,8 +1221,7 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             currentUser = {
                 type: null,
                 subjectKey: null,
-                name: null,
-                moduleIndex: null
+                name: null
             };
             
             // Reset to student selection
@@ -2172,7 +1251,7 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             
             // Show selected panel and update tab style
             document.getElementById(tabName + 'Panel').classList.remove('hidden');
-            document.getElementById(tabName + 'Tab').className = 'flex-1 py-4 px-4 text-center font-semibold text-orange-600 border-b-2 border-orange-600 bg-orange-50 text-sm';
+            document.getElementById(tabName + 'Tab').className = 'flex-1 py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm';
             
             // Hide admin-only tabs for teachers
             if (currentUser.type === 'teacher') {
@@ -2180,7 +1259,7 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                     tab.style.display = 'none';
                 });
                 // Make activities tab full width for teachers
-                document.getElementById('activitiesTab').className = 'w-full py-4 px-4 text-center font-semibold text-orange-600 border-b-2 border-orange-600 bg-orange-50 text-sm';
+                document.getElementById('activitiesTab').className = 'w-full py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm';
             } else {
                 document.querySelectorAll('.admin-only').forEach(tab => {
                     tab.style.display = 'block';
@@ -2339,11 +1418,6 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 container.innerHTML = '';
                 
                 availableSubjects[subjectKey].modules.forEach((module, index) => {
-                    // For students, only show the specific module they have access to
-                    if (currentUser.type === 'student' && currentUser.moduleIndex !== undefined && currentUser.moduleIndex !== index) {
-                        return; // Skip this module
-                    }
-                    
                     const moduleDiv = document.createElement('div');
                     moduleDiv.className = 'border border-gray-200 rounded-lg overflow-hidden';
                     moduleDiv.innerHTML = `
@@ -2359,7 +1433,7 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                                     ${module.activities.length === 0 ? 
                                         '<p class="text-gray-500 italic">Nenhuma atividade adicionada ainda.</p>' : 
                                         module.activities.map((activity, actIndex) => `
-                                            <div class="bg-orange-50 p-3 rounded-lg relative activity-item ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'cursor-move' : ''}" 
+                                            <div class="bg-blue-50 p-3 rounded-lg relative activity-item ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'cursor-move' : ''}" 
                                                  draggable="${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'true' : 'false'}"
                                                  data-subject="${subjectKey}" 
                                                  data-module="${index}" 
@@ -2374,9 +1448,9 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                                                     </div>
                                                 ` : ''}
                                                 <div class="${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'ml-6' : ''}">
-                                                    <h4 class="font-semibold text-orange-800">${activity.title}</h4>
+                                                    <h4 class="font-semibold text-blue-800">${activity.title}</h4>
                                                     <p class="text-gray-700 text-sm mt-1">${activity.description}</p>
-                                                    ${activity.link ? `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:text-orange-800 text-sm mt-2 inline-block">🔗 Acessar atividade</a>` : ''}
+                                                    ${activity.link ? `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block">🔗 Acessar atividade</a>` : ''}
                                                 </div>
                                                 ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? `
                                                     <button onclick="deleteActivity('${subjectKey}', ${index}, ${actIndex})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs">
@@ -3148,61 +2222,50 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             alert('✅ Atividade adicionada com sucesso!');
         }
 
-        // Initialize system data with proper structure
-        function initializeSystemData() {
-            // Ensure systemData has proper structure
-            if (!systemData.admin) {
-                systemData.admin = { password: 'admin123' };
-            }
-            if (!systemData.subjects) {
-                systemData.subjects = {};
-            }
-            if (!systemData.moduleAccess) {
-                systemData.moduleAccess = {};
-            }
-        }
-
-        // Load default sample data only if no saved data exists
-        function loadDefaultSampleData() {
-            console.log('📝 Carregando dados de exemplo padrão...');
-            
-            systemData.subjects = JSON.parse(JSON.stringify(DEFAULT_SAMPLE_DATA.subjects));
-            systemData.moduleAccess = { ...systemData.moduleAccess, ...DEFAULT_SAMPLE_DATA.moduleAccess };
-            
-            console.log('✅ Dados de exemplo carregados:', Object.keys(systemData.subjects));
-        }
-
-        // Validate and fix data structure
-        function validateDataStructure() {
-            let fixed = false;
-            
-            // Ensure all subjects have required properties
-            Object.keys(systemData.subjects).forEach(key => {
-                const subject = systemData.subjects[key];
-                if (!subject.teachers) {
-                    subject.teachers = [];
-                    fixed = true;
-                }
-                if (!subject.modules) {
-                    subject.modules = [];
-                    fixed = true;
-                }
-                
-                // Ensure all modules have activities array
-                subject.modules.forEach(module => {
-                    if (!module.activities) {
-                        module.activities = [];
-                        fixed = true;
-                    }
-                });
+        // Initialize with sample data and teachers
+        function initializeSampleData() {
+            // Add sample teachers
+            systemData.subjects.math.teachers.push({
+                name: 'Prof. Maria Silva',
+                password: 'mat123',
+                id: '1'
             });
-            
-            if (fixed) {
-                console.log('🔧 Estrutura de dados corrigida');
-                saveData();
-            }
-            
-            return fixed;
+
+            systemData.subjects.portuguese.teachers.push({
+                name: 'Prof. João Santos',
+                password: 'port123',
+                id: '2'
+            });
+
+            systemData.subjects.history.teachers.push({
+                name: 'Prof. Ana Costa',
+                password: 'hist123',
+                id: '3'
+            });
+
+            // Add sample activities
+            systemData.subjects.math.modules[0].activities.push({
+                title: 'Exercícios de Equações',
+                description: 'Resolva as equações do primeiro grau propostas.',
+                link: 'https://example.com/exercicios-equacoes'
+            });
+
+            systemData.subjects.portuguese.modules[0].activities.push({
+                title: 'Análise Sintática',
+                description: 'Identifique os termos das orações nos textos fornecidos.',
+                link: null
+            });
+
+            systemData.subjects.history.modules[0].activities.push({
+                title: 'Período Colonial',
+                description: 'Estude sobre a colonização do Brasil.',
+                link: null
+            });
+
+            // Add more access codes
+            systemData.moduleAccess['math-1'] = 'MAT02';
+            systemData.moduleAccess['portuguese-1'] = 'PORT02';
+            systemData.moduleAccess['history-1'] = 'HIST02';
         }
 
         // Drag and Drop Functions
@@ -3297,36 +2360,28 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
         function initializeSystem() {
             console.log('🚀 Inicializando sistema...');
             
-            // Step 1: Initialize basic data structure
-            initializeSystemData();
-            console.log('📋 Estrutura básica inicializada');
+            // Always start with sample data structure
+            initializeSampleData();
             
-            // Step 2: Try to load saved data
-            const hasSavedData = loadData();
-            
-            // Step 3: If no saved data, load default sample data
-            if (!hasSavedData || Object.keys(systemData.subjects).length === 0) {
-                console.log('📝 Nenhum dado salvo encontrado - carregando dados de exemplo');
-                loadDefaultSampleData();
-                saveData(); // Save the sample data
+            // Try to load saved data and merge
+            const savedData = loadData();
+            if (savedData) {
+                console.log('✅ Dados salvos carregados');
             } else {
-                console.log('✅ Dados salvos carregados:', Object.keys(systemData.subjects));
+                console.log('📝 Usando dados de exemplo');
+                saveData(); // Save the initial sample data
             }
             
-            // Step 4: Validate and fix data structure if needed
-            validateDataStructure();
-            
-            // Step 5: Load sync configuration
+            // Load sync configuration
             loadSyncConfig();
             console.log('🔄 Configuração de sync carregada');
             
-            // Step 6: Update display
+            // Update display
             updateSyncDisplay();
             
-            console.log('✅ Sistema inicializado com sucesso');
-            console.log('📊 Matérias disponíveis:', Object.keys(systemData.subjects));
-            console.log('🔐 Códigos de acesso:', Object.keys(systemData.moduleAccess).length);
-            console.log('👤 Senha admin:', systemData.admin.password);
+            console.log('✅ Sistema inicializado');
+            console.log('Subjects disponíveis:', Object.keys(systemData.subjects));
+            console.log('Códigos de acesso:', systemData.moduleAccess);
         }
 
         // Initialize the system when page loads
@@ -3337,5 +2392,5 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             stopAutoSync();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b975e491c600f5',t:'MTc1OTk2NjU4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a6ff6445e04ae8',t:'MTc1OTc3Mjk5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
