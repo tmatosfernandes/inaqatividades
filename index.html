@@ -79,7 +79,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+<body class="bg-gradient-to-br from-orange-50 to-amber-100 min-h-screen">
     <!-- Sync Indicator -->
     <div id="syncIndicator" class="sync-indicator bg-green-500 text-white px-3 py-1 rounded-full text-sm hidden">
         🔄 Sincronizando...
@@ -89,7 +89,7 @@
     <div id="loginOverlay" class="fixed inset-0 bg-black bg-opacity-50 login-overlay flex items-center justify-center z-50">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                     </svg>
@@ -100,7 +100,7 @@
             
             <div class="space-y-4 mb-6">
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="selectUserType('student')" id="studentBtn" class="py-2 px-3 border-2 border-blue-500 text-blue-500 rounded-lg transition duration-200 hover:bg-blue-50 text-sm">
+                    <button onclick="selectUserType('student')" id="studentBtn" class="py-2 px-3 border-2 border-orange-500 text-orange-500 rounded-lg transition duration-200 hover:bg-orange-50 text-sm">
                         👨‍🎓 Aluno
                     </button>
                     <button onclick="selectUserType('teacher')" id="teacherBtn" class="py-2 px-3 border-2 border-gray-300 text-gray-500 rounded-lg transition duration-200 hover:bg-gray-50 text-sm">
@@ -122,14 +122,14 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         <span id="passwordLabel">Senha de Acesso</span>
                     </label>
-                    <input type="password" id="passwordInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Digite sua senha">
+                    <input type="password" id="passwordInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Digite sua senha">
                     <div class="mt-2 text-xs text-gray-500">
                         <div id="studentHint" class="block">💡 Digite o código de acesso do módulo</div>
                         <div id="teacherHint" class="hidden">💡 Digite sua senha de professor</div>
                         <div id="adminHint" class="hidden">💡 Senha do administrador: <span class="font-mono">admin123</span></div>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
                     Entrar
                 </button>
                 <div id="errorMessage" class="text-red-500 text-sm text-center hidden">Senha incorreta. Tente novamente.</div>
@@ -179,12 +179,12 @@
 
                 <!-- Navigation Arrows -->
                 <div class="flex justify-between items-center mt-6">
-                    <button onclick="previousSubject()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-3 rounded-full transition duration-200">
+                    <button onclick="previousSubject()" class="bg-orange-200 hover:bg-orange-300 text-orange-700 p-3 rounded-full transition duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
                     </button>
-                    <button onclick="nextSubject()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-3 rounded-full transition duration-200">
+                    <button onclick="nextSubject()" class="bg-orange-200 hover:bg-orange-300 text-orange-700 p-3 rounded-full transition duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -198,7 +198,7 @@
             <!-- Admin Navigation Tabs -->
             <div class="bg-white rounded-2xl shadow-xl mb-6">
                 <div class="flex border-b border-gray-200 flex-wrap" id="adminTabs">
-                    <button onclick="showAdminTab('subjects')" id="subjectsTab" class="flex-1 py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm admin-only">
+                    <button onclick="showAdminTab('subjects')" id="subjectsTab" class="flex-1 py-4 px-4 text-center font-semibold text-orange-600 border-b-2 border-orange-600 bg-orange-50 text-sm admin-only">
                         📚 Matérias
                     </button>
                     <button onclick="showAdminTab('modules')" id="modulesTab" class="flex-1 py-4 px-4 text-center font-semibold text-gray-500 hover:text-gray-700 text-sm admin-only">
@@ -230,7 +230,7 @@
                         <input type="text" id="newSubjectDescription" placeholder="Descrição (ex: Mecânica e Eletricidade)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <input type="text" id="newSubjectEmoji" placeholder="Emoji (ex: ⚡)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <input type="text" id="newSubjectColor" placeholder="Cor (ex: red-500)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="addSubject()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addSubject()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Matéria
                         </button>
                     </div>
@@ -250,7 +250,7 @@
                         <select id="moduleSubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         </select>
                         <input type="text" id="newModuleName" placeholder="Nome do módulo" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="addModule()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addModule()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Módulo
                         </button>
                     </div>
@@ -276,7 +276,7 @@
                         <input type="text" id="activityTitle" placeholder="Título da atividade" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         <textarea id="activityDescription" placeholder="Descrição da atividade" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 h-20"></textarea>
                         <input type="url" id="activityLink" placeholder="Link da atividade (opcional)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="addActivity()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="addActivity()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Atividade
                         </button>
                     </div>
@@ -293,20 +293,22 @@
 
             <!-- Users Management -->
             <div id="usersPanel" class="bg-white rounded-2xl shadow-xl p-6 hidden">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Gerenciar Usuários</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Gerenciar Professores</h3>
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
-                        <h4 class="font-semibold text-gray-700 mb-3">Adicionar Professor</h4>
-                        <input type="text" id="newTeacherName" placeholder="Nome do professor" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <input type="password" id="newTeacherPassword" placeholder="Senha do professor" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <h4 class="font-semibold text-gray-700 mb-3">Adicionar Novo Professor</h4>
                         <select id="teacherSubjectSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         </select>
-                        <button onclick="addTeacher()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <input type="text" id="teacherName" placeholder="Nome do professor" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <input type="password" id="teacherPassword" placeholder="Senha do professor" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        <button onclick="addTeacher()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Adicionar Professor
                         </button>
                     </div>
                     <div>
-                        <h4 class="font-semibold text-gray-700 mb-3">Professores Cadastrados</h4>
+                        <h4 class="font-semibold text-gray-700 mb-3">Professores por Matéria</h4>
+                        <select id="viewTeachersSelect" onchange="loadTeachersList()" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
+                        </select>
                         <div id="teachersList" class="space-y-2 max-h-60 overflow-y-auto"></div>
                     </div>
                 </div>
@@ -323,7 +325,7 @@
                         <select id="accessModuleSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
                         </select>
                         <input type="text" id="moduleAccessCode" placeholder="Código de acesso (ex: MAT01)" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="setModuleAccess()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="setModuleAccess()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Definir Código
                         </button>
                     </div>
@@ -366,10 +368,10 @@
                             </p>
                         </div>
                         <input type="url" id="csvFileUrl" placeholder="URL do arquivo CSV compartilhado" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2">
-                        <button onclick="configureCsvSync()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200 mb-2">
+                        <button onclick="configureCsvSync()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200 mb-2">
                             Configurar Sincronização
                         </button>
-                        <button onclick="testCsvConnection()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                        <button onclick="testCsvConnection()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                             Testar Conexão
                         </button>
                     </div>
@@ -378,17 +380,14 @@
                     <div>
                         <h4 class="font-semibold text-gray-700 mb-3">🔄 Sincronização Manual</h4>
                         <div class="space-y-2">
-                            <button onclick="forceSyncFromCsv()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            <button onclick="forceSyncFromCsv()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📥 Sincronizar do CSV
                             </button>
-                            <button onclick="exportToCsvFile()" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            <button onclick="exportToCsvFile()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📤 Exportar para CSV
                             </button>
-                            <button onclick="generateSampleCsv()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition duration-200">
+                            <button onclick="generateSampleCsv()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
                                 📋 Gerar CSV Modelo
-                            </button>
-                            <button onclick="debugCsvContent()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition duration-200">
-                                🔍 Debug CSV
                             </button>
                         </div>
                         
@@ -419,7 +418,6 @@
         const STORAGE_KEY = 'portal_atividades_data';
         const SYNC_CONFIG_KEY = 'portal_sync_config';
         
-        // Sync Configuration
         let syncConfig = {
             csvUrl: null,
             autoSync: false,
@@ -438,7 +436,7 @@
         
         let currentUser = {
             type: null, // 'admin', 'teacher', 'student'
-            subjectKey: null, // para professores
+            subjectKey: null, // para professores e alunos
             name: null
         };
         let currentSubject = 0;
@@ -449,10 +447,10 @@
                 const saved = localStorage.getItem(SYNC_CONFIG_KEY);
                 if (saved) {
                     syncConfig = { ...syncConfig, ...JSON.parse(saved) };
-                    updateSyncDisplay();
-                    if (syncConfig.autoSync && syncConfig.csvUrl) {
-                        startAutoSync();
-                    }
+                }
+                updateSyncDisplay();
+                if (syncConfig.autoSync && syncConfig.csvUrl) {
+                    startAutoSync();
                 }
             } catch (error) {
                 console.error('Erro ao carregar configuração de sincronização:', error);
@@ -548,22 +546,52 @@
             }
 
             try {
-                // Test the URL
-                const response = await fetch(url, { mode: 'cors' });
+                addToSyncLog(`Testando URL: ${url}`);
+                const response = await fetch(url, { 
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
+                }
+
+                const csvContent = await response.text();
+                
+                // Validate CSV content
+                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
+                    csvContent.trim().toLowerCase().startsWith('<html')) {
+                    throw new Error('URL retorna HTML em vez de CSV. Verifique o formato da URL.');
+                }
+                
+                if (csvContent.length < 10) {
+                    throw new Error('Arquivo CSV muito pequeno ou vazio.');
                 }
 
                 syncConfig.csvUrl = url;
                 saveSyncConfig();
                 updateSyncDisplay();
-                addToSyncLog(`CSV configurado: ${url}`);
+                addToSyncLog(`✅ CSV configurado com sucesso`);
                 
-                alert('✅ URL do CSV configurada com sucesso! A sincronização automática está disponível.');
+                alert('✅ URL do CSV configurada com sucesso!\n\nA sincronização automática está disponível.');
                 
             } catch (error) {
-                addToSyncLog(`Erro ao configurar CSV: ${error.message}`);
-                alert('❌ Erro ao acessar o arquivo CSV. Verifique se a URL está correta e se o arquivo é público.');
+                addToSyncLog(`❌ Erro: ${error.message}`);
+                
+                let errorMsg = '❌ Erro ao acessar o arquivo CSV:\n\n' + error.message;
+                
+                if (error.message.includes('CORS')) {
+                    errorMsg += '\n\n🔧 SOLUÇÕES PARA CORS:\n';
+                    errorMsg += '1. Google Drive: Use https://drive.google.com/uc?export=download&id=SEU_ID\n';
+                    errorMsg += '2. Google Sheets: Use https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv\n';
+                    errorMsg += '3. Dropbox: Adicione ?dl=1 no final da URL\n';
+                    errorMsg += '4. Certifique-se que o arquivo é público';
+                } else if (error.message.includes('HTML')) {
+                    errorMsg += '\n\n🔧 A URL está retornando uma página web em vez do arquivo CSV.\n';
+                    errorMsg += 'Verifique se está usando o link direto para download do arquivo.';
+                }
+                
+                alert(errorMsg);
             }
         }
 
@@ -574,34 +602,8 @@
             }
 
             try {
-                addToSyncLog('Testando conexão com CSV...');
-                const response = await fetch(syncConfig.csvUrl, { mode: 'cors' });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const csvContent = await response.text();
-                const lines = csvContent.split('\n').filter(line => line.trim());
-                
-                addToSyncLog(`Conexão OK - ${lines.length} linhas encontradas`);
-                alert(`✅ Conexão bem-sucedida!\n\nArquivo CSV acessível com ${lines.length} linhas.`);
-                
-            } catch (error) {
-                addToSyncLog(`Erro na conexão: ${error.message}`);
-                alert(`❌ Erro ao conectar com o CSV:\n${error.message}`);
-            }
-        }
-
-        async function forceSyncFromCsv() {
-            if (!syncConfig.csvUrl) {
-                alert('Configure primeiro a URL do arquivo CSV.');
-                return;
-            }
-
-            try {
-                showSyncIndicator('🔄 Sincronizando dados...');
-                addToSyncLog('Iniciando sincronização manual...');
+                addToSyncLog('🔍 Testando conexão com CSV...');
+                showSyncIndicator('🔍 Testando conexão...');
                 
                 const response = await fetch(syncConfig.csvUrl, { 
                     mode: 'cors',
@@ -613,18 +615,120 @@
                 }
 
                 const csvContent = await response.text();
-                await importFromCSV(csvContent, false);
                 
-                syncConfig.lastSync = Date.now();
-                saveSyncConfig();
-                updateSyncDisplay();
+                // Validate content
+                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
+                    csvContent.trim().toLowerCase().startsWith('<html')) {
+                    throw new Error('URL retorna HTML em vez de CSV');
+                }
                 
-                addToSyncLog('Sincronização manual concluída');
-                showSyncIndicator('✅ Dados sincronizados!');
+                const lines = csvContent.split('\n').filter(line => line.trim());
+                const headers = lines.length > 0 ? parseCSVLine(lines[0]) : [];
+                
+                addToSyncLog(`✅ Conexão OK - ${lines.length} linhas, ${headers.length} colunas`);
+                showSyncIndicator('✅ Conexão OK!');
+                
+                let message = `✅ Conexão bem-sucedida!\n\n`;
+                message += `📊 Arquivo CSV acessível:\n`;
+                message += `• ${lines.length} linhas total\n`;
+                message += `• ${headers.length} colunas\n`;
+                message += `• Tamanho: ${(csvContent.length / 1024).toFixed(1)} KB\n\n`;
+                
+                if (headers.length > 0) {
+                    message += `📋 Colunas encontradas:\n${headers.slice(0, 5).join(', ')}${headers.length > 5 ? '...' : ''}`;
+                }
+                
+                alert(message);
                 
             } catch (error) {
-                addToSyncLog(`Erro na sincronização: ${error.message}`);
-                alert(`❌ Erro ao sincronizar:\n${error.message}`);
+                addToSyncLog(`❌ Erro na conexão: ${error.message}`);
+                showSyncIndicator('❌ Erro na conexão');
+                
+                let errorMsg = `❌ Erro ao conectar com o CSV:\n\n${error.message}`;
+                
+                if (error.message.includes('Failed to fetch') || error.message.includes('Network Error')) {
+                    errorMsg += '\n\n🔧 POSSÍVEIS SOLUÇÕES:\n';
+                    errorMsg += '• Verifique sua conexão com a internet\n';
+                    errorMsg += '• Certifique-se que o arquivo é público\n';
+                    errorMsg += '• Tente usar uma URL diferente (Google Sheets, Dropbox, etc.)\n';
+                    errorMsg += '• Verifique se não há bloqueio de CORS';
+                } else if (error.message.includes('HTML')) {
+                    errorMsg += '\n\n🔧 A URL está retornando uma página web.\n';
+                    errorMsg += 'Use o link direto para download do arquivo CSV.';
+                }
+                
+                alert(errorMsg);
+            }
+        }
+
+        async function forceSyncFromCsv() {
+            if (!syncConfig.csvUrl) {
+                alert('Configure primeiro a URL do arquivo CSV.');
+                return;
+            }
+
+            try {
+                showSyncIndicator('🔄 Sincronizando dados...');
+                addToSyncLog('🔄 Iniciando sincronização manual...');
+                
+                const response = await fetch(syncConfig.csvUrl, { 
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const csvContent = await response.text();
+                addToSyncLog(`Conteúdo recebido: ${csvContent.length} caracteres`);
+                
+                // Validate content before processing
+                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
+                    csvContent.trim().toLowerCase().startsWith('<html')) {
+                    throw new Error('URL retorna HTML em vez de CSV. Verifique a configuração da URL.');
+                }
+                
+                const success = await importFromCSV(csvContent, false);
+                
+                if (success) {
+                    syncConfig.lastSync = Date.now();
+                    saveSyncConfig();
+                    updateSyncDisplay();
+                    
+                    addToSyncLog('✅ Sincronização manual concluída');
+                    showSyncIndicator('✅ Dados sincronizados!');
+                    
+                    // Force reload of all UI components
+                    loadSubjects();
+                    if (currentAdminTab === 'subjects') loadSubjectsList();
+                    if (currentAdminTab === 'modules') loadModulesList();
+                    if (currentAdminTab === 'activities') loadActivitiesList();
+                    if (currentAdminTab === 'users') loadTeachersList();
+                    if (currentAdminTab === 'access') loadAccessCodesList();
+                    updateAllSelects();
+                    
+                } else {
+                    throw new Error('Falha ao processar dados do CSV');
+                }
+                
+            } catch (error) {
+                addToSyncLog(`❌ Erro na sincronização: ${error.message}`);
+                showSyncIndicator('❌ Erro na sincronização');
+                
+                let errorMsg = `❌ Erro ao sincronizar:\n\n${error.message}`;
+                
+                if (error.message.includes('Failed to fetch') || error.message.includes('Network Error')) {
+                    errorMsg += '\n\n🔧 POSSÍVEIS SOLUÇÕES:\n';
+                    errorMsg += '• Verifique sua conexão com a internet\n';
+                    errorMsg += '• Certifique-se que o arquivo CSV é público\n';
+                    errorMsg += '• Tente reconfigurar a URL do CSV';
+                } else if (error.message.includes('HTML')) {
+                    errorMsg += '\n\n🔧 A URL está retornando uma página web.\n';
+                    errorMsg += 'Reconfigure a URL usando o formato correto.';
+                }
+                
+                alert(errorMsg);
             }
         }
 
@@ -663,16 +767,46 @@
                             cache: 'no-cache'
                         });
                         
-                        if (response.ok) {
+                        if (response && response.ok) {
                             const csvContent = await response.text();
-                            await importFromCSV(csvContent, true); // Silent sync
                             
-                            syncConfig.lastSync = Date.now();
-                            saveSyncConfig();
-                            updateSyncDisplay();
+                            // Validate content
+                            if (!csvContent.trim().toLowerCase().startsWith('<!doctype html') && 
+                                !csvContent.trim().toLowerCase().startsWith('<html')) {
+                                
+                                const success = await importFromCSV(csvContent, true); // Silent sync
+                                
+                                if (success) {
+                                    syncConfig.lastSync = Date.now();
+                                    saveSyncConfig();
+                                    updateSyncDisplay();
+                                    
+                                    // Show subtle indicator for successful auto-sync
+                                    const indicator = document.getElementById('syncIndicator');
+                                    if (indicator) {
+                                        indicator.textContent = '✅ Sincronizado';
+                                        indicator.classList.remove('hidden');
+                                        indicator.classList.add('bg-green-500');
+                                        indicator.classList.remove('syncing');
+                                        
+                                        setTimeout(() => {
+                                            indicator.classList.add('hidden');
+                                        }, 2000);
+                                    }
+                                }
+                            }
                         }
                     } catch (error) {
                         console.error('Auto-sync error:', error);
+                        // Don't show alerts for auto-sync errors, just log them
+                        addToSyncLog(`Auto-sync falhou: ${error.message}`);
+                        
+                        // Update sync status to show error
+                        const syncStatus = document.getElementById('syncStatus');
+                        if (syncStatus) {
+                            syncStatus.innerHTML = '⚠️ Erro na sincronização automática';
+                            syncStatus.className = 'text-xs text-red-600 mt-1';
+                        }
                     }
                 }
             }, 30000); // 30 seconds
@@ -691,7 +825,7 @@
             // Add admin password
             csvContent += `Admin,,,,,,,,,,,,,"admin123"\n`;
             
-            // Add sample data
+            // Add sample data structure (empty but showing format)
             csvContent += `Materia,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,,,,,,,\n`;
             csvContent += `Modulo,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,,,,,"MAT01",\n`;
             csvContent += `Atividade,"matematica","Matemática","Álgebra e Geometria","📊","blue-500","Módulo 1: Álgebra",,,"Exercícios de Equações","Resolva as equações propostas","https://exemplo.com/exercicios","MAT01",\n`;
@@ -704,73 +838,15 @@
             link.click();
             
             addToSyncLog('CSV modelo gerado');
-            alert('📋 Arquivo CSV modelo gerado! Use este arquivo como base para configurar a sincronização.');
-        }
-
-        async function debugCsvContent() {
-            if (!syncConfig.csvUrl) {
-                alert('Configure primeiro a URL do arquivo CSV.');
-                return;
-            }
-
-            try {
-                addToSyncLog('Iniciando debug do CSV...');
-                const response = await fetch(syncConfig.csvUrl, { 
-                    mode: 'cors',
-                    cache: 'no-cache'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const csvContent = await response.text();
-                
-                // Show raw content
-                console.log('=== CONTEÚDO BRUTO DO CSV ===');
-                console.log(csvContent);
-                
-                // Parse and show structure
-                const lines = csvContent.split('\n').filter(line => line.trim());
-                console.log('=== ANÁLISE DO CSV ===');
-                console.log(`Total de linhas: ${lines.length}`);
-                
-                if (lines.length > 0) {
-                    const headers = parseCSVLine(lines[0]);
-                    console.log('Headers:', headers);
-                    
-                    for (let i = 1; i < Math.min(lines.length, 6); i++) {
-                        const values = parseCSVLine(lines[i]);
-                        const row = {};
-                        headers.forEach((header, index) => {
-                            row[header.replace(/"/g, '').trim()] = (values[index] || '').replace(/"/g, '').trim();
-                        });
-                        console.log(`Linha ${i}:`, row);
-                    }
-                }
-                
-                // Show current system data
-                console.log('=== DADOS ATUAIS DO SISTEMA ===');
-                console.log('Subjects:', Object.keys(systemData.subjects));
-                console.log('Module Access:', systemData.moduleAccess);
-                console.log('Admin Password:', systemData.admin.password);
-                
-                addToSyncLog('Debug concluído - verifique o console do navegador');
-                alert('🔍 Debug concluído!\n\nAbra o console do navegador (F12) para ver os detalhes do CSV e dados do sistema.');
-                
-            } catch (error) {
-                addToSyncLog(`Erro no debug: ${error.message}`);
-                alert(`❌ Erro ao fazer debug do CSV:\n${error.message}`);
-            }
+            alert('📋 Arquivo CSV modelo gerado!\n\nEste arquivo contém exemplos de como estruturar seus dados.\nEdite o arquivo com suas próprias matérias e faça upload para uma pasta compartilhada.');
         }
 
         // Data Persistence Functions
         function saveData() {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(systemData));
-                console.log('✅ Dados salvos com sucesso!');
             } catch (error) {
-                console.error('❌ Erro ao salvar dados:', error);
+                console.error('Erro ao salvar dados:', error);
                 alert('Erro ao salvar dados. Verifique o espaço de armazenamento do navegador.');
             }
         }
@@ -786,11 +862,10 @@
                         subjects: parsedData.subjects || {},
                         moduleAccess: parsedData.moduleAccess || {}
                     };
-                    console.log('✅ Dados carregados com sucesso!');
                     return true;
                 }
             } catch (error) {
-                console.error('❌ Erro ao carregar dados:', error);
+                console.error('Erro ao carregar dados:', error);
                 alert('Erro ao carregar dados salvos. Usando dados padrão.');
             }
             return false;
@@ -853,14 +928,15 @@
                 // Backup current data
                 const backup = JSON.parse(JSON.stringify(systemData));
                 
-                // Don't reset completely - preserve existing structure
+                // Start with current data structure to preserve existing data
                 const newData = {
-                    admin: { password: 'admin123' },
-                    subjects: {},
-                    moduleAccess: {}
+                    admin: { password: systemData.admin.password },
+                    subjects: JSON.parse(JSON.stringify(systemData.subjects)), // Preserve existing subjects
+                    moduleAccess: { ...systemData.moduleAccess } // Preserve existing access codes
                 };
 
                 const lines = csvContent.split('\n').filter(line => line.trim());
+                
                 if (lines.length === 0) {
                     throw new Error('Arquivo CSV vazio');
                 }
@@ -869,10 +945,13 @@
                 addToSyncLog(`Headers encontrados: ${headers.join(', ')}`);
                 
                 let processedRows = 0;
+                let skippedRows = 0;
+                let updatedSubjects = new Set();
                 
                 // Process each line
                 for (let i = 1; i < lines.length; i++) {
                     const line = lines[i].trim();
+                    
                     if (!line) continue;
                     
                     const values = parseCSVLine(line);
@@ -883,32 +962,52 @@
                         row[header] = (values[index] || '').replace(/"/g, '').trim();
                     });
                     
-                    if (processCSVRow(row, newData)) {
+                    const result = processCSVRow(row, newData);
+                    if (result) {
                         processedRows++;
+                        
+                        // Track which subjects were updated
+                        const subjectKey = getSubjectKeyFromRow(row);
+                        if (subjectKey) {
+                            updatedSubjects.add(subjectKey);
+                        }
+                    } else {
+                        skippedRows++;
                     }
                 }
                 
-                // Only update if we processed some data
+                // Apply changes if any data was processed
                 if (processedRows > 0) {
+                    // Remove duplicates and validate data integrity
+                    cleanupDuplicateData(newData);
+                    
                     systemData = newData;
                     saveData();
-                    addToSyncLog(`${processedRows} linhas processadas com sucesso`);
+                    addToSyncLog(`${processedRows} linhas processadas, ${updatedSubjects.size} matérias atualizadas`);
                     
-                    // Reload UI
-                    loadSubjects();
-                    if (document.getElementById('subjectsList')) {
-                        loadSubjectsList();
-                    }
-                    if (document.getElementById('teachersList')) {
-                        loadTeachersList();
-                    }
-                    if (document.getElementById('accessCodesList')) {
-                        loadAccessCodesList();
-                    }
-                    updateAllSelects();
+                    // Force complete UI reload
+                    setTimeout(() => {
+                        loadSubjects();
+                        if (document.getElementById('subjectsList')) {
+                            loadSubjectsList();
+                        }
+                        if (document.getElementById('teachersList')) {
+                            loadTeachersList();
+                        }
+                        if (document.getElementById('accessCodesList')) {
+                            loadAccessCodesList();
+                        }
+                        if (document.getElementById('modulesList')) {
+                            loadModulesList();
+                        }
+                        if (document.getElementById('activitiesList')) {
+                            loadActivitiesList();
+                        }
+                        updateAllSelects();
+                    }, 100);
                     
                     if (!silent) {
-                        alert(`✅ Dados CSV importados com sucesso!\n${processedRows} registros processados.`);
+                        alert(`✅ Dados CSV importados com sucesso!\n\n📊 Resultado:\n• ${processedRows} registros processados\n• ${updatedSubjects.size} matérias atualizadas\n• ${skippedRows} linhas ignoradas`);
                     }
                 } else {
                     throw new Error('Nenhum dado válido encontrado no CSV');
@@ -926,6 +1025,85 @@
             }
         }
 
+        // Clean up duplicate data and ensure integrity
+        function cleanupDuplicateData(data) {
+            Object.keys(data.subjects).forEach(subjectKey => {
+                const subject = data.subjects[subjectKey];
+                
+                // Remove duplicate teachers
+                const uniqueTeachers = [];
+                const seenTeacherPasswords = new Set();
+                const seenTeacherNames = new Set();
+                
+                subject.teachers.forEach(teacher => {
+                    const key = `${teacher.name}-${teacher.password}`;
+                    if (!seenTeacherPasswords.has(teacher.password) && !seenTeacherNames.has(teacher.name)) {
+                        uniqueTeachers.push(teacher);
+                        seenTeacherPasswords.add(teacher.password);
+                        seenTeacherNames.add(teacher.name);
+                    }
+                });
+                subject.teachers = uniqueTeachers;
+                
+                // Remove duplicate modules
+                const uniqueModules = [];
+                const seenModuleNames = new Set();
+                
+                subject.modules.forEach(module => {
+                    if (!seenModuleNames.has(module.name)) {
+                        // Remove duplicate activities within module
+                        const uniqueActivities = [];
+                        const seenActivityTitles = new Set();
+                        
+                        module.activities.forEach(activity => {
+                            if (!seenActivityTitles.has(activity.title)) {
+                                uniqueActivities.push(activity);
+                                seenActivityTitles.add(activity.title);
+                            }
+                        });
+                        
+                        module.activities = uniqueActivities;
+                        uniqueModules.push(module);
+                        seenModuleNames.add(module.name);
+                    }
+                });
+                subject.modules = uniqueModules;
+            });
+        }
+
+        // Helper function to find value in row using multiple possible column names
+        function findValueInRow(row, possibleKeys) {
+            for (const key of possibleKeys) {
+                if (row[key] && row[key].toString().trim()) {
+                    return row[key].toString().trim();
+                }
+                
+                // Also try case-insensitive matching
+                const foundKey = Object.keys(row).find(rowKey => 
+                    rowKey.toLowerCase().trim() === key.toLowerCase().trim()
+                );
+                if (foundKey && row[foundKey] && row[foundKey].toString().trim()) {
+                    return row[foundKey].toString().trim();
+                }
+            }
+            return '';
+        }
+
+        function getSubjectKeyFromRow(row) {
+            // Try to extract subject key from row
+            const subjectKeys = Object.keys(row).filter(key => 
+                key.toLowerCase().includes('materia') || 
+                key.toLowerCase().includes('subject') ||
+                key.toLowerCase().includes('id_materia') ||
+                key.toLowerCase().includes('subjectid')
+            );
+            
+            if (subjectKeys.length > 0) {
+                return (row[subjectKeys[0]] || '').toString().trim();
+            }
+            return null;
+        }
+
         function parseCSVLine(line) {
             const values = [];
             let current = '';
@@ -935,7 +1113,13 @@
                 const char = line[i];
                 
                 if (char === '"') {
-                    inQuotes = !inQuotes;
+                    if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
+                        // Handle escaped quotes
+                        current += '"';
+                        i++; // Skip next quote
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
                 } else if (char === ',' && !inQuotes) {
                     values.push(current.trim());
                     current = '';
@@ -945,151 +1129,187 @@
             }
             
             values.push(current.trim());
-            return values;
+            return values.map(v => v.replace(/^"|"$/g, '')); // Remove surrounding quotes
         }
 
         function processCSVRow(row, targetData) {
-            const tipo = row.Tipo;
-            const subjectKey = row.ID_Materia;
+            // Check if row has any meaningful data first
+            const hasAnyData = Object.values(row).some(value => value && value.toString().trim() !== '');
             
-            console.log('Processando linha:', row);
+            if (!hasAnyData) {
+                return false;
+            }
+            
+            // Try multiple strategies to find tipo
+            let tipo = '';
+            
+            // Strategy 1: Look for explicit tipo columns
+            const tipoKeys = Object.keys(row).filter(key => {
+                const lowerKey = key.toLowerCase().trim();
+                return lowerKey === 'tipo' || lowerKey === 'type' || 
+                       lowerKey.includes('tipo') || lowerKey.includes('type');
+            });
+            
+            if (tipoKeys.length > 0) {
+                tipo = (row[tipoKeys[0]] || '').toString().trim();
+            }
+            
+            // Strategy 2: Try first column if no tipo column found
+            if (!tipo) {
+                const firstKey = Object.keys(row)[0];
+                const firstValue = (row[firstKey] || '').toString().trim();
+                
+                // Check if first value looks like a tipo
+                const validTipos = [
+                    'Admin', 'admin', 'ADMIN',
+                    'Materia', 'materia', 'MATERIA', 'Subject', 'subject', 'SUBJECT',
+                    'Modulo', 'modulo', 'MODULO', 'Module', 'module', 'MODULE',
+                    'Atividade', 'atividade', 'ATIVIDADE', 'Activity', 'activity', 'ACTIVITY',
+                    'Professor', 'professor', 'PROFESSOR', 'Teacher', 'teacher', 'TEACHER'
+                ];
+                
+                if (validTipos.includes(firstValue)) {
+                    tipo = firstValue;
+                }
+            }
+            
+            // Strategy 3: Try to infer tipo from available data
+            if (!tipo) {
+                const adminPassword = findValueInRow(row, ['Senha_Admin', 'senha_admin', 'AdminPassword', 'admin_password']);
+                const teacherName = findValueInRow(row, ['Nome_Professor', 'nome_professor', 'TeacherName', 'teacher_name']);
+                const moduleName = findValueInRow(row, ['Nome_Modulo', 'nome_modulo', 'ModuleName', 'module_name']);
+                const activityTitle = findValueInRow(row, ['Titulo_Atividade', 'titulo_atividade', 'ActivityTitle', 'activity_title']);
+                const subjectName = findValueInRow(row, ['Nome_Materia', 'nome_materia', 'SubjectName', 'subject_name']);
+                
+                if (adminPassword) {
+                    tipo = 'Admin';
+                } else if (teacherName) {
+                    tipo = 'Professor';
+                } else if (activityTitle) {
+                    tipo = 'Atividade';
+                } else if (moduleName) {
+                    tipo = 'Modulo';
+                } else if (subjectName) {
+                    tipo = 'Materia';
+                }
+            }
+            
+            // Try to find subject key with more flexible matching
+            let subjectKey = findValueInRow(row, [
+                'ID_Materia', 'id_materia', 'SubjectID', 'subject_id', 'subjectid',
+                'Materia', 'materia', 'Subject', 'subject'
+            ]);
             
             // Process admin password
-            if (tipo === 'Admin' && row.Senha_Admin) {
-                targetData.admin.password = row.Senha_Admin;
-                console.log('Admin password updated:', row.Senha_Admin);
+            const adminPassword = findValueInRow(row, ['Senha_Admin', 'senha_admin', 'AdminPassword', 'admin_password']);
+            if ((tipo.toLowerCase().includes('admin') || !tipo) && adminPassword) {
+                targetData.admin.password = adminPassword;
                 return true;
             }
             
-            // Skip if no subject key for non-admin rows
-            if (!subjectKey && tipo !== 'Admin') {
-                console.log('Skipping row - no subject key');
+            // Skip if no tipo found
+            if (!tipo) {
+                return false;
+            }
+            
+            // For non-admin rows, we need subject key
+            if (!subjectKey && !tipo.toLowerCase().includes('admin')) {
                 return false;
             }
             
             // Ensure subject exists
             if (subjectKey && !targetData.subjects[subjectKey]) {
+                const subjectName = findValueInRow(row, ['Nome_Materia', 'nome_materia', 'SubjectName', 'subject_name']) || subjectKey;
+                const subjectDesc = findValueInRow(row, ['Descricao_Materia', 'descricao_materia', 'SubjectDescription', 'subject_description']) || '';
+                const subjectEmoji = findValueInRow(row, ['Emoji_Materia', 'emoji_materia', 'SubjectEmoji', 'subject_emoji']) || '📚';
+                const subjectColor = findValueInRow(row, ['Cor_Materia', 'cor_materia', 'SubjectColor', 'subject_color']) || 'blue-500';
+                
                 targetData.subjects[subjectKey] = {
-                    name: row.Nome_Materia || subjectKey,
-                    description: row.Descricao_Materia || '',
-                    emoji: row.Emoji_Materia || '📚',
-                    color: row.Cor_Materia || 'blue-500',
+                    name: subjectName,
+                    description: subjectDesc,
+                    emoji: subjectEmoji,
+                    color: subjectColor,
                     teachers: [],
                     modules: []
                 };
-                console.log('Created subject:', subjectKey);
             }
             
             const subject = targetData.subjects[subjectKey];
-            if (!subject && tipo !== 'Admin') {
-                console.log('No subject found for:', subjectKey);
+            if (!subject && !tipo.toLowerCase().includes('admin')) {
                 return false;
             }
             
-            // Process different types
-            if (tipo === 'Professor' && row.Nome_Professor) {
-                // Add teacher if not exists
-                const existingTeacher = subject.teachers.find(t => t.name === row.Nome_Professor);
-                if (!existingTeacher) {
-                    subject.teachers.push({
-                        id: row.ID_Professor || Date.now().toString(),
-                        name: row.Nome_Professor,
-                        password: row.Senha_Professor || 'temp123'
-                    });
-                    console.log('Added teacher:', row.Nome_Professor);
+            // Get data using flexible column matching
+            const teacherName = findValueInRow(row, ['Nome_Professor', 'nome_professor', 'TeacherName', 'teacher_name']);
+            const moduleName = findValueInRow(row, ['Nome_Modulo', 'nome_modulo', 'ModuleName', 'module_name']);
+            const activityTitle = findValueInRow(row, ['Titulo_Atividade', 'titulo_atividade', 'ActivityTitle', 'activity_title']);
+            const accessCode = findValueInRow(row, ['Codigo_Acesso', 'codigo_acesso', 'AccessCode', 'access_code']);
+            
+            // Process based on tipo
+            const tipoLower = tipo.toLowerCase();
+            
+            if (tipoLower.includes('professor') || tipoLower.includes('teacher')) {
+                if (teacherName) {
+                    const existingTeacher = subject.teachers.find(t => t.name === teacherName);
+                    if (!existingTeacher) {
+                        const teacherPassword = findValueInRow(row, ['Senha_Professor', 'senha_professor', 'TeacherPassword', 'teacher_password']) || 'temp123';
+                        const teacherId = findValueInRow(row, ['ID_Professor', 'id_professor', 'TeacherID', 'teacher_id']) || Date.now().toString();
+                        
+                        subject.teachers.push({
+                            id: teacherId,
+                            name: teacherName,
+                            password: teacherPassword
+                        });
+                    }
+                    return true;
                 }
-                return true;
-            } else if ((tipo === 'Modulo' || tipo === 'Atividade') && row.Nome_Modulo) {
+            } else if ((tipoLower.includes('modulo') || tipoLower.includes('module') || 
+                       tipoLower.includes('atividade') || tipoLower.includes('activity')) && moduleName) {
+                
                 // Find or create module
-                let module = subject.modules.find(m => m.name === row.Nome_Modulo);
+                let module = subject.modules.find(m => m.name === moduleName);
                 if (!module) {
                     module = {
-                        name: row.Nome_Modulo,
+                        name: moduleName,
                         activities: []
                     };
                     subject.modules.push(module);
-                    console.log('Created module:', row.Nome_Modulo);
                     
                     // Set access code if provided
-                    if (row.Codigo_Acesso) {
+                    if (accessCode) {
                         const moduleIndex = subject.modules.length - 1;
                         const moduleKey = `${subjectKey}-${moduleIndex}`;
-                        targetData.moduleAccess[moduleKey] = row.Codigo_Acesso;
-                        console.log('Set access code:', row.Codigo_Acesso, 'for', moduleKey);
+                        targetData.moduleAccess[moduleKey] = accessCode;
                     }
                 }
                 
                 // Add activity if it's an activity row
-                if (tipo === 'Atividade' && row.Titulo_Atividade) {
-                    const existingActivity = module.activities.find(a => a.title === row.Titulo_Atividade);
+                if ((tipoLower.includes('atividade') || tipoLower.includes('activity')) && activityTitle) {
+                    const existingActivity = module.activities.find(a => a.title === activityTitle);
                     if (!existingActivity) {
+                        const activityDesc = findValueInRow(row, ['Descricao_Atividade', 'descricao_atividade', 'ActivityDescription', 'activity_description']) || '';
+                        const activityLink = findValueInRow(row, ['Link_Atividade', 'link_atividade', 'ActivityLink', 'activity_link']);
+                        
                         module.activities.push({
-                            title: row.Titulo_Atividade,
-                            description: row.Descricao_Atividade || '',
-                            link: row.Link_Atividade || null
+                            title: activityTitle,
+                            description: activityDesc,
+                            link: activityLink || null
                         });
-                        console.log('Added activity:', row.Titulo_Atividade);
                     }
                 }
                 return true;
-            } else if (tipo === 'Materia') {
-                // Just creating the subject is enough
-                console.log('Subject created/updated:', subjectKey);
+            } else if (tipoLower.includes('materia') || tipoLower.includes('subject')) {
+                // Subject already created above
                 return true;
             }
             
-            console.log('Row not processed:', tipo);
             return false;
         }
 
-        // Initialize system with sample data
-        systemData.subjects = {
-            math: {
-                name: 'Matemática',
-                description: 'Álgebra, Geometria e Cálculo',
-                emoji: '📊',
-                color: 'blue-500',
-                teachers: [], // professores vinculados
-                modules: [
-                    { name: 'Módulo 1: Álgebra Básica', activities: [] },
-                    { name: 'Módulo 2: Geometria Plana', activities: [] },
-                    { name: 'Módulo 3: Funções', activities: [] },
-                    { name: 'Módulo 4: Trigonometria', activities: [] }
-                ]
-            },
-            portuguese: {
-                name: 'Português',
-                description: 'Gramática, Literatura e Redação',
-                emoji: '📚',
-                color: 'green-500',
-                teachers: [],
-                modules: [
-                    { name: 'Módulo 1: Gramática', activities: [] },
-                    { name: 'Módulo 2: Literatura Clássica', activities: [] },
-                    { name: 'Módulo 3: Redação', activities: [] },
-                    { name: 'Módulo 4: Interpretação de Texto', activities: [] }
-                ]
-            },
-            history: {
-                name: 'História',
-                description: 'Brasil, Mundo e Contemporânea',
-                emoji: '🏛️',
-                color: 'purple-500',
-                teachers: [],
-                modules: [
-                    { name: 'Módulo 1: Brasil Colonial', activities: [] },
-                    { name: 'Módulo 2: Independência', activities: [] },
-                    { name: 'Módulo 3: República', activities: [] },
-                    { name: 'Módulo 4: História Contemporânea', activities: [] }
-                ]
-            }
-        };
-
-        // Códigos de acesso para módulos (formato: subjectKey-moduleIndex: código)
-        systemData.moduleAccess = {
-            'math-0': 'MAT01',
-            'portuguese-0': 'PORT01',
-            'history-0': 'HIST01'
+        // Default empty data structure
+        const DEFAULT_SAMPLE_DATA = {
+            subjects: {},
+            moduleAccess: {}
         };
 
         let currentAdminTab = 'subjects';
@@ -1098,38 +1318,92 @@
         function selectUserType(type) {
             currentUser.type = type;
             
-            // Reset all buttons
+            // Reset all buttons to default state
             const buttons = ['studentBtn', 'teacherBtn', 'adminBtn'];
             buttons.forEach(btnId => {
-                document.getElementById(btnId).className = 'py-2 px-3 border-2 border-gray-300 text-gray-500 rounded-lg transition duration-200 hover:bg-gray-50 text-sm';
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.className = 'py-2 px-3 border-2 border-gray-300 text-gray-500 rounded-lg transition duration-200 hover:bg-gray-50 text-sm';
+                }
             });
             
-            // Reset all hints
+            // Reset all hints to hidden
             const hints = ['studentHint', 'teacherHint', 'adminHint'];
             hints.forEach(hintId => {
-                document.getElementById(hintId).classList.add('hidden');
+                const hint = document.getElementById(hintId);
+                if (hint) {
+                    hint.classList.add('hidden');
+                }
             });
             
-            // Update selected button and show appropriate elements
+            // Get common elements
             const subjectSelectDiv = document.getElementById('subjectSelectDiv');
             const passwordLabel = document.getElementById('passwordLabel');
             
+            // Configure based on selected type
             if (type === 'student') {
-                document.getElementById('studentBtn').className = 'py-2 px-3 border-2 border-blue-500 bg-blue-500 text-white rounded-lg transition duration-200 text-sm';
-                document.getElementById('studentHint').classList.remove('hidden');
-                subjectSelectDiv.classList.remove('hidden');
-                passwordLabel.textContent = 'Código de Acesso do Módulo';
+                const studentBtn = document.getElementById('studentBtn');
+                const studentHint = document.getElementById('studentHint');
+                
+                if (studentBtn) {
+                    studentBtn.className = 'py-2 px-3 border-2 border-orange-500 bg-orange-500 text-white rounded-lg transition duration-200 text-sm';
+                }
+                if (studentHint) {
+                    studentHint.classList.remove('hidden');
+                }
+                if (subjectSelectDiv) {
+                    subjectSelectDiv.classList.remove('hidden');
+                }
+                if (passwordLabel) {
+                    passwordLabel.textContent = 'Código de Acesso do Módulo';
+                }
                 updateLoginSubjectSelect();
+                
             } else if (type === 'teacher') {
-                document.getElementById('teacherBtn').className = 'py-2 px-3 border-2 border-purple-500 bg-purple-500 text-white rounded-lg transition duration-200 text-sm';
-                document.getElementById('teacherHint').classList.remove('hidden');
-                subjectSelectDiv.classList.add('hidden');
-                passwordLabel.textContent = 'Senha do Professor';
+                const teacherBtn = document.getElementById('teacherBtn');
+                const teacherHint = document.getElementById('teacherHint');
+                
+                if (teacherBtn) {
+                    teacherBtn.className = 'py-2 px-3 border-2 border-amber-500 bg-amber-500 text-white rounded-lg transition duration-200 text-sm';
+                }
+                if (teacherHint) {
+                    teacherHint.classList.remove('hidden');
+                }
+                if (subjectSelectDiv) {
+                    subjectSelectDiv.classList.add('hidden');
+                }
+                if (passwordLabel) {
+                    passwordLabel.textContent = 'Senha do Professor';
+                }
+                
             } else if (type === 'admin') {
-                document.getElementById('adminBtn').className = 'py-2 px-3 border-2 border-red-500 bg-red-500 text-white rounded-lg transition duration-200 text-sm';
-                document.getElementById('adminHint').classList.remove('hidden');
-                subjectSelectDiv.classList.add('hidden');
-                passwordLabel.textContent = 'Senha do Administrador';
+                const adminBtn = document.getElementById('adminBtn');
+                const adminHint = document.getElementById('adminHint');
+                
+                if (adminBtn) {
+                    adminBtn.className = 'py-2 px-3 border-2 border-red-500 bg-red-500 text-white rounded-lg transition duration-200 text-sm';
+                }
+                if (adminHint) {
+                    adminHint.classList.remove('hidden');
+                }
+                if (subjectSelectDiv) {
+                    subjectSelectDiv.classList.add('hidden');
+                }
+                if (passwordLabel) {
+                    passwordLabel.textContent = 'Senha do Administrador';
+                }
+            }
+            
+            // Clear any previous error messages
+            const errorMessage = document.getElementById('errorMessage');
+            if (errorMessage) {
+                errorMessage.classList.add('hidden');
+            }
+            
+            // Clear password field
+            const passwordInput = document.getElementById('passwordInput');
+            if (passwordInput) {
+                passwordInput.value = '';
             }
         }
 
@@ -1159,15 +1433,16 @@
                     loginSuccess = true;
                 }
             } else if (currentUser.type === 'teacher') {
-                // Teacher login - check all subjects for matching teacher
+                // Teacher login - check all subjects for matching teacher password
                 Object.keys(systemData.subjects).forEach(subjectKey => {
                     const subject = systemData.subjects[subjectKey];
-                    const teacher = subject.teachers.find(t => t.password === password);
-                    if (teacher) {
-                        currentUser.name = teacher.name;
-                        currentUser.subjectKey = subjectKey;
-                        loginSuccess = true;
-                    }
+                    subject.teachers.forEach(teacher => {
+                        if (teacher.password === password) {
+                            currentUser.name = teacher.name;
+                            currentUser.subjectKey = subjectKey; // Store which subject this teacher belongs to
+                            loginSuccess = true;
+                        }
+                    });
                 });
             } else if (currentUser.type === 'student') {
                 // Student login - check module access codes
@@ -1176,6 +1451,7 @@
                     if (systemData.moduleAccess[key] === password && key.startsWith(selectedSubject + '-')) {
                         currentUser.name = 'Aluno';
                         currentUser.subjectKey = selectedSubject;
+                        currentUser.moduleIndex = parseInt(key.split('-')[1]); // Store allowed module index
                         loginSuccess = true;
                     }
                 });
@@ -1196,11 +1472,20 @@
                     document.getElementById('adminPanel').classList.add('hidden');
                 }
                 
-                loadSubjects();
-                
-                // Start auto-sync if configured
-                if (syncConfig.csvUrl && syncConfig.autoSync) {
-                    startAutoSync();
+                // Sync data first if CSV is configured
+                if (syncConfig.csvUrl) {
+                    forceSyncFromCsv().then(() => {
+                        loadSubjects();
+                    }).catch(() => {
+                        loadSubjects(); // Load anyway if sync fails
+                    });
+                    
+                    // Start auto-sync
+                    if (syncConfig.autoSync) {
+                        startAutoSync();
+                    }
+                } else {
+                    loadSubjects();
                 }
             } else {
                 document.getElementById('errorMessage').classList.remove('hidden');
@@ -1221,11 +1506,14 @@
             currentUser = {
                 type: null,
                 subjectKey: null,
-                name: null
+                name: null,
+                moduleIndex: null
             };
             
             // Reset to student selection
-            selectUserType('student');
+            setTimeout(() => {
+                selectUserType('student');
+            }, 100);
         }
 
         // Admin Tab Management
@@ -1241,7 +1529,8 @@
             // Hide all panels
             const panels = ['subjectsPanel', 'modulesPanel', 'activitiesPanel', 'usersPanel', 'accessPanel', 'syncPanel'];
             panels.forEach(panelId => {
-                document.getElementById(panelId).classList.add('hidden');
+                const panel = document.getElementById(panelId);
+                if (panel) panel.classList.add('hidden');
             });
             
             // Reset all tab styles
@@ -1250,8 +1539,10 @@
             });
             
             // Show selected panel and update tab style
-            document.getElementById(tabName + 'Panel').classList.remove('hidden');
-            document.getElementById(tabName + 'Tab').className = 'flex-1 py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm';
+            const selectedPanel = document.getElementById(tabName + 'Panel');
+            const selectedTab = document.getElementById(tabName + 'Tab');
+            if (selectedPanel) selectedPanel.classList.remove('hidden');
+            if (selectedTab) selectedTab.className = 'flex-1 py-4 px-4 text-center font-semibold text-orange-600 border-b-2 border-orange-600 bg-orange-50 text-sm';
             
             // Hide admin-only tabs for teachers
             if (currentUser.type === 'teacher') {
@@ -1259,7 +1550,8 @@
                     tab.style.display = 'none';
                 });
                 // Make activities tab full width for teachers
-                document.getElementById('activitiesTab').className = 'w-full py-4 px-4 text-center font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 text-sm';
+                const activitiesTab = document.getElementById('activitiesTab');
+                if (activitiesTab) activitiesTab.className = 'w-full py-4 px-4 text-center font-semibold text-orange-600 border-b-2 border-orange-600 bg-orange-50 text-sm';
             } else {
                 document.querySelectorAll('.admin-only').forEach(tab => {
                     tab.style.display = 'block';
@@ -1289,21 +1581,24 @@
             const container = document.getElementById('carouselContainer');
             const dotsContainer = document.getElementById('carouselDots');
             
-            // Filter subjects based on user permissions
-            let availableSubjects = {};
-            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
-                // Students and teachers see only their assigned subject
-                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
-                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
-                }
-            } else if (currentUser.type === 'admin') {
-                // Admin sees all subjects
-                availableSubjects = systemData.subjects;
+            // Filter subjects based on user type
+            let availableSubjects = systemData.subjects;
+            
+            // For teachers, only show their assigned subject
+            if (currentUser.type === 'teacher' && currentUser.subjectKey) {
+                availableSubjects = {};
+                availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
             }
             
             const subjectKeys = Object.keys(availableSubjects);
             container.innerHTML = '';
             dotsContainer.innerHTML = '';
+            
+            // Show empty state if no subjects
+            if (subjectKeys.length === 0) {
+                showEmptyState();
+                return;
+            }
             
             subjectKeys.forEach((key, index) => {
                 const subject = availableSubjects[key];
@@ -1334,14 +1629,13 @@
         }
 
         function showSubject(index) {
-            // Get available subjects based on user permissions
-            let availableSubjects = {};
-            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
-                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
-                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
-                }
-            } else if (currentUser.type === 'admin') {
-                availableSubjects = systemData.subjects;
+            // Filter subjects based on user type
+            let availableSubjects = systemData.subjects;
+            
+            // For teachers, only show their assigned subject
+            if (currentUser.type === 'teacher' && currentUser.subjectKey) {
+                availableSubjects = {};
+                availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
             }
             
             const subjectKeys = Object.keys(availableSubjects);
@@ -1349,1048 +1643,761 @@
             if (index < 0) index = subjectKeys.length - 1;
             
             currentSubject = index;
+            
+            // Update carousel position
             const container = document.getElementById('carouselContainer');
             container.style.transform = `translateX(-${index * 100}%)`;
             
             // Update dots
             document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
+                if (i === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
             });
+            
+            // Load modules for current subject
+            const subjectKey = subjectKeys[index];
+            loadModulesForSubject(subjectKey);
         }
 
         function nextSubject() {
-            let availableSubjects = {};
-            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
-                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
-                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
-                }
-            } else if (currentUser.type === 'admin') {
-                availableSubjects = systemData.subjects;
-            }
-            
-            const subjectKeys = Object.keys(availableSubjects);
-            currentSubject = (currentSubject + 1) % subjectKeys.length;
-            showSubject(currentSubject);
+            showSubject(currentSubject + 1);
         }
 
         function previousSubject() {
-            let availableSubjects = {};
-            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
-                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
-                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
-                }
-            } else if (currentUser.type === 'admin') {
-                availableSubjects = systemData.subjects;
-            }
-            
-            const subjectKeys = Object.keys(availableSubjects);
-            currentSubject = (currentSubject - 1 + subjectKeys.length) % subjectKeys.length;
-            showSubject(currentSubject);
+            showSubject(currentSubject - 1);
         }
 
-        // Module toggle functionality
-        function toggleModule(subjectKey, moduleIndex) {
-            const content = document.getElementById(`${subjectKey}-module-${moduleIndex}`);
-            const icon = document.getElementById(`${subjectKey}-icon-${moduleIndex}`);
+        function loadModulesForSubject(subjectKey) {
+            const subject = systemData.subjects[subjectKey];
+            if (!subject) return;
             
-            content.classList.toggle('expanded');
-            icon.style.transform = content.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0deg)';
-        }
-
-        // Load subjects and modules
-        function loadSubjects() {
-            buildCarousel();
+            const modulesContainer = document.getElementById(`${subjectKey}-modules`);
+            if (!modulesContainer) return;
             
-            // Get available subjects based on user permissions
-            let availableSubjects = {};
-            if (currentUser.type === 'student' || currentUser.type === 'teacher') {
-                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
-                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
-                }
-            } else if (currentUser.type === 'admin') {
-                availableSubjects = systemData.subjects;
-            }
+            modulesContainer.innerHTML = '';
             
-            Object.keys(availableSubjects).forEach(subjectKey => {
-                const container = document.getElementById(`${subjectKey}-modules`);
-                if (!container) return;
+            subject.modules.forEach((module, moduleIndex) => {
+                const moduleKey = `${subjectKey}-${moduleIndex}`;
+                const hasAccess = currentUser.type === 'admin' || 
+                                 currentUser.type === 'teacher' || 
+                                 (currentUser.type === 'student' && currentUser.moduleIndex === moduleIndex);
                 
-                container.innerHTML = '';
+                const moduleDiv = document.createElement('div');
+                moduleDiv.className = `border border-gray-200 rounded-lg ${hasAccess ? 'bg-white' : 'bg-gray-100'}`;
                 
-                availableSubjects[subjectKey].modules.forEach((module, index) => {
-                    const moduleDiv = document.createElement('div');
-                    moduleDiv.className = 'border border-gray-200 rounded-lg overflow-hidden';
-                    moduleDiv.innerHTML = `
-                        <button onclick="toggleModule('${subjectKey}', ${index})" class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 flex justify-between items-center transition duration-200">
-                            <span class="font-semibold text-gray-800">${module.name}</span>
-                            <svg id="${subjectKey}-icon-${index}" class="w-5 h-5 text-gray-600 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                const accessCode = systemData.moduleAccess[moduleKey];
+                const lockIcon = hasAccess ? '' : '🔒';
+                const accessInfo = (currentUser.type === 'admin' || currentUser.type === 'teacher') && accessCode ? 
+                    `<span class="text-xs text-gray-500 ml-2">(Código: ${accessCode})</span>` : '';
+                
+                moduleDiv.innerHTML = `
+                    <div class="p-4">
+                        <div class="flex justify-between items-center cursor-pointer" onclick="toggleModule('${moduleKey}')">
+                            <h4 class="font-semibold text-gray-800">${lockIcon} ${module.name} ${accessInfo}</h4>
+                            <svg id="${moduleKey}-arrow" class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
-                        </button>
-                        <div id="${subjectKey}-module-${index}" class="module-content bg-white">
-                            <div class="p-4">
-                                <div id="${subjectKey}-activities-${index}" class="space-y-3">
-                                    ${module.activities.length === 0 ? 
-                                        '<p class="text-gray-500 italic">Nenhuma atividade adicionada ainda.</p>' : 
-                                        module.activities.map((activity, actIndex) => `
-                                            <div class="bg-blue-50 p-3 rounded-lg relative activity-item ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'cursor-move' : ''}" 
-                                                 draggable="${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'true' : 'false'}"
-                                                 data-subject="${subjectKey}" 
-                                                 data-module="${index}" 
-                                                 data-activity="${actIndex}"
-                                                 ondragstart="handleDragStart(event)"
-                                                 ondragover="handleDragOver(event)"
-                                                 ondrop="handleDrop(event)"
-                                                 ondragend="handleDragEnd(event)">
-                                                ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? `
-                                                    <div class="drag-handle absolute top-2 left-2 text-gray-400 cursor-move">
-                                                        ⋮⋮
-                                                    </div>
-                                                ` : ''}
-                                                <div class="${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? 'ml-6' : ''}">
-                                                    <h4 class="font-semibold text-blue-800">${activity.title}</h4>
-                                                    <p class="text-gray-700 text-sm mt-1">${activity.description}</p>
-                                                    ${activity.link ? `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block">🔗 Acessar atividade</a>` : ''}
-                                                </div>
-                                                ${(currentUser.type === 'admin' || currentUser.type === 'teacher') ? `
-                                                    <button onclick="deleteActivity('${subjectKey}', ${index}, ${actIndex})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs">
-                                                        ✕
-                                                    </button>
-                                                ` : ''}
-                                            </div>
-                                        `).join('')
-                                    }
-                                </div>
+                        </div>
+                        <div id="${moduleKey}-content" class="module-content mt-4">
+                            <div class="space-y-3">
+                                ${module.activities.map(activity => `
+                                    <div class="activity-item bg-gray-50 p-3 rounded-lg ${hasAccess ? 'hover:bg-gray-100' : 'opacity-50'}">
+                                        <h5 class="font-medium text-gray-800">${activity.title}</h5>
+                                        <p class="text-sm text-gray-600 mt-1">${activity.description}</p>
+                                        ${activity.link && hasAccess ? 
+                                            `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 text-blue-600 hover:text-blue-800 text-sm">
+                                                🔗 Acessar atividade
+                                            </a>` : 
+                                            (activity.link && !hasAccess ? '<p class="text-sm text-gray-400 mt-2">🔒 Link disponível após acesso</p>' : '')
+                                        }
+                                    </div>
+                                `).join('')}
+                                ${module.activities.length === 0 ? '<p class="text-gray-500 text-sm">Nenhuma atividade cadastrada ainda.</p>' : ''}
                             </div>
                         </div>
-                    `;
-                    container.appendChild(moduleDiv);
-                });
-            });
-        }
-
-        // CRUD Functions for Subjects
-        function loadSubjectsList() {
-            const container = document.getElementById('subjectsList');
-            container.innerHTML = '';
-            
-            // Filter subjects based on user permissions
-            let availableSubjects = {};
-            if (currentUser.type === 'teacher') {
-                // Teachers see only their subject
-                if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
-                    availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
-                }
-            } else if (currentUser.type === 'admin') {
-                // Admin sees all subjects
-                availableSubjects = systemData.subjects;
-            }
-            
-            Object.keys(availableSubjects).forEach(key => {
-                const subject = availableSubjects[key];
-                const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
-                div.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <span class="text-2xl">${subject.emoji}</span>
-                        <div>
-                            <h5 class="font-semibold">${subject.name}</h5>
-                            <p class="text-sm text-gray-600">${subject.description}</p>
-                            <p class="text-xs text-blue-600">${subject.teachers.length} professor(es)</p>
-                        </div>
-                    </div>
-                    <div class="flex space-x-2">
-                        ${currentUser.type === 'admin' ? `
-                            <button onclick="editSubject('${key}')" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
-                            <button onclick="deleteSubject('${key}')" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
-                        ` : `
-                            <span class="text-green-600 text-sm">✓ Sua matéria</span>
-                        `}
                     </div>
                 `;
-                container.appendChild(div);
+                
+                modulesContainer.appendChild(moduleDiv);
             });
+            
+            if (subject.modules.length === 0) {
+                modulesContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Nenhum módulo cadastrado ainda.</p>';
+            }
         }
 
-        function addSubject() {
-            if (currentUser.type !== 'admin') {
-                alert('Apenas administradores podem adicionar matérias.');
-                return;
-            }
+        function showEmptyState() {
+            const container = document.getElementById('carouselContainer');
+            const dotsContainer = document.getElementById('carouselDots');
+            
+            container.innerHTML = `
+                <div class="w-full flex-shrink-0">
+                    <div class="bg-white rounded-2xl shadow-xl p-8 mx-2 text-center">
+                        <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-3xl">📚</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Sistema Vazio</h3>
+                        <p class="text-gray-600 mb-6">Nenhuma matéria foi cadastrada ainda.</p>
+                        <div class="space-y-3 text-sm text-gray-500">
+                            <p>💡 <strong>Para começar:</strong></p>
+                            <p>1. Configure um arquivo CSV na aba Sincronização</p>
+                            <p>2. Ou cadastre matérias manualmente no painel administrativo</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            dotsContainer.innerHTML = '';
+        }
 
+        function toggleModule(moduleKey) {
+            const content = document.getElementById(`${moduleKey}-content`);
+            const arrow = document.getElementById(`${moduleKey}-arrow`);
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('expanded');
+                arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function loadSubjects() {
+            buildCarousel();
+            showSubject(0);
+        }
+
+        // Admin Functions
+        function addSubject() {
             const key = document.getElementById('newSubjectKey').value.trim();
             const name = document.getElementById('newSubjectName').value.trim();
             const description = document.getElementById('newSubjectDescription').value.trim();
             const emoji = document.getElementById('newSubjectEmoji').value.trim();
             const color = document.getElementById('newSubjectColor').value.trim();
-
+            
             if (!key || !name || !description || !emoji || !color) {
                 alert('Por favor, preencha todos os campos.');
                 return;
             }
-
+            
             if (systemData.subjects[key]) {
                 alert('Já existe uma matéria com este ID.');
                 return;
             }
-
+            
             systemData.subjects[key] = {
-                name: name,
-                description: description,
-                emoji: emoji,
-                color: color,
+                name,
+                description,
+                emoji,
+                color,
                 teachers: [],
                 modules: []
             };
-
+            
+            saveData();
+            loadSubjectsList();
+            updateAllSelects();
+            loadSubjects();
+            
             // Clear form
             document.getElementById('newSubjectKey').value = '';
             document.getElementById('newSubjectName').value = '';
             document.getElementById('newSubjectDescription').value = '';
             document.getElementById('newSubjectEmoji').value = '';
             document.getElementById('newSubjectColor').value = '';
-
-            // Save data
-            saveData();
-            addToSyncLog('Matéria adicionada: ' + name);
             
-            loadSubjectsList();
-            loadSubjects();
-            updateAllSelects();
-            alert('✅ Matéria adicionada com sucesso!');
+            alert('Matéria adicionada com sucesso!');
         }
 
-        // Teacher Management Functions
-        function addTeacher() {
-            if (currentUser.type !== 'admin') {
-                alert('Apenas administradores podem adicionar professores.');
-                return;
-            }
-
-            const name = document.getElementById('newTeacherName').value.trim();
-            const password = document.getElementById('newTeacherPassword').value.trim();
-            const subjectKey = document.getElementById('teacherSubjectSelect').value;
-
-            if (!name || !password || !subjectKey) {
-                alert('Por favor, preencha todos os campos.');
-                return;
-            }
-
-            if (password.length < 4) {
-                alert('A senha deve ter pelo menos 4 caracteres.');
-                return;
-            }
-
-            // Check if password already exists
-            let passwordExists = false;
+        function loadSubjectsList() {
+            const container = document.getElementById('subjectsList');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
             Object.keys(systemData.subjects).forEach(key => {
-                systemData.subjects[key].teachers.forEach(teacher => {
-                    if (teacher.password === password) {
-                        passwordExists = true;
-                    }
-                });
+                const subject = systemData.subjects[key];
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <span class="text-lg">${subject.emoji}</span>
+                        <span class="font-medium ml-2">${subject.name}</span>
+                        <span class="text-sm text-gray-500 ml-2">(${key})</span>
+                    </div>
+                    <button onclick="deleteSubject('${key}')" class="text-red-500 hover:text-red-700 text-sm">
+                        🗑️ Excluir
+                    </button>
+                `;
+                container.appendChild(div);
             });
-
-            if (passwordExists) {
-                alert('Esta senha já está sendo usada por outro professor.');
-                return;
-            }
-
-            const teacher = {
-                name: name,
-                password: password,
-                id: Date.now().toString()
-            };
-
-            systemData.subjects[subjectKey].teachers.push(teacher);
-
-            // Clear form
-            document.getElementById('newTeacherName').value = '';
-            document.getElementById('newTeacherPassword').value = '';
-
-            // Save data
-            saveData();
-            addToSyncLog('Professor adicionado: ' + name);
-
-            loadTeachersList();
-            loadSubjectsList();
-            alert('✅ Professor adicionado com sucesso!');
-        }
-
-        function loadTeachersList() {
-            const container = document.getElementById('teachersList');
-            container.innerHTML = '';
-
-            Object.keys(systemData.subjects).forEach(subjectKey => {
-                const subject = systemData.subjects[subjectKey];
-                subject.teachers.forEach((teacher, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-2';
-                    div.innerHTML = `
-                        <div>
-                            <h5 class="font-semibold">${teacher.name}</h5>
-                            <p class="text-sm text-gray-600">${subject.name}</p>
-                            <p class="text-xs text-gray-500">Senha: ${teacher.password}</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button onclick="editTeacher('${subjectKey}', ${index})" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
-                            <button onclick="deleteTeacher('${subjectKey}', ${index})" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-            });
-        }
-
-        function editTeacher(subjectKey, teacherIndex) {
-            if (currentUser.type !== 'admin') {
-                alert('Apenas administradores podem editar professores.');
-                return;
-            }
-
-            const teacher = systemData.subjects[subjectKey].teachers[teacherIndex];
-            const newName = prompt('Nome do professor:', teacher.name);
-            if (newName === null) return;
-
-            const newPassword = prompt('Nova senha:', teacher.password);
-            if (newPassword === null) return;
-
-            if (newPassword.length < 4) {
-                alert('A senha deve ter pelo menos 4 caracteres.');
-                return;
-            }
-
-            systemData.subjects[subjectKey].teachers[teacherIndex].name = newName.trim();
-            systemData.subjects[subjectKey].teachers[teacherIndex].password = newPassword.trim();
-
-            saveData();
-            loadTeachersList();
-            alert('Professor atualizado com sucesso!');
-        }
-
-        function deleteTeacher(subjectKey, teacherIndex) {
-            if (currentUser.type !== 'admin') {
-                alert('Apenas administradores podem excluir professores.');
-                return;
-            }
-
-            const teacher = systemData.subjects[subjectKey].teachers[teacherIndex];
-            if (!confirm(`Tem certeza que deseja excluir o professor "${teacher.name}"?`)) {
-                return;
-            }
-
-            systemData.subjects[subjectKey].teachers.splice(teacherIndex, 1);
-            saveData();
-            loadTeachersList();
-            loadSubjectsList();
-            alert('Professor excluído com sucesso!');
-        }
-
-        function editSubject(key) {
-            if (currentUser.type !== 'admin') {
-                alert('Apenas administradores podem editar matérias.');
-                return;
-            }
-
-            const subject = systemData.subjects[key];
-            const newName = prompt('Nome da matéria:', subject.name);
-            if (newName === null) return;
-            
-            const newDescription = prompt('Descrição:', subject.description);
-            if (newDescription === null) return;
-            
-            const newEmoji = prompt('Emoji:', subject.emoji);
-            if (newEmoji === null) return;
-            
-            const newColor = prompt('Cor (ex: blue-500):', subject.color);
-            if (newColor === null) return;
-
-            systemData.subjects[key].name = newName;
-            systemData.subjects[key].description = newDescription;
-            systemData.subjects[key].emoji = newEmoji;
-            systemData.subjects[key].color = newColor;
-
-            saveData();
-            loadSubjectsList();
-            loadSubjects();
-            alert('Matéria atualizada com sucesso!');
-        }
-
-        // Access Code Management Functions
-        function setModuleAccess() {
-            if (currentUser.type !== 'admin') {
-                alert('Apenas administradores podem definir códigos de acesso.');
-                return;
-            }
-
-            const subjectKey = document.getElementById('accessSubjectSelect').value;
-            const moduleIndex = document.getElementById('accessModuleSelect').value;
-            const accessCode = document.getElementById('moduleAccessCode').value.trim();
-
-            if (!subjectKey || moduleIndex === '' || !accessCode) {
-                alert('Por favor, preencha todos os campos.');
-                return;
-            }
-
-            if (accessCode.length < 3) {
-                alert('O código deve ter pelo menos 3 caracteres.');
-                return;
-            }
-
-            // Check if code already exists
-            const existingKey = Object.keys(systemData.moduleAccess).find(key => 
-                systemData.moduleAccess[key] === accessCode
-            );
-
-            if (existingKey) {
-                alert('Este código já está sendo usado em outro módulo.');
-                return;
-            }
-
-            const moduleKey = `${subjectKey}-${moduleIndex}`;
-            systemData.moduleAccess[moduleKey] = accessCode;
-
-            document.getElementById('moduleAccessCode').value = '';
-            saveData();
-            addToSyncLog('Código de acesso definido: ' + accessCode);
-            loadAccessCodesList();
-            alert('✅ Código de acesso definido com sucesso!');
-        }
-
-        function loadAccessCodesList() {
-            const container = document.getElementById('accessCodesList');
-            container.innerHTML = '';
-
-            Object.keys(systemData.moduleAccess).forEach(moduleKey => {
-                const [subjectKey, moduleIndex] = moduleKey.split('-');
-                const subject = systemData.subjects[subjectKey];
-                const module = subject?.modules[parseInt(moduleIndex)];
-                const accessCode = systemData.moduleAccess[moduleKey];
-
-                if (subject && module) {
-                    const div = document.createElement('div');
-                    div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-2';
-                    div.innerHTML = `
-                        <div>
-                            <h5 class="font-semibold">${subject.name}</h5>
-                            <p class="text-sm text-gray-600">${module.name}</p>
-                            <p class="text-xs text-blue-600 font-mono">Código: ${accessCode}</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button onclick="editModuleAccess('${moduleKey}')" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
-                            <button onclick="deleteModuleAccess('${moduleKey}')" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                }
-            });
-        }
-
-        function editModuleAccess(moduleKey) {
-            if (currentUser.type !== 'admin') {
-                alert('Apenas administradores podem editar códigos de acesso.');
-                return;
-            }
-
-            const currentCode = systemData.moduleAccess[moduleKey];
-            const newCode = prompt('Novo código de acesso:', currentCode);
-            
-            if (newCode === null || newCode.trim().length < 3) {
-                if (newCode !== null) alert('O código deve ter pelo menos 3 caracteres.');
-                return;
-            }
-
-            // Check if new code already exists
-            const existingKey = Object.keys(systemData.moduleAccess).find(key => 
-                key !== moduleKey && systemData.moduleAccess[key] === newCode.trim()
-            );
-
-            if (existingKey) {
-                alert('Este código já está sendo usado em outro módulo.');
-                return;
-            }
-
-            systemData.moduleAccess[moduleKey] = newCode.trim();
-            saveData();
-            loadAccessCodesList();
-            alert('Código atualizado com sucesso!');
-        }
-
-        function deleteModuleAccess(moduleKey) {
-            if (currentUser.type !== 'admin') {
-                alert('Apenas administradores podem excluir códigos de acesso.');
-                return;
-            }
-
-            if (!confirm('Tem certeza que deseja excluir este código de acesso?')) {
-                return;
-            }
-
-            delete systemData.moduleAccess[moduleKey];
-            saveData();
-            loadAccessCodesList();
-            alert('Código de acesso excluído com sucesso!');
         }
 
         function deleteSubject(key) {
-            if (currentUser.type !== 'admin') {
-                alert('Apenas administradores podem excluir matérias.');
-                return;
-            }
-
-            if (!confirm(`Tem certeza que deseja excluir a matéria "${systemData.subjects[key].name}"? Todos os módulos e atividades serão perdidos.`)) {
-                return;
-            }
-
-            delete systemData.subjects[key];
-            
-            // Remove related access codes
-            Object.keys(systemData.moduleAccess).forEach(moduleKey => {
-                if (moduleKey.startsWith(key + '-')) {
-                    delete systemData.moduleAccess[moduleKey];
-                }
-            });
-
-            saveData();
-            loadSubjectsList();
-            loadSubjects();
-            updateAllSelects();
-            alert('Matéria excluída com sucesso!');
-        }
-
-        // Update all select elements
-        function updateAllSelects() {
-            updateModuleSelects();
-            updateActivitySelects();
-            updateTeacherSelects();
-            updateAccessSelects();
-        }
-
-        function updateTeacherSelects() {
-            const select = document.getElementById('teacherSubjectSelect');
-            if (!select) return;
-            
-            select.innerHTML = '';
-            Object.keys(systemData.subjects).forEach(key => {
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = systemData.subjects[key].name;
-                select.appendChild(option);
-            });
-        }
-
-        function updateAccessSelects() {
-            const select = document.getElementById('accessSubjectSelect');
-            if (!select) return;
-            
-            select.innerHTML = '';
-            Object.keys(systemData.subjects).forEach(key => {
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = systemData.subjects[key].name;
-                select.appendChild(option);
-            });
-            updateAccessModuleSelect();
-        }
-
-        function updateAccessModuleSelect() {
-            const subjectKey = document.getElementById('accessSubjectSelect').value;
-            const select = document.getElementById('accessModuleSelect');
-            select.innerHTML = '';
-
-            if (systemData.subjects[subjectKey]) {
-                systemData.subjects[subjectKey].modules.forEach((module, index) => {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = module.name;
-                    select.appendChild(option);
+            if (confirm(`Tem certeza que deseja excluir a matéria "${systemData.subjects[key].name}"? Esta ação não pode ser desfeita.`)) {
+                delete systemData.subjects[key];
+                
+                // Remove related access codes
+                Object.keys(systemData.moduleAccess).forEach(moduleKey => {
+                    if (moduleKey.startsWith(key + '-')) {
+                        delete systemData.moduleAccess[moduleKey];
+                    }
                 });
+                
+                saveData();
+                loadSubjectsList();
+                updateAllSelects();
+                loadSubjects();
+                alert('Matéria excluída com sucesso!');
             }
         }
 
-        // CRUD Functions for Modules
+        function addModule() {
+            const subjectKey = document.getElementById('moduleSubjectSelect').value;
+            const moduleName = document.getElementById('newModuleName').value.trim();
+            
+            if (!subjectKey || !moduleName) {
+                alert('Por favor, selecione uma matéria e digite o nome do módulo.');
+                return;
+            }
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject) {
+                alert('Matéria não encontrada.');
+                return;
+            }
+            
+            // Check if module already exists
+            if (subject.modules.find(m => m.name === moduleName)) {
+                alert('Já existe um módulo com este nome nesta matéria.');
+                return;
+            }
+            
+            subject.modules.push({
+                name: moduleName,
+                activities: []
+            });
+            
+            saveData();
+            loadModulesList();
+            updateAllSelects();
+            loadSubjects();
+            
+            document.getElementById('newModuleName').value = '';
+            alert('Módulo adicionado com sucesso!');
+        }
+
         function updateModuleSelects() {
             const selects = ['moduleSubjectSelect', 'viewModulesSelect'];
             selects.forEach(selectId => {
                 const select = document.getElementById(selectId);
-                if (!select) return;
-                
-                select.innerHTML = '';
-                
-                // Filter subjects based on user permissions
-                let availableSubjects = {};
-                if (currentUser.type === 'teacher') {
-                    if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
-                        availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
-                    }
-                } else if (currentUser.type === 'admin') {
-                    availableSubjects = systemData.subjects;
+                if (select) {
+                    select.innerHTML = '<option value="">Selecione uma matéria</option>';
+                    Object.keys(systemData.subjects).forEach(key => {
+                        const subject = systemData.subjects[key];
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = `${subject.emoji} ${subject.name}`;
+                        select.appendChild(option);
+                    });
                 }
-                
-                Object.keys(availableSubjects).forEach(key => {
-                    const option = document.createElement('option');
-                    option.value = key;
-                    option.textContent = availableSubjects[key].name;
-                    select.appendChild(option);
-                });
             });
-            loadModulesList();
         }
 
         function loadModulesList() {
             const subjectKey = document.getElementById('viewModulesSelect').value;
             const container = document.getElementById('modulesList');
+            
+            if (!container) return;
+            
             container.innerHTML = '';
-
-            if (!subjectKey || !systemData.subjects[subjectKey]) return;
-
-            systemData.subjects[subjectKey].modules.forEach((module, index) => {
+            
+            if (!subjectKey) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Selecione uma matéria para ver os módulos.</p>';
+                return;
+            }
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject || subject.modules.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Nenhum módulo encontrado.</p>';
+                return;
+            }
+            
+            subject.modules.forEach((module, index) => {
                 const moduleKey = `${subjectKey}-${index}`;
                 const accessCode = systemData.moduleAccess[moduleKey] || 'Sem código';
                 
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
                 div.innerHTML = `
                     <div>
-                        <h5 class="font-semibold">${module.name}</h5>
-                        <p class="text-sm text-gray-600">${module.activities.length} atividades</p>
-                        <p class="text-xs text-blue-600 font-mono">Código: ${accessCode}</p>
+                        <span class="font-medium">${module.name}</span>
+                        <span class="text-sm text-gray-500 ml-2">(${module.activities.length} atividades)</span>
+                        <span class="text-xs text-blue-600 ml-2">Código: ${accessCode}</span>
                     </div>
-                    <div class="flex space-x-2">
-                        <button onclick="editModule('${subjectKey}', ${index})" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
-                        ${(currentUser.type === 'admin' || (currentUser.type === 'teacher' && currentUser.subjectKey === subjectKey)) ? `
-                            <button onclick="deleteModule('${subjectKey}', ${index})" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
-                        ` : ''}
-                    </div>
+                    <button onclick="deleteModule('${subjectKey}', ${index})" class="text-red-500 hover:text-red-700 text-sm">
+                        🗑️ Excluir
+                    </button>
                 `;
                 container.appendChild(div);
             });
-        }
-
-        function addModule() {
-            const subjectKey = document.getElementById('moduleSubjectSelect').value;
-            const name = document.getElementById('newModuleName').value.trim();
-
-            if (!name) {
-                alert('Por favor, digite o nome do módulo.');
-                return;
-            }
-
-            // Check permissions
-            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
-                alert('Você só pode adicionar módulos à sua matéria.');
-                return;
-            }
-
-            systemData.subjects[subjectKey].modules.push({
-                name: name,
-                activities: []
-            });
-
-            document.getElementById('newModuleName').value = '';
-            saveData();
-            addToSyncLog('Módulo adicionado: ' + name);
-            loadModulesList();
-            loadSubjects();
-            updateAllSelects();
-            alert('✅ Módulo adicionado com sucesso!');
-        }
-
-        function editModule(subjectKey, moduleIndex) {
-            // Check permissions
-            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
-                alert('Você só pode editar módulos da sua matéria.');
-                return;
-            }
-
-            const module = systemData.subjects[subjectKey].modules[moduleIndex];
-            const newName = prompt('Nome do módulo:', module.name);
-            if (newName === null || !newName.trim()) return;
-
-            systemData.subjects[subjectKey].modules[moduleIndex].name = newName.trim();
-            saveData();
-            loadModulesList();
-            loadSubjects();
-            alert('Módulo atualizado com sucesso!');
         }
 
         function deleteModule(subjectKey, moduleIndex) {
-            // Check permissions
-            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
-                alert('Você só pode excluir módulos da sua matéria.');
-                return;
-            }
-
-            const module = systemData.subjects[subjectKey].modules[moduleIndex];
-            if (!confirm(`Tem certeza que deseja excluir o módulo "${module.name}"? Todas as atividades serão perdidas.`)) {
-                return;
-            }
-
-            // Remove module access code
-            const moduleKey = `${subjectKey}-${moduleIndex}`;
-            delete systemData.moduleAccess[moduleKey];
-
-            systemData.subjects[subjectKey].modules.splice(moduleIndex, 1);
-            saveData();
-            loadModulesList();
-            loadSubjects();
-            loadAccessCodesList();
-            alert('Módulo excluído com sucesso!');
-        }
-
-        // CRUD Functions for Activities
-        function updateActivitySelects() {
-            const selects = ['activitySubjectSelect', 'viewActivitiesSubjectSelect'];
-            selects.forEach(selectId => {
-                const select = document.getElementById(selectId);
-                if (!select) return;
+            const subject = systemData.subjects[subjectKey];
+            const module = subject.modules[moduleIndex];
+            
+            if (confirm(`Tem certeza que deseja excluir o módulo "${module.name}"? Esta ação não pode ser desfeita.`)) {
+                subject.modules.splice(moduleIndex, 1);
                 
-                select.innerHTML = '';
+                // Remove access code
+                const moduleKey = `${subjectKey}-${moduleIndex}`;
+                delete systemData.moduleAccess[moduleKey];
                 
-                // Filter subjects based on user permissions
-                let availableSubjects = {};
-                if (currentUser.type === 'teacher') {
-                    // Teachers can only see their own subject
-                    if (currentUser.subjectKey && systemData.subjects[currentUser.subjectKey]) {
-                        availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                // Update access codes for remaining modules
+                const newModuleAccess = {};
+                Object.keys(systemData.moduleAccess).forEach(key => {
+                    if (key.startsWith(subjectKey + '-')) {
+                        const oldIndex = parseInt(key.split('-')[1]);
+                        if (oldIndex > moduleIndex) {
+                            const newKey = `${subjectKey}-${oldIndex - 1}`;
+                            newModuleAccess[newKey] = systemData.moduleAccess[key];
+                        } else if (oldIndex < moduleIndex) {
+                            newModuleAccess[key] = systemData.moduleAccess[key];
+                        }
+                    } else {
+                        newModuleAccess[key] = systemData.moduleAccess[key];
                     }
-                } else if (currentUser.type === 'admin') {
-                    // Admins can see all subjects
-                    availableSubjects = systemData.subjects;
-                }
+                });
+                systemData.moduleAccess = newModuleAccess;
                 
-                Object.keys(availableSubjects).forEach(key => {
-                    const option = document.createElement('option');
-                    option.value = key;
-                    option.textContent = availableSubjects[key].name;
-                    select.appendChild(option);
-                });
-            });
-            updateActivityModuleSelect();
-            updateViewActivitiesModuleSelect();
-        }
-
-        function updateActivityModuleSelect() {
-            const subjectKey = document.getElementById('activitySubjectSelect').value;
-            const select = document.getElementById('activityModuleSelect');
-            select.innerHTML = '';
-
-            if (systemData.subjects[subjectKey]) {
-                systemData.subjects[subjectKey].modules.forEach((module, index) => {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = module.name;
-                    select.appendChild(option);
-                });
+                saveData();
+                loadModulesList();
+                updateAllSelects();
+                loadSubjects();
+                alert('Módulo excluído com sucesso!');
             }
         }
 
-        function updateViewActivitiesModuleSelect() {
-            const subjectKey = document.getElementById('viewActivitiesSubjectSelect').value;
-            const select = document.getElementById('viewActivitiesModuleSelect');
-            select.innerHTML = '';
-
-            if (systemData.subjects[subjectKey]) {
-                systemData.subjects[subjectKey].modules.forEach((module, index) => {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = module.name;
-                    select.appendChild(option);
-                });
-            }
-            loadActivitiesList();
-        }
-
-        function loadActivitiesList() {
-            const subjectKey = document.getElementById('viewActivitiesSubjectSelect').value;
-            const moduleIndex = document.getElementById('viewActivitiesModuleSelect').value;
-            const container = document.getElementById('activitiesList');
-            container.innerHTML = '';
-
-            if (!subjectKey || moduleIndex === '' || !systemData.subjects[subjectKey]) return;
-
-            const activities = systemData.subjects[subjectKey].modules[moduleIndex].activities;
-            activities.forEach((activity, index) => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
-                div.innerHTML = `
-                    <div>
-                        <h5 class="font-semibold">${activity.title}</h5>
-                        <p class="text-sm text-gray-600">${activity.description}</p>
-                        ${activity.link ? `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 text-xs">🔗 Link</a>` : ''}
-                    </div>
-                    <div class="flex space-x-2">
-                        ${(currentUser.type === 'admin' || (currentUser.type === 'teacher' && currentUser.subjectKey === subjectKey)) ? `
-                            <button onclick="editActivity('${subjectKey}', ${moduleIndex}, ${index})" class="text-blue-500 hover:text-blue-700 text-sm">Editar</button>
-                            <button onclick="deleteActivity('${subjectKey}', ${moduleIndex}, ${index})" class="text-red-500 hover:text-red-700 text-sm">Excluir</button>
-                        ` : ''}
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function editActivity(subjectKey, moduleIndex, activityIndex) {
-            // Check permissions - teachers can edit activities in their subject
-            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
-                alert('Você só pode editar atividades da sua matéria.');
-                return;
-            }
-
-            const activity = systemData.subjects[subjectKey].modules[moduleIndex].activities[activityIndex];
-            
-            const newTitle = prompt('Título da atividade:', activity.title);
-            if (newTitle === null) return;
-            
-            const newDescription = prompt('Descrição:', activity.description);
-            if (newDescription === null) return;
-            
-            const newLink = prompt('Link (opcional):', activity.link || '');
-            if (newLink === null) return;
-
-            systemData.subjects[subjectKey].modules[moduleIndex].activities[activityIndex] = {
-                title: newTitle.trim(),
-                description: newDescription.trim(),
-                link: newLink.trim() || null
-            };
-
-            saveData();
-            loadActivitiesList();
-            loadSubjects();
-            alert('Atividade atualizada com sucesso!');
-        }
-
-        function deleteActivity(subjectKey, moduleIndex, activityIndex) {
-            // Check permissions - teachers can delete activities in their subject
-            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subjectKey) {
-                alert('Você só pode excluir atividades da sua matéria.');
-                return;
-            }
-
-            const activity = systemData.subjects[subjectKey].modules[moduleIndex].activities[activityIndex];
-            if (!confirm(`Tem certeza que deseja excluir a atividade "${activity.title}"?`)) {
-                return;
-            }
-
-            systemData.subjects[subjectKey].modules[moduleIndex].activities.splice(activityIndex, 1);
-            saveData();
-            loadActivitiesList();
-            loadSubjects();
-            alert('Atividade excluída com sucesso!');
-        }
-
-        // Add activity functionality
         function addActivity() {
-            const subject = document.getElementById('activitySubjectSelect').value;
+            const subjectKey = document.getElementById('activitySubjectSelect').value;
             const moduleIndex = parseInt(document.getElementById('activityModuleSelect').value);
-            const title = document.getElementById('activityTitle').value;
-            const description = document.getElementById('activityDescription').value;
-            const link = document.getElementById('activityLink').value;
-
-            if (!title || !description) {
-                alert('Por favor, preencha o título e a descrição da atividade.');
+            const title = document.getElementById('activityTitle').value.trim();
+            const description = document.getElementById('activityDescription').value.trim();
+            const link = document.getElementById('activityLink').value.trim();
+            
+            if (!subjectKey || isNaN(moduleIndex) || !title || !description) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
                 return;
             }
-
-            // Check permissions - teachers can add activities to their subject
-            if (currentUser.type === 'teacher' && currentUser.subjectKey !== subject) {
-                alert('Você só pode adicionar atividades à sua matéria.');
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject || !subject.modules[moduleIndex]) {
+                alert('Matéria ou módulo não encontrado.');
                 return;
             }
-
-            const activity = {
-                title: title,
-                description: description,
+            
+            // Check if activity already exists
+            if (subject.modules[moduleIndex].activities.find(a => a.title === title)) {
+                alert('Já existe uma atividade com este título neste módulo.');
+                return;
+            }
+            
+            subject.modules[moduleIndex].activities.push({
+                title,
+                description,
                 link: link || null
-            };
-
-            systemData.subjects[subject].modules[moduleIndex].activities.push(activity);
+            });
+            
+            saveData();
+            loadActivitiesList();
+            loadSubjects();
             
             // Clear form
             document.getElementById('activityTitle').value = '';
             document.getElementById('activityDescription').value = '';
             document.getElementById('activityLink').value = '';
             
-            // Save data
+            alert('Atividade adicionada com sucesso!');
+        }
+
+        function updateActivitySelects() {
+            const selects = ['activitySubjectSelect', 'viewActivitiesSubjectSelect'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    select.innerHTML = '<option value="">Selecione uma matéria</option>';
+                    
+                    // For teachers, only show their assigned subject
+                    let availableSubjects = systemData.subjects;
+                    if (currentUser.type === 'teacher' && currentUser.subjectKey) {
+                        availableSubjects = {};
+                        availableSubjects[currentUser.subjectKey] = systemData.subjects[currentUser.subjectKey];
+                    }
+                    
+                    Object.keys(availableSubjects).forEach(key => {
+                        const subject = availableSubjects[key];
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = `${subject.emoji} ${subject.name}`;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        function updateActivityModuleSelect() {
+            const subjectKey = document.getElementById('activitySubjectSelect').value;
+            const select = document.getElementById('activityModuleSelect');
+            
+            select.innerHTML = '<option value="">Selecione um módulo</option>';
+            
+            if (!subjectKey) return;
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject) return;
+            
+            subject.modules.forEach((module, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = module.name;
+                select.appendChild(option);
+            });
+        }
+
+        function updateViewActivitiesModuleSelect() {
+            const subjectKey = document.getElementById('viewActivitiesSubjectSelect').value;
+            const select = document.getElementById('viewActivitiesModuleSelect');
+            
+            select.innerHTML = '<option value="">Selecione um módulo</option>';
+            
+            if (!subjectKey) return;
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject) return;
+            
+            subject.modules.forEach((module, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = module.name;
+                select.appendChild(option);
+            });
+        }
+
+        function loadActivitiesList() {
+            const subjectKey = document.getElementById('viewActivitiesSubjectSelect').value;
+            const moduleIndex = parseInt(document.getElementById('viewActivitiesModuleSelect').value);
+            const container = document.getElementById('activitiesList');
+            
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (!subjectKey || isNaN(moduleIndex)) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Selecione uma matéria e módulo para ver as atividades.</p>';
+                return;
+            }
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject || !subject.modules[moduleIndex]) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Módulo não encontrado.</p>';
+                return;
+            }
+            
+            const activities = subject.modules[moduleIndex].activities;
+            if (activities.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Nenhuma atividade encontrada.</p>';
+                return;
+            }
+            
+            activities.forEach((activity, activityIndex) => {
+                const div = document.createElement('div');
+                div.className = 'p-3 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h5 class="font-medium">${activity.title}</h5>
+                            <p class="text-sm text-gray-600 mt-1">${activity.description}</p>
+                            ${activity.link ? `<a href="${activity.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 text-sm">🔗 ${activity.link}</a>` : ''}
+                        </div>
+                        <button onclick="deleteActivity('${subjectKey}', ${moduleIndex}, ${activityIndex})" class="text-red-500 hover:text-red-700 text-sm ml-2">
+                            🗑️
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function deleteActivity(subjectKey, moduleIndex, activityIndex) {
+            const subject = systemData.subjects[subjectKey];
+            const activity = subject.modules[moduleIndex].activities[activityIndex];
+            
+            if (confirm(`Tem certeza que deseja excluir a atividade "${activity.title}"?`)) {
+                subject.modules[moduleIndex].activities.splice(activityIndex, 1);
+                saveData();
+                loadActivitiesList();
+                loadSubjects();
+                alert('Atividade excluída com sucesso!');
+            }
+        }
+
+        function addTeacher() {
+            const subjectKey = document.getElementById('teacherSubjectSelect').value;
+            const name = document.getElementById('teacherName').value.trim();
+            const password = document.getElementById('teacherPassword').value.trim();
+            
+            if (!subjectKey || !name || !password) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject) {
+                alert('Matéria não encontrada.');
+                return;
+            }
+            
+            // Check if teacher already exists
+            if (subject.teachers.find(t => t.name === name || t.password === password)) {
+                alert('Já existe um professor com este nome ou senha nesta matéria.');
+                return;
+            }
+            
+            subject.teachers.push({
+                id: Date.now().toString(),
+                name,
+                password
+            });
+            
             saveData();
-            addToSyncLog('Atividade adicionada: ' + title);
+            loadTeachersList();
             
-            // Reload subjects and activities list
-            loadSubjects();
-            loadActivitiesList();
+            // Clear form
+            document.getElementById('teacherName').value = '';
+            document.getElementById('teacherPassword').value = '';
             
-            alert('✅ Atividade adicionada com sucesso!');
+            alert('Professor adicionado com sucesso!');
         }
 
-        // Initialize with sample data and teachers
-        function initializeSampleData() {
-            // Add sample teachers
-            systemData.subjects.math.teachers.push({
-                name: 'Prof. Maria Silva',
-                password: 'mat123',
-                id: '1'
+        function updateTeacherSelects() {
+            const selects = ['teacherSubjectSelect', 'viewTeachersSelect'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    select.innerHTML = '<option value="">Selecione uma matéria</option>';
+                    Object.keys(systemData.subjects).forEach(key => {
+                        const subject = systemData.subjects[key];
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = `${subject.emoji} ${subject.name}`;
+                        select.appendChild(option);
+                    });
+                }
             });
-
-            systemData.subjects.portuguese.teachers.push({
-                name: 'Prof. João Santos',
-                password: 'port123',
-                id: '2'
-            });
-
-            systemData.subjects.history.teachers.push({
-                name: 'Prof. Ana Costa',
-                password: 'hist123',
-                id: '3'
-            });
-
-            // Add sample activities
-            systemData.subjects.math.modules[0].activities.push({
-                title: 'Exercícios de Equações',
-                description: 'Resolva as equações do primeiro grau propostas.',
-                link: 'https://example.com/exercicios-equacoes'
-            });
-
-            systemData.subjects.portuguese.modules[0].activities.push({
-                title: 'Análise Sintática',
-                description: 'Identifique os termos das orações nos textos fornecidos.',
-                link: null
-            });
-
-            systemData.subjects.history.modules[0].activities.push({
-                title: 'Período Colonial',
-                description: 'Estude sobre a colonização do Brasil.',
-                link: null
-            });
-
-            // Add more access codes
-            systemData.moduleAccess['math-1'] = 'MAT02';
-            systemData.moduleAccess['portuguese-1'] = 'PORT02';
-            systemData.moduleAccess['history-1'] = 'HIST02';
         }
 
-        // Drag and Drop Functions
-        let draggedElement = null;
-        let draggedData = null;
-
-        function handleDragStart(event) {
-            draggedElement = event.target;
-            draggedData = {
-                subject: event.target.dataset.subject,
-                module: parseInt(event.target.dataset.module),
-                activity: parseInt(event.target.dataset.activity)
-            };
+        function loadTeachersList() {
+            const subjectKey = document.getElementById('viewTeachersSelect').value;
+            const container = document.getElementById('teachersList');
             
-            event.target.classList.add('dragging');
-            event.dataTransfer.effectAllowed = 'move';
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (!subjectKey) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Selecione uma matéria para ver os professores.</p>';
+                return;
+            }
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject || subject.teachers.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Nenhum professor encontrado.</p>';
+                return;
+            }
+            
+            subject.teachers.forEach((teacher, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <span class="font-medium">${teacher.name}</span>
+                        <span class="text-sm text-gray-500 ml-2">Senha: ${teacher.password}</span>
+                    </div>
+                    <button onclick="deleteTeacher('${subjectKey}', ${index})" class="text-red-500 hover:text-red-700 text-sm">
+                        🗑️ Excluir
+                    </button>
+                `;
+                container.appendChild(div);
+            });
         }
 
-        function handleDragOver(event) {
-            event.preventDefault();
-            event.dataTransfer.dropEffect = 'move';
+        function deleteTeacher(subjectKey, teacherIndex) {
+            const subject = systemData.subjects[subjectKey];
+            const teacher = subject.teachers[teacherIndex];
             
-            const target = event.target.closest('.activity-item');
-            if (target && target !== draggedElement) {
-                target.classList.add('drag-over');
+            if (confirm(`Tem certeza que deseja excluir o professor "${teacher.name}"?`)) {
+                subject.teachers.splice(teacherIndex, 1);
+                saveData();
+                loadTeachersList();
+                alert('Professor excluído com sucesso!');
             }
         }
 
-        function handleDrop(event) {
-            event.preventDefault();
+        function setModuleAccess() {
+            const subjectKey = document.getElementById('accessSubjectSelect').value;
+            const moduleIndex = parseInt(document.getElementById('accessModuleSelect').value);
+            const accessCode = document.getElementById('moduleAccessCode').value.trim();
             
-            const target = event.target.closest('.activity-item');
-            if (!target || target === draggedElement) return;
-            
-            const targetData = {
-                subject: target.dataset.subject,
-                module: parseInt(target.dataset.module),
-                activity: parseInt(target.dataset.activity)
-            };
-            
-            // Only allow reordering within the same module
-            if (draggedData.subject === targetData.subject && draggedData.module === targetData.module) {
-                reorderActivities(draggedData, targetData);
+            if (!subjectKey || isNaN(moduleIndex) || !accessCode) {
+                alert('Por favor, preencha todos os campos.');
+                return;
             }
             
-            target.classList.remove('drag-over');
-        }
-
-        function handleDragEnd(event) {
-            event.target.classList.remove('dragging');
-            
-            // Remove drag-over class from all elements
-            document.querySelectorAll('.activity-item').forEach(item => {
-                item.classList.remove('drag-over');
-            });
-            
-            draggedElement = null;
-            draggedData = null;
-        }
-
-        function reorderActivities(fromData, toData) {
-            const activities = systemData.subjects[fromData.subject].modules[fromData.module].activities;
-            
-            // Remove the dragged activity
-            const draggedActivity = activities.splice(fromData.activity, 1)[0];
-            
-            // Insert at new position
-            let newIndex = toData.activity;
-            if (fromData.activity < toData.activity) {
-                newIndex = toData.activity;
+            const subject = systemData.subjects[subjectKey];
+            if (!subject || !subject.modules[moduleIndex]) {
+                alert('Matéria ou módulo não encontrado.');
+                return;
             }
             
-            activities.splice(newIndex, 0, draggedActivity);
+            // Check if access code already exists
+            const existingKey = Object.keys(systemData.moduleAccess).find(key => 
+                systemData.moduleAccess[key] === accessCode
+            );
             
-            // Save data and reload
+            if (existingKey) {
+                alert('Este código de acesso já está sendo usado por outro módulo.');
+                return;
+            }
+            
+            const moduleKey = `${subjectKey}-${moduleIndex}`;
+            systemData.moduleAccess[moduleKey] = accessCode;
+            
             saveData();
+            loadAccessCodesList();
             loadSubjects();
-            loadActivitiesList();
             
-            // Show success message
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-            notification.textContent = '✅ Ordem das atividades atualizada!';
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            document.getElementById('moduleAccessCode').value = '';
+            alert('Código de acesso definido com sucesso!');
         }
 
-        // Initialize system
-        function initializeSystem() {
-            console.log('🚀 Inicializando sistema...');
+        function updateAccessSelects() {
+            const selects = ['accessSubjectSelect'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    select.innerHTML = '<option value="">Selecione uma matéria</option>';
+                    Object.keys(systemData.subjects).forEach(key => {
+                        const subject = systemData.subjects[key];
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = `${subject.emoji} ${subject.name}`;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        function updateAccessModuleSelect() {
+            const subjectKey = document.getElementById('accessSubjectSelect').value;
+            const select = document.getElementById('accessModuleSelect');
             
-            // Always start with sample data structure
-            initializeSampleData();
+            select.innerHTML = '<option value="">Selecione um módulo</option>';
             
-            // Try to load saved data and merge
-            const savedData = loadData();
-            if (savedData) {
-                console.log('✅ Dados salvos carregados');
-            } else {
-                console.log('📝 Usando dados de exemplo');
-                saveData(); // Save the initial sample data
+            if (!subjectKey) return;
+            
+            const subject = systemData.subjects[subjectKey];
+            if (!subject) return;
+            
+            subject.modules.forEach((module, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = module.name;
+                select.appendChild(option);
+            });
+        }
+
+        function loadAccessCodesList() {
+            const container = document.getElementById('accessCodesList');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const accessCodes = Object.keys(systemData.moduleAccess);
+            if (accessCodes.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Nenhum código de acesso definido.</p>';
+                return;
             }
             
-            // Load sync configuration
+            accessCodes.forEach(moduleKey => {
+                const [subjectKey, moduleIndex] = moduleKey.split('-');
+                const subject = systemData.subjects[subjectKey];
+                const module = subject?.modules[parseInt(moduleIndex)];
+                const accessCode = systemData.moduleAccess[moduleKey];
+                
+                if (subject && module) {
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+                    div.innerHTML = `
+                        <div>
+                            <span class="font-medium">${subject.emoji} ${subject.name}</span>
+                            <span class="text-sm text-gray-600 ml-2">→ ${module.name}</span>
+                            <span class="text-sm font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded ml-2">${accessCode}</span>
+                        </div>
+                        <button onclick="deleteAccessCode('${moduleKey}')" class="text-red-500 hover:text-red-700 text-sm">
+                            🗑️ Remover
+                        </button>
+                    `;
+                    container.appendChild(div);
+                }
+            });
+        }
+
+        function deleteAccessCode(moduleKey) {
+            if (confirm('Tem certeza que deseja remover este código de acesso?')) {
+                delete systemData.moduleAccess[moduleKey];
+                saveData();
+                loadAccessCodesList();
+                loadSubjects();
+                alert('Código de acesso removido com sucesso!');
+            }
+        }
+
+        function updateAllSelects() {
+            updateModuleSelects();
+            updateActivitySelects();
+            updateTeacherSelects();
+            updateAccessSelects();
+            updateLoginSubjectSelect();
+        }
+
+        // Initialize the application
+        function init() {
+            // Load sync configuration first
             loadSyncConfig();
-            console.log('🔄 Configuração de sync carregada');
             
-            // Update display
-            updateSyncDisplay();
+            // Try to load saved data
+            const hasData = loadData();
             
-            console.log('✅ Sistema inicializado');
-            console.log('Subjects disponíveis:', Object.keys(systemData.subjects));
-            console.log('Códigos de acesso:', systemData.moduleAccess);
+            // If no saved data, use default sample data
+            if (!hasData) {
+                systemData.subjects = DEFAULT_SAMPLE_DATA.subjects;
+                systemData.moduleAccess = DEFAULT_SAMPLE_DATA.moduleAccess;
+                saveData();
+            }
+            
+            // Set default user type
+            selectUserType('student');
+            
+            // Update all selects
+            updateAllSelects();
         }
 
-        // Initialize the system when page loads
-        window.addEventListener('load', initializeSystem);
-
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', () => {
-            stopAutoSync();
-        });
+        // Start the application
+        init();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a6ff6445e04ae8',t:'MTc1OTc3Mjk5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ba960336e664eb',t:'MTc1OTk3ODM4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
