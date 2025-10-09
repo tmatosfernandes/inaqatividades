@@ -435,7 +435,7 @@
         // Sync Configuration
         // 🔧 CONFIGURAÇÃO GLOBAL DO CSV
         // Cole aqui a URL do seu arquivo CSV do Google Drive para configuração automática
-        const GLOBAL_CSV_URL = 'https://docs.google.com/spreadsheets/d/1W1ktK5az2FFRCZcZwBaH5-ys3a0fd3H0SjWwzTQZj3Y/export?format=csv'; // Exemplo: 'https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv'
+        const GLOBAL_CSV_URL = ''; // Exemplo: 'https://docs.google.com/spreadsheets/d/SEU_ID/export?format=csv'
         
         let syncConfig = {
             csvUrl: null,
@@ -1019,7 +1019,7 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
             });
         }
 
-        function testSimpleSync() {
+        async function testSimpleSync() {
             if (!syncConfig.csvUrl) {
                 alert('❌ Configure primeiro a URL do CSV para testar a sincronização.');
                 return;
@@ -1041,8 +1041,61 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
                 console.log(`  ${key}: ${subject.teachers.length} professores, ${subject.modules.length} módulos`);
             });
 
-            // Test the sync
-            forceSyncFromCsv().then(success => {
+            try {
+                // First, test the connection
+                addToSyncLog('🔍 Testando conexão com o CSV...');
+                
+                let response;
+                try {
+                    response = await fetch(syncConfig.csvUrl, { 
+                        mode: 'cors',
+                        cache: 'no-cache',
+                        headers: {
+                            'Accept': 'text/csv,text/plain,*/*'
+                        }
+                    });
+                } catch (error) {
+                    addToSyncLog(`Tentativa 1 falhou: ${error.message}`);
+                    try {
+                        response = await fetch(syncConfig.csvUrl, { 
+                            cache: 'no-cache',
+                            headers: {
+                                'Accept': 'text/csv,text/plain,*/*'
+                            }
+                        });
+                        addToSyncLog('Tentativa 2: fetch sem CORS mode');
+                    } catch (error2) {
+                        throw new Error(`Falha na conexão: ${error2.message}`);
+                    }
+                }
+                
+                if (!response || !response.ok) {
+                    throw new Error(`HTTP ${response?.status || 'Network Error'} - Falha na resposta do servidor`);
+                }
+
+                const csvContent = await response.text();
+                addToSyncLog(`Conteúdo recebido: ${csvContent.length} caracteres`);
+                
+                // Validate content
+                if (csvContent.trim().toLowerCase().startsWith('<!doctype html') || 
+                    csvContent.trim().toLowerCase().startsWith('<html')) {
+                    throw new Error('URL retorna HTML em vez de CSV. Verifique a configuração da URL.');
+                }
+                
+                if (csvContent.length < 10) {
+                    throw new Error('Arquivo CSV muito pequeno ou vazio.');
+                }
+                
+                // Show first few lines for debugging
+                const lines = csvContent.split('\n').slice(0, 5);
+                addToSyncLog(`Primeiras 5 linhas do CSV:`);
+                lines.forEach((line, idx) => {
+                    addToSyncLog(`  ${idx}: "${line.substring(0, 100)}${line.length > 100 ? '...' : ''}"`);
+                });
+                
+                // Test the sync
+                const success = await importFromCSV(csvContent, false);
+                
                 if (success) {
                     console.log('=== DADOS APÓS SINCRONIZAÇÃO ===');
                     console.log('Matérias:', Object.keys(systemData.subjects));
@@ -1053,16 +1106,35 @@ Professor,"matematica","Matemática","Álgebra e Geometria","📊","blue-500",,"
                         console.log(`  ${key}: ${subject.teachers.length} professores, ${subject.modules.length} módulos`);
                     });
                     
-                    addToSyncLog('✅ Teste de sincronização concluído');
+                    addToSyncLog('✅ Teste de sincronização concluído com sucesso');
                     alert('✅ Teste de sincronização concluído!\n\nVerifique:\n1. Se as matérias apareceram no carrossel\n2. Se os dados foram atualizados\n3. O console (F12) para detalhes completos');
                 } else {
-                    addToSyncLog('❌ Teste de sincronização falhou');
-                    alert('❌ Teste de sincronização falhou!\n\nVerifique o log de sincronização e o console (F12) para mais detalhes.');
+                    addToSyncLog('❌ Teste de sincronização falhou - nenhum dado foi processado');
+                    alert('❌ Teste de sincronização falhou!\n\nO CSV foi acessado mas nenhum dado válido foi encontrado.\n\nVerifique:\n1. Se o formato do CSV está correto\n2. Se as colunas têm os nomes esperados\n3. Use "🔍 Debug CSV" para análise detalhada');
                 }
-            }).catch(error => {
+                
+            } catch (error) {
                 addToSyncLog(`❌ Erro no teste: ${error.message}`);
-                alert(`❌ Erro no teste de sincronização:\n${error.message}`);
-            });
+                console.error('Erro completo do teste:', error);
+                
+                let errorMsg = `❌ Erro no teste de sincronização:\n\n${error.message}`;
+                
+                if (error.message.includes('Failed to fetch') || error.message.includes('Network Error')) {
+                    errorMsg += '\n\n🔧 POSSÍVEIS SOLUÇÕES:\n';
+                    errorMsg += '• Verifique sua conexão com a internet\n';
+                    errorMsg += '• Certifique-se que o arquivo CSV é público\n';
+                    errorMsg += '• Tente reconfigurar a URL do CSV\n';
+                    errorMsg += '• Use "🔍 Debug CSV" para mais detalhes';
+                } else if (error.message.includes('HTML')) {
+                    errorMsg += '\n\n🔧 A URL está retornando uma página web.\n';
+                    errorMsg += 'Reconfigure a URL usando o formato correto para CSV.';
+                } else if (error.message.includes('HTTP')) {
+                    errorMsg += '\n\n🔧 Problema de acesso ao arquivo.\n';
+                    errorMsg += 'Verifique se o arquivo é público e a URL está correta.';
+                }
+                
+                alert(errorMsg);
+            }
         }
 
         async function debugCsvContent() {
@@ -1304,9 +1376,14 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 
                 // Backup current data
                 const backup = JSON.parse(JSON.stringify(systemData));
+                console.log('Backup dos dados atuais criado');
                 
-                // Start with current data instead of empty - this preserves existing data
-                const newData = JSON.parse(JSON.stringify(systemData));
+                // Start with current data structure to preserve existing data
+                const newData = {
+                    admin: { password: systemData.admin.password },
+                    subjects: JSON.parse(JSON.stringify(systemData.subjects)), // Preserve existing subjects
+                    moduleAccess: { ...systemData.moduleAccess } // Preserve existing access codes
+                };
 
                 const lines = csvContent.split('\n').filter(line => line.trim());
                 console.log('Linhas encontradas:', lines.length);
@@ -1387,8 +1464,11 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 console.log('Matérias atualizadas:', Array.from(updatedSubjects));
                 console.log('Dados finais:', newData);
                 
-                // Only update if we processed some data
+                // Apply changes if any data was processed
                 if (processedRows > 0) {
+                    // Remove duplicates and validate data integrity
+                    cleanupDuplicateData(newData);
+                    
                     systemData = newData;
                     saveData();
                     addToSyncLog(`${processedRows} linhas processadas, ${updatedSubjects.size} matérias atualizadas`);
@@ -1421,6 +1501,66 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                     throw new Error('Nenhum dado válido encontrado no CSV');
                 }
                 
+            } catch (error) {
+                addToSyncLog(`Erro na importação: ${error.message}`);
+                console.error('CSV Import error:', error);
+                if (!silent) {
+                    alert(`❌ Erro ao processar arquivo CSV:\n${error.message}\n\nVerifique o formato do arquivo e use "🔍 Debug CSV" para mais detalhes.`);
+                }
+                return false;
+            }
+        }
+
+        // Clean up duplicate data and ensure integrity
+        function cleanupDuplicateData(data) {
+            console.log('🧹 Limpando dados duplicados...');
+            
+            Object.keys(data.subjects).forEach(subjectKey => {
+                const subject = data.subjects[subjectKey];
+                
+                // Remove duplicate teachers
+                const uniqueTeachers = [];
+                const seenTeacherPasswords = new Set();
+                const seenTeacherNames = new Set();
+                
+                subject.teachers.forEach(teacher => {
+                    const key = `${teacher.name}-${teacher.password}`;
+                    if (!seenTeacherPasswords.has(teacher.password) && !seenTeacherNames.has(teacher.name)) {
+                        uniqueTeachers.push(teacher);
+                        seenTeacherPasswords.add(teacher.password);
+                        seenTeacherNames.add(teacher.name);
+                    }
+                });
+                subject.teachers = uniqueTeachers;
+                
+                // Remove duplicate modules
+                const uniqueModules = [];
+                const seenModuleNames = new Set();
+                
+                subject.modules.forEach(module => {
+                    if (!seenModuleNames.has(module.name)) {
+                        // Remove duplicate activities within module
+                        const uniqueActivities = [];
+                        const seenActivityTitles = new Set();
+                        
+                        module.activities.forEach(activity => {
+                            if (!seenActivityTitles.has(activity.title)) {
+                                uniqueActivities.push(activity);
+                                seenActivityTitles.add(activity.title);
+                            }
+                        });
+                        
+                        module.activities = uniqueActivities;
+                        uniqueModules.push(module);
+                        seenModuleNames.add(module.name);
+                    }
+                });
+                subject.modules = uniqueModules;
+            });
+            
+            console.log('✅ Limpeza de dados concluída');
+        }
+                
                 return true;
                 
             } catch (error) {
@@ -1431,6 +1571,24 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
                 }
                 return false;
             }
+        }
+
+        // Helper function to find value in row using multiple possible column names
+        function findValueInRow(row, possibleKeys) {
+            for (const key of possibleKeys) {
+                if (row[key] && row[key].toString().trim()) {
+                    return row[key].toString().trim();
+                }
+                
+                // Also try case-insensitive matching
+                const foundKey = Object.keys(row).find(rowKey => 
+                    rowKey.toLowerCase().trim() === key.toLowerCase().trim()
+                );
+                if (foundKey && row[foundKey] && row[foundKey].toString().trim()) {
+                    return row[foundKey].toString().trim();
+                }
+            }
+            return '';
         }
 
         function getSubjectKeyFromRow(row) {
@@ -1547,99 +1705,120 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
         function processCSVRow(row, targetData, structure = null) {
             console.log('=== PROCESSANDO LINHA ===');
             console.log('Row completa:', row);
-            console.log('Todas as chaves da row:', Object.keys(row));
-            console.log('Valores da row:', Object.values(row));
             
             // Check if row has any meaningful data first
             const hasAnyData = Object.values(row).some(value => value && value.toString().trim() !== '');
-            console.log('hasAnyData:', hasAnyData);
             
             if (!hasAnyData) {
                 console.log('❌ Linha completamente vazia - pulando');
                 return false;
             }
             
-            // Try to find tipo column with more flexible matching
+            // Try multiple strategies to find tipo
             let tipo = '';
-            const tipoKeys = Object.keys(row).filter(key => 
-                key.toLowerCase().includes('tipo') || 
-                key.toLowerCase().includes('type') ||
-                key.toLowerCase() === 'tipo' ||
-                key.toLowerCase() === 'type'
-            );
+            
+            // Strategy 1: Look for explicit tipo columns
+            const tipoKeys = Object.keys(row).filter(key => {
+                const lowerKey = key.toLowerCase().trim();
+                return lowerKey === 'tipo' || lowerKey === 'type' || 
+                       lowerKey.includes('tipo') || lowerKey.includes('type');
+            });
             
             if (tipoKeys.length > 0) {
                 tipo = (row[tipoKeys[0]] || '').toString().trim();
-            } else {
-                // Try first column if no tipo column found
+                console.log('Tipo encontrado via coluna específica:', tipo);
+            }
+            
+            // Strategy 2: Try first column if no tipo column found
+            if (!tipo) {
                 const firstKey = Object.keys(row)[0];
                 const firstValue = (row[firstKey] || '').toString().trim();
-                console.log('Primeira coluna:', firstKey, '=', `"${firstValue}"`);
+                console.log('Testando primeira coluna:', firstKey, '=', `"${firstValue}"`);
                 
                 // Check if first value looks like a tipo
-                if (['Admin', 'admin', 'Materia', 'materia', 'Subject', 'subject', 
-                     'Modulo', 'modulo', 'Module', 'module', 'Atividade', 'atividade', 
-                     'Activity', 'activity', 'Professor', 'professor', 'Teacher', 'teacher'].includes(firstValue)) {
+                const validTipos = [
+                    'Admin', 'admin', 'ADMIN',
+                    'Materia', 'materia', 'MATERIA', 'Subject', 'subject', 'SUBJECT',
+                    'Modulo', 'modulo', 'MODULO', 'Module', 'module', 'MODULE',
+                    'Atividade', 'atividade', 'ATIVIDADE', 'Activity', 'activity', 'ACTIVITY',
+                    'Professor', 'professor', 'PROFESSOR', 'Teacher', 'teacher', 'TEACHER'
+                ];
+                
+                if (validTipos.includes(firstValue)) {
                     tipo = firstValue;
                     console.log('Tipo detectado na primeira coluna:', tipo);
                 }
             }
             
-            // Try to find subject key with more flexible matching
-            let subjectKey = '';
-            const subjectKeys = Object.keys(row).filter(key => 
-                key.toLowerCase().includes('materia') || 
-                key.toLowerCase().includes('subject') ||
-                key.toLowerCase().includes('id_materia') ||
-                key.toLowerCase().includes('subjectid')
-            );
-            
-            if (subjectKeys.length > 0) {
-                subjectKey = (row[subjectKeys[0]] || '').toString().trim();
+            // Strategy 3: Try to infer tipo from available data
+            if (!tipo) {
+                const adminPassword = findValueInRow(row, ['Senha_Admin', 'senha_admin', 'AdminPassword', 'admin_password']);
+                const teacherName = findValueInRow(row, ['Nome_Professor', 'nome_professor', 'TeacherName', 'teacher_name']);
+                const moduleName = findValueInRow(row, ['Nome_Modulo', 'nome_modulo', 'ModuleName', 'module_name']);
+                const activityTitle = findValueInRow(row, ['Titulo_Atividade', 'titulo_atividade', 'ActivityTitle', 'activity_title']);
+                const subjectName = findValueInRow(row, ['Nome_Materia', 'nome_materia', 'SubjectName', 'subject_name']);
+                
+                if (adminPassword) {
+                    tipo = 'Admin';
+                    console.log('Tipo inferido como Admin (tem senha admin)');
+                } else if (teacherName) {
+                    tipo = 'Professor';
+                    console.log('Tipo inferido como Professor (tem nome professor)');
+                } else if (activityTitle) {
+                    tipo = 'Atividade';
+                    console.log('Tipo inferido como Atividade (tem título atividade)');
+                } else if (moduleName) {
+                    tipo = 'Modulo';
+                    console.log('Tipo inferido como Modulo (tem nome módulo)');
+                } else if (subjectName) {
+                    tipo = 'Materia';
+                    console.log('Tipo inferido como Materia (tem nome matéria)');
+                }
             }
+            
+            // Try to find subject key with more flexible matching
+            let subjectKey = findValueInRow(row, [
+                'ID_Materia', 'id_materia', 'SubjectID', 'subject_id', 'subjectid',
+                'Materia', 'materia', 'Subject', 'subject'
+            ]);
             
             console.log('Tipo detectado:', `"${tipo}"`);
             console.log('Subject Key detectado:', `"${subjectKey}"`);
             console.log('Chaves de tipo encontradas:', tipoKeys);
             console.log('Chaves de subject encontradas:', subjectKeys);
             
-            // Process admin password - try multiple column names
-            const adminPassword = row.Senha_Admin || row.senha_admin || row.AdminPassword || row.admin_password;
-            if ((tipo === 'Admin' || tipo === 'admin') && adminPassword) {
-                targetData.admin.password = adminPassword.trim();
+            // Process admin password
+            const adminPassword = findValueInRow(row, ['Senha_Admin', 'senha_admin', 'AdminPassword', 'admin_password']);
+            if ((tipo.toLowerCase().includes('admin') || !tipo) && adminPassword) {
+                targetData.admin.password = adminPassword;
                 console.log('✅ Admin password updated:', adminPassword);
                 return true;
             }
             
-            // If no tipo but has admin password, assume it's admin row
-            if (!tipo && adminPassword) {
-                targetData.admin.password = adminPassword.trim();
-                console.log('✅ Admin password updated (sem tipo explícito):', adminPassword);
-                return true;
-            }
-            
-            // Skip empty rows but be more flexible
-            if (!tipo || tipo === '') {
-                console.log('❌ Skipping row - no tipo found');
-                console.log('Tentou buscar em:', ['Tipo', 'tipo', 'Type', 'type']);
+            // Skip if no tipo found
+            if (!tipo) {
+                console.log('❌ Skipping row - no tipo found or inferred');
                 return false;
             }
             
             // For non-admin rows, we need subject key
-            if (!subjectKey && !['Admin', 'admin'].includes(tipo)) {
+            if (!subjectKey && !tipo.toLowerCase().includes('admin')) {
                 console.log('❌ Skipping row - no subject key for type:', tipo);
-                console.log('Tentou buscar subject em:', ['ID_Materia', 'id_materia', 'SubjectID', 'subject_id']);
-                console.log('Available keys in row:', Object.keys(row));
                 return false;
             }
             
             // Ensure subject exists
             if (subjectKey && !targetData.subjects[subjectKey]) {
+                const subjectName = findValueInRow(row, ['Nome_Materia', 'nome_materia', 'SubjectName', 'subject_name']) || subjectKey;
+                const subjectDesc = findValueInRow(row, ['Descricao_Materia', 'descricao_materia', 'SubjectDescription', 'subject_description']) || '';
+                const subjectEmoji = findValueInRow(row, ['Emoji_Materia', 'emoji_materia', 'SubjectEmoji', 'subject_emoji']) || '📚';
+                const subjectColor = findValueInRow(row, ['Cor_Materia', 'cor_materia', 'SubjectColor', 'subject_color']) || 'blue-500';
+                
                 targetData.subjects[subjectKey] = {
-                    name: (row.Nome_Materia || subjectKey).trim(),
-                    description: (row.Descricao_Materia || '').trim(),
-                    emoji: (row.Emoji_Materia || '📚').trim(),
-                    color: (row.Cor_Materia || 'blue-500').trim(),
+                    name: subjectName,
+                    description: subjectDesc,
+                    emoji: subjectEmoji,
+                    color: subjectColor,
                     teachers: [],
                     modules: []
                 };
@@ -1647,81 +1826,184 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             }
             
             const subject = targetData.subjects[subjectKey];
-            if (!subject && tipo !== 'Admin') {
+            if (!subject && !tipo.toLowerCase().includes('admin')) {
                 console.log('No subject found for:', subjectKey);
                 return false;
             }
             
-            // Process different types - try multiple column name variations
-            const teacherName = row.Nome_Professor || row.nome_professor || row.TeacherName || row.teacher_name;
-            const moduleName = row.Nome_Modulo || row.nome_modulo || row.ModuleName || row.module_name;
-            const activityTitle = row.Titulo_Atividade || row.titulo_atividade || row.ActivityTitle || row.activity_title;
-            const accessCode = row.Codigo_Acesso || row.codigo_acesso || row.AccessCode || row.access_code;
+            // Get data using flexible column matching
+            const teacherName = findValueInRow(row, ['Nome_Professor', 'nome_professor', 'TeacherName', 'teacher_name']);
+            const moduleName = findValueInRow(row, ['Nome_Modulo', 'nome_modulo', 'ModuleName', 'module_name']);
+            const activityTitle = findValueInRow(row, ['Titulo_Atividade', 'titulo_atividade', 'ActivityTitle', 'activity_title']);
+            const accessCode = findValueInRow(row, ['Codigo_Acesso', 'codigo_acesso', 'AccessCode', 'access_code']);
             
-            if (['Professor', 'professor', 'Teacher', 'teacher'].includes(tipo) && teacherName && teacherName.trim()) {
-                // Add teacher if not exists
-                const cleanTeacherName = teacherName.trim();
-                const existingTeacher = subject.teachers.find(t => t.name === cleanTeacherName);
-                if (!existingTeacher) {
-                    const teacherPassword = row.Senha_Professor || row.senha_professor || row.TeacherPassword || row.teacher_password || 'temp123';
-                    const teacherId = row.ID_Professor || row.id_professor || row.TeacherID || row.teacher_id || Date.now().toString();
-                    
-                    subject.teachers.push({
-                        id: teacherId.toString().trim(),
-                        name: cleanTeacherName,
-                        password: teacherPassword.toString().trim()
-                    });
-                    console.log('✅ Added teacher:', cleanTeacherName);
+            // Process based on tipo
+            const tipoLower = tipo.toLowerCase();
+            
+            if (tipoLower.includes('professor') || tipoLower.includes('teacher')) {
+                if (teacherName) {
+                    const existingTeacher = subject.teachers.find(t => t.name === teacherName);
+                    if (!existingTeacher) {
+                        const teacherPassword = findValueInRow(row, ['Senha_Professor', 'senha_professor', 'TeacherPassword', 'teacher_password']) || 'temp123';
+                        const teacherId = findValueInRow(row, ['ID_Professor', 'id_professor', 'TeacherID', 'teacher_id']) || Date.now().toString();
+                        
+                        subject.teachers.push({
+                            id: teacherId,
+                            name: teacherName,
+                            password: teacherPassword
+                        });
+                        console.log('✅ Added teacher:', teacherName);
+                    }
+                    return true;
                 }
-                return true;
-            } else if (['Modulo', 'modulo', 'Module', 'module', 'Atividade', 'atividade', 'Activity', 'activity'].includes(tipo) && moduleName && moduleName.trim()) {
-                const cleanModuleName = moduleName.trim();
+            } else if ((tipoLower.includes('modulo') || tipoLower.includes('module') || 
+                       tipoLower.includes('atividade') || tipoLower.includes('activity')) && moduleName) {
                 
                 // Find or create module
-                let module = subject.modules.find(m => m.name === cleanModuleName);
+                let module = subject.modules.find(m => m.name === moduleName);
                 if (!module) {
                     module = {
-                        name: cleanModuleName,
+                        name: moduleName,
                         activities: []
                     };
                     subject.modules.push(module);
-                    console.log('✅ Created module:', cleanModuleName);
+                    console.log('✅ Created module:', moduleName);
                     
                     // Set access code if provided
-                    if (accessCode && accessCode.trim()) {
+                    if (accessCode) {
                         const moduleIndex = subject.modules.length - 1;
                         const moduleKey = `${subjectKey}-${moduleIndex}`;
-                        targetData.moduleAccess[moduleKey] = accessCode.trim();
-                        console.log('✅ Set access code:', accessCode.trim(), 'for', moduleKey);
+                        targetData.moduleAccess[moduleKey] = accessCode;
+                        console.log('✅ Set access code:', accessCode, 'for', moduleKey);
                     }
                 }
                 
                 // Add activity if it's an activity row
-                if (['Atividade', 'atividade', 'Activity', 'activity'].includes(tipo) && activityTitle && activityTitle.trim()) {
-                    const cleanActivityTitle = activityTitle.trim();
-                    const existingActivity = module.activities.find(a => a.title === cleanActivityTitle);
+                if ((tipoLower.includes('atividade') || tipoLower.includes('activity')) && activityTitle) {
+                    const existingActivity = module.activities.find(a => a.title === activityTitle);
                     if (!existingActivity) {
-                        const activityDesc = row.Descricao_Atividade || row.descricao_atividade || row.ActivityDescription || row.activity_description || '';
-                        const activityLink = row.Link_Atividade || row.link_atividade || row.ActivityLink || row.activity_link;
+                        const activityDesc = findValueInRow(row, ['Descricao_Atividade', 'descricao_atividade', 'ActivityDescription', 'activity_description']) || '';
+                        const activityLink = findValueInRow(row, ['Link_Atividade', 'link_atividade', 'ActivityLink', 'activity_link']);
                         
                         module.activities.push({
-                            title: cleanActivityTitle,
-                            description: activityDesc.toString().trim(),
-                            link: (activityLink && activityLink.trim()) ? activityLink.trim() : null
+                            title: activityTitle,
+                            description: activityDesc,
+                            link: activityLink || null
                         });
-                        console.log('✅ Added activity:', cleanActivityTitle);
+                        console.log('✅ Added activity:', activityTitle);
                     }
                 }
                 return true;
-            } else if (['Materia', 'materia', 'Subject', 'subject'].includes(tipo)) {
-                // Just creating the subject is enough
-                console.log('✅ Subject created/updated:', subjectKey);
+            } else if (tipoLower.includes('materia') || tipoLower.includes('subject')) {
+                // Subject already created above
+                console.log('✅ Subject processed:', subjectKey);
                 return true;
             }
             
-            console.log('Row not processed - tipo:', `"${tipo}"`, 'keys:', Object.keys(row));
+            console.log('❌ Row not processed - tipo:', `"${tipo}"`);
             return false;
         }
+
+        // Default sample data structure - only used if no saved data exists
+        const DEFAULT_SAMPLE_DATA = {
+            subjects: {
+                math: {
+                    name: 'Matemática',
+                    description: 'Álgebra, Geometria e Cálculo',
+                    emoji: '📊',
+                    color: 'blue-500',
+                    teachers: [
+                        {
+                            name: 'Prof. Maria Silva',
+                            password: 'mat123',
+                            id: '1'
+                        }
+                    ],
+                    modules: [
+                        { 
+                            name: 'Módulo 1: Álgebra Básica', 
+                            activities: [
+                                {
+                                    title: 'Exercícios de Equações',
+                                    description: 'Resolva as equações do primeiro grau propostas.',
+                                    link: 'https://example.com/exercicios-equacoes'
+                                }
+                            ]
+                        },
+                        { name: 'Módulo 2: Geometria Plana', activities: [] },
+                        { name: 'Módulo 3: Funções', activities: [] },
+                        { name: 'Módulo 4: Trigonometria', activities: [] }
+                    ]
+                },
+                portuguese: {
+                    name: 'Português',
+                    description: 'Gramática, Literatura e Redação',
+                    emoji: '📚',
+                    color: 'green-500',
+                    teachers: [
+                        {
+                            name: 'Prof. João Santos',
+                            password: 'port123',
+                            id: '2'
+                        }
+                    ],
+                    modules: [
+                        { 
+                            name: 'Módulo 1: Gramática', 
+                            activities: [
+                                {
+                                    title: 'Análise Sintática',
+                                    description: 'Identifique os termos das orações nos textos fornecidos.',
+                                    link: null
+                                }
+                            ]
+                        },
+                        { name: 'Módulo 2: Literatura Clássica', activities: [] },
+                        { name: 'Módulo 3: Redação', activities: [] },
+                        { name: 'Módulo 4: Interpretação de Texto', activities: [] }
+                    ]
+                },
+                history: {
+                    name: 'História',
+                    description: 'Brasil, Mundo e Contemporânea',
+                    emoji: '🏛️',
+                    color: 'purple-500',
+                    teachers: [
+                        {
+                            name: 'Prof. Ana Costa',
+                            password: 'hist123',
+                            id: '3'
+                        }
+                    ],
+                    modules: [
+                        { 
+                            name: 'Módulo 1: Brasil Colonial', 
+                            activities: [
+                                {
+                                    title: 'Período Colonial',
+                                    description: 'Estude sobre a colonização do Brasil.',
+                                    link: null
+                                }
+                            ]
+                        },
+                        { name: 'Módulo 2: Independência', activities: [] },
+                        { name: 'Módulo 3: República', activities: [] },
+                        { name: 'Módulo 4: História Contemporânea', activities: [] }
+                    ]
+                }
+            },
+            moduleAccess: {
+                'math-0': 'MAT01',
+                'math-1': 'MAT02',
+                'portuguese-0': 'PORT01',
+                'portuguese-1': 'PORT02',
+                'history-0': 'HIST01',
+                'history-1': 'HIST02'
+            }
+        };
+
+        let currentAdminTab = 'subjects';
+
         // User type selection
         function selectUserType(type) {
             currentUser.type = type;
@@ -2866,50 +3148,61 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             alert('✅ Atividade adicionada com sucesso!');
         }
 
-        // Initialize with sample data and teachers
-        function initializeSampleData() {
-            // Add sample teachers
-            systemData.subjects.math.teachers.push({
-                name: 'Prof. Maria Silva',
-                password: 'mat123',
-                id: '1'
-            });
+        // Initialize system data with proper structure
+        function initializeSystemData() {
+            // Ensure systemData has proper structure
+            if (!systemData.admin) {
+                systemData.admin = { password: 'admin123' };
+            }
+            if (!systemData.subjects) {
+                systemData.subjects = {};
+            }
+            if (!systemData.moduleAccess) {
+                systemData.moduleAccess = {};
+            }
+        }
 
-            systemData.subjects.portuguese.teachers.push({
-                name: 'Prof. João Santos',
-                password: 'port123',
-                id: '2'
-            });
+        // Load default sample data only if no saved data exists
+        function loadDefaultSampleData() {
+            console.log('📝 Carregando dados de exemplo padrão...');
+            
+            systemData.subjects = JSON.parse(JSON.stringify(DEFAULT_SAMPLE_DATA.subjects));
+            systemData.moduleAccess = { ...systemData.moduleAccess, ...DEFAULT_SAMPLE_DATA.moduleAccess };
+            
+            console.log('✅ Dados de exemplo carregados:', Object.keys(systemData.subjects));
+        }
 
-            systemData.subjects.history.teachers.push({
-                name: 'Prof. Ana Costa',
-                password: 'hist123',
-                id: '3'
+        // Validate and fix data structure
+        function validateDataStructure() {
+            let fixed = false;
+            
+            // Ensure all subjects have required properties
+            Object.keys(systemData.subjects).forEach(key => {
+                const subject = systemData.subjects[key];
+                if (!subject.teachers) {
+                    subject.teachers = [];
+                    fixed = true;
+                }
+                if (!subject.modules) {
+                    subject.modules = [];
+                    fixed = true;
+                }
+                
+                // Ensure all modules have activities array
+                subject.modules.forEach(module => {
+                    if (!module.activities) {
+                        module.activities = [];
+                        fixed = true;
+                    }
+                });
             });
-
-            // Add sample activities
-            systemData.subjects.math.modules[0].activities.push({
-                title: 'Exercícios de Equações',
-                description: 'Resolva as equações do primeiro grau propostas.',
-                link: 'https://example.com/exercicios-equacoes'
-            });
-
-            systemData.subjects.portuguese.modules[0].activities.push({
-                title: 'Análise Sintática',
-                description: 'Identifique os termos das orações nos textos fornecidos.',
-                link: null
-            });
-
-            systemData.subjects.history.modules[0].activities.push({
-                title: 'Período Colonial',
-                description: 'Estude sobre a colonização do Brasil.',
-                link: null
-            });
-
-            // Add more access codes
-            systemData.moduleAccess['math-1'] = 'MAT02';
-            systemData.moduleAccess['portuguese-1'] = 'PORT02';
-            systemData.moduleAccess['history-1'] = 'HIST02';
+            
+            if (fixed) {
+                console.log('🔧 Estrutura de dados corrigida');
+                saveData();
+            }
+            
+            return fixed;
         }
 
         // Drag and Drop Functions
@@ -3004,28 +3297,36 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
         function initializeSystem() {
             console.log('🚀 Inicializando sistema...');
             
-            // Always start with sample data structure
-            initializeSampleData();
+            // Step 1: Initialize basic data structure
+            initializeSystemData();
+            console.log('📋 Estrutura básica inicializada');
             
-            // Try to load saved data and merge
-            const savedData = loadData();
-            if (savedData) {
-                console.log('✅ Dados salvos carregados');
+            // Step 2: Try to load saved data
+            const hasSavedData = loadData();
+            
+            // Step 3: If no saved data, load default sample data
+            if (!hasSavedData || Object.keys(systemData.subjects).length === 0) {
+                console.log('📝 Nenhum dado salvo encontrado - carregando dados de exemplo');
+                loadDefaultSampleData();
+                saveData(); // Save the sample data
             } else {
-                console.log('📝 Usando dados de exemplo');
-                saveData(); // Save the initial sample data
+                console.log('✅ Dados salvos carregados:', Object.keys(systemData.subjects));
             }
             
-            // Load sync configuration
+            // Step 4: Validate and fix data structure if needed
+            validateDataStructure();
+            
+            // Step 5: Load sync configuration
             loadSyncConfig();
             console.log('🔄 Configuração de sync carregada');
             
-            // Update display
+            // Step 6: Update display
             updateSyncDisplay();
             
-            console.log('✅ Sistema inicializado');
-            console.log('Subjects disponíveis:', Object.keys(systemData.subjects));
-            console.log('Códigos de acesso:', systemData.moduleAccess);
+            console.log('✅ Sistema inicializado com sucesso');
+            console.log('📊 Matérias disponíveis:', Object.keys(systemData.subjects));
+            console.log('🔐 Códigos de acesso:', Object.keys(systemData.moduleAccess).length);
+            console.log('👤 Senha admin:', systemData.admin.password);
         }
 
         // Initialize the system when page loads
@@ -3036,5 +3337,5 @@ A URL atual está retornando uma página web em vez do arquivo CSV.`);
             stopAutoSync();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b20ac9a14ecae4',t:'MTc1OTg4ODgwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b975e491c600f5',t:'MTc1OTk2NjU4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
